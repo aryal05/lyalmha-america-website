@@ -1,0 +1,22 @@
+📸 **IMPORTANT: Add Your Logo**
+
+Please save your logo image (the one you provided) as:
+`logo.png`
+
+And place it in this folder: `frontend/public/`
+
+The full path should be:
+`C:\Users\aryal\Desktop\Project-Culture\frontend\public\logo.png`
+
+Your logo will automatically appear in:
+✓ Navigation bar
+✓ Hero section (animated)
+✓ Footer
+✓ Browser tab (favicon)
+
+Recommended specifications:
+- Format: PNG with transparent background
+- Size: 512x512px or larger
+- Square aspect ratio preferred
+
+Once you add the logo, refresh your browser to see it!
