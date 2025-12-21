@@ -46,13 +46,15 @@ const Blogs = () => {
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          {heroBanner && (
-            <img
-              src={getImageUrl(heroBanner.image)}
-              alt="Blog Background"
-              className="w-full h-full object-cover"
-            />
-          )}
+          <img
+            src={
+              heroBanner?.image
+                ? getImageUrl(heroBanner.image)
+                : "https://images.unsplash.com/photo-1555325219-e495c86927ee?w=1920&h=1080&fit=crop"
+            }
+            alt="Blog Background"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-deep-black/85"></div>
         </div>
 

@@ -26,7 +26,52 @@ const Culture = () => {
 
       console.log("Culture banner response:", bannerRes.data.data);
       console.log("Festivals response:", festivalsRes.data.data);
-      setFestivals(festivalsRes.data.data || []);
+
+      // Use database festivals or fallback to static data
+      const dbFestivals = festivalsRes.data.data || [];
+      const staticFestivals = [
+        {
+          id: "static-1",
+          title: "Dashain",
+          description:
+            "The longest and most auspicious festival in Nepal, celebrating the victory of good over evil.",
+          image:
+            "https://images.unsplash.com/photo-1604055933218-4c3e72c4e1fa?w=800&h=600&fit=crop",
+          highlights: JSON.stringify([
+            "15 days of celebration",
+            "Family gatherings",
+            "Traditional blessings",
+          ]),
+        },
+        {
+          id: "static-2",
+          title: "Tihar",
+          description:
+            "The festival of lights, honoring different animals and the bond between brothers and sisters.",
+          image:
+            "https://images.unsplash.com/photo-1605811774534-8f4e6b93e16b?w=800&h=600&fit=crop",
+          highlights: JSON.stringify([
+            "Festival of lights",
+            "Worship of Laxmi",
+            "Bhai Tika ceremony",
+          ]),
+        },
+        {
+          id: "static-3",
+          title: "Losar",
+          description:
+            "Tibetan New Year celebration, marking new beginnings with family and community.",
+          image:
+            "https://images.unsplash.com/photo-1528642474498-1af0c17fd8c3?w=800&h=600&fit=crop",
+          highlights: JSON.stringify([
+            "New Year celebration",
+            "Traditional dances",
+            "Community feasts",
+          ]),
+        },
+      ];
+
+      setFestivals(dbFestivals.length > 0 ? dbFestivals : staticFestivals);
       setTraditions(traditionsRes.data.data || []);
 
       const banners = bannerRes.data.data || [];
@@ -48,13 +93,15 @@ const Culture = () => {
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          {heroBanner && (
-            <img
-              src={getImageUrl(heroBanner.image)}
-              alt="Culture Background"
-              className="w-full h-full object-cover"
-            />
-          )}
+          <img
+            src={
+              heroBanner?.image
+                ? getImageUrl(heroBanner.image)
+                : "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop"
+            }
+            alt="Culture Background"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-deep-black/85"></div>
         </div>
 

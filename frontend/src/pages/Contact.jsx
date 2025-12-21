@@ -57,13 +57,15 @@ const Contact = () => {
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          {heroBanner && (
-            <img
-              src={getImageUrl(heroBanner.image)}
-              alt="Contact Background"
-              className="w-full h-full object-cover"
-            />
-          )}
+          <img
+            src={
+              heroBanner?.image
+                ? getImageUrl(heroBanner.image)
+                : "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1920&h=1080&fit=crop"
+            }
+            alt="Contact Background"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-deep-black/85"></div>
         </div>
 
