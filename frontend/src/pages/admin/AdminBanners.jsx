@@ -114,12 +114,14 @@ const AdminBanners = () => {
     <AdminLayout>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Banners Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Banners Management
+          </h1>
           <button
             onClick={() => setShowForm(!showForm)}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
-            {showForm ? 'Cancel' : '+ New Banner'}
+            {showForm ? "Cancel" : "+ New Banner"}
           </button>
         </div>
 
@@ -130,25 +132,33 @@ const AdminBanners = () => {
             className="bg-white p-6 rounded-lg shadow-md mb-8"
           >
             <h2 className="text-xl font-bold mb-4 text-gray-900">
-              {editingBanner ? 'Edit Banner' : 'Add New Banner'}
+              {editingBanner ? "Edit Banner" : "Add New Banner"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Title</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Title
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Description (Optional)</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Description (Optional)
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows="3"
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
@@ -156,10 +166,14 @@ const AdminBanners = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Position</label>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                    Position
+                  </label>
                   <select
                     value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="hero">Hero</option>
@@ -172,60 +186,80 @@ const AdminBanners = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Display Order</label>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                    Display Order
+                  </label>
                   <input
                     type="number"
                     value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, order_index: e.target.value })
+                    }
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Link (Optional)</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Link (Optional)
+                </label>
                 <input
-                  type="url"
+                  type="text"
                   value={formData.link}
-                  onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                  placeholder="https://example.com"
+                  onChange={(e) =>
+                    setFormData({ ...formData, link: e.target.value })
+                  }
+                  placeholder="/about or https://example.com"
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">Banner Image</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">
+                  Banner Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    const file = e.target.files[0]
-                    setImageFile(file)
-                    setFormData({ ...formData, image: file })
+                    const file = e.target.files[0];
+                    setImageFile(file);
+                    setFormData({ ...formData, image: file });
                   }}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
-                
+
                 {/* Show current banner image when editing */}
                 {editingBanner && editingBanner.image && !imageFile && (
                   <div className="mt-4">
-                    <p className="text-gray-600 text-sm mb-2">Current banner:</p>
-                    <img 
-                      src={`http://localhost:5000${editingBanner.image}`} 
-                      alt="Current banner" 
+                    <p className="text-gray-600 text-sm mb-2">
+                      Current banner:
+                    </p>
+                    <img
+                      src={
+                        editingBanner.image.startsWith("http")
+                          ? editingBanner.image
+                          : `${API_URL}${editingBanner.image}`
+                      }
+                      alt="Current banner"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-300"
                     />
-                    <p className="text-gray-500 text-xs mt-1">Upload a new image to replace this one</p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      Upload a new image to replace this one
+                    </p>
                   </div>
                 )}
-                
+
                 {/* Show new image preview */}
                 {imageFile && (
                   <div className="mt-4">
-                    <p className="text-gray-600 text-sm mb-2">New banner preview:</p>
-                    <img 
-                      src={URL.createObjectURL(imageFile)} 
-                      alt="New banner preview" 
+                    <p className="text-gray-600 text-sm mb-2">
+                      New banner preview:
+                    </p>
+                    <img
+                      src={URL.createObjectURL(imageFile)}
+                      alt="New banner preview"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-300"
                     />
                   </div>
@@ -237,10 +271,15 @@ const AdminBanners = () => {
                   type="checkbox"
                   id="active"
                   checked={formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, active: e.target.checked })
+                  }
                   className="mr-2"
                 />
-                <label htmlFor="active" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="active"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Active (Display on website)
                 </label>
               </div>
@@ -250,7 +289,7 @@ const AdminBanners = () => {
                   type="submit"
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
                 >
-                  {editingBanner ? 'Update' : 'Create'}
+                  {editingBanner ? "Update" : "Create"}
                 </button>
                 <button
                   type="button"
@@ -284,16 +323,20 @@ const AdminBanners = () => {
                   <div className="flex-1">
                     <h3 className="text-lg font-bold">{banner.title}</h3>
                     {banner.description && (
-                      <p className="text-sm text-gray-600 mt-1">{banner.description}</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {banner.description}
+                      </p>
                     )}
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <span className={`px-3 py-1 text-xs rounded ${
-                      banner.active === 1
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {banner.active === 1 ? 'Active' : 'Inactive'}
+                    <span
+                      className={`px-3 py-1 text-xs rounded ${
+                        banner.active === 1
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {banner.active === 1 ? "Active" : "Inactive"}
                     </span>
                     <span className="px-3 py-1 text-xs rounded bg-blue-100 text-blue-800">
                       {banner.position}
@@ -301,11 +344,13 @@ const AdminBanners = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 mt-4">
-                  <span className="text-sm text-gray-500">Order: {banner.order_index}</span>
+                  <span className="text-sm text-gray-500">
+                    Order: {banner.order_index}
+                  </span>
                   {banner.link && (
-                    <a 
-                      href={banner.link} 
-                      target="_blank" 
+                    <a
+                      href={banner.link}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-600 hover:underline"
                     >
@@ -318,11 +363,11 @@ const AdminBanners = () => {
                     onClick={() => toggleActive(banner.id, banner.active)}
                     className={`px-4 py-2 rounded text-sm ${
                       banner.active === 1
-                        ? 'bg-yellow-600 text-white hover:bg-yellow-700'
-                        : 'bg-green-600 text-white hover:bg-green-700'
+                        ? "bg-yellow-600 text-white hover:bg-yellow-700"
+                        : "bg-green-600 text-white hover:bg-green-700"
                     }`}
                   >
-                    {banner.active === 1 ? 'Deactivate' : 'Activate'}
+                    {banner.active === 1 ? "Deactivate" : "Activate"}
                   </button>
                   <button
                     onClick={() => handleEdit(banner)}
@@ -348,7 +393,7 @@ const AdminBanners = () => {
         )}
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminBanners
