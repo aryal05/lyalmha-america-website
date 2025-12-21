@@ -28,51 +28,82 @@ const Supporters = () => {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-deep-black">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-charcoal-black">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-white">Loading supporters...</p>
+          <div className="mandala-pattern opacity-10 h-32 flex items-center justify-center">
+            <p className="text-gold-accent text-xl font-semibold">
+              Loading supporters...
+            </p>
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-deep-black">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-charcoal-black overflow-hidden">
+      {/* Background Mandala */}
+      <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="heading-lg mb-6 relative inline-block">
+            Our{" "}
+            <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+              Supporters
+            </span>
+            <div className="absolute -top-3 -left-3 w-8 h-8 border-t-2 border-l-2 border-gold-accent"></div>
+            <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-2 border-r-2 border-newari-red"></div>
+          </h2>
+          <div className="pagoda-divider w-48 mx-auto mb-6"></div>
+          <p className="text-paragraph-text text-lg max-w-3xl mx-auto">
+            We are deeply grateful to our community supporters who make our
+            cultural preservation efforts possible
+          </p>
+        </motion.div>
+
         {/* Financial Supporters */}
         {financialSupporters.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
             className="mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-              Financial <span className="text-nepal-red">Supporters</span>
-            </h2>
-            <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
-              We extend our heartfelt gratitude to these individuals and
-              families who have generously supported the Biskaa Jatra project
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <h3 className="text-2xl font-bold text-center text-primary-text mb-8">
+              Financial Supporters
+            </h3>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {financialSupporters.map((supporter, index) => (
                 <motion.div
                   key={supporter.id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.02, duration: 0.4 }}
-                  className="bg-accent-gray rounded-lg p-4 text-center hover:bg-gradient-to-r hover:from-nepal-red/10 hover:to-usa-blue/10 transition-all duration-300"
+                  transition={{ delay: index * 0.02, duration: 0.3 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="card-premium temple-corner p-4 text-center group"
                 >
-                  <p className="text-white font-medium text-sm">
-                    {supporter.name}
-                  </p>
-                  {supporter.description && (
-                    <p className="text-gray-400 text-xs mt-1">
-                      {supporter.description}
-                    </p>
-                  )}
+                  <div className="relative">
+                    <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                    <div className="relative z-10">
+                      <p className="text-primary-text font-medium text-sm group-hover:text-gold-accent transition-colors">
+                        {supporter.name}
+                      </p>
+                      {supporter.description && (
+                        <p className="text-paragraph-text text-xs mt-1 line-clamp-2">
+                          {supporter.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -85,38 +116,56 @@ const Supporters = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ delay: 0.2 }}
+            className="mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-              Corporate <span className="text-usa-blue">Sponsors</span>
-            </h2>
-            <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
-              Special thanks to our corporate partners who have contributed to
-              preserving our cultural heritage
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <h3 className="text-2xl font-bold text-center text-primary-text mb-8">
+              Corporate Sponsors
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {corporateSponsors.map((sponsor, index) => (
                 <motion.div
                   key={sponsor.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  className="bg-gradient-to-br from-accent-gray to-usa-blue/5 rounded-xl p-6 text-center hover:shadow-xl hover:shadow-usa-blue/20 transition-all duration-300 group"
+                  transition={{ delay: index * 0.05, duration: 0.4 }}
+                  whileHover={{ y: -5 }}
+                  className="card-premium temple-corner p-6 text-center group"
                 >
-                  <h3 className="text-white font-bold text-lg mb-2 group-hover:text-usa-blue transition-colors duration-300">
-                    {sponsor.name}
-                  </h3>
-                  {sponsor.contact_person && (
-                    <p className="text-gray-400 text-sm">
-                      {sponsor.contact_person}
-                    </p>
-                  )}
-                  {sponsor.description && (
-                    <p className="text-gray-500 text-xs mt-2">
-                      {sponsor.description}
-                    </p>
-                  )}
+                  <div className="relative">
+                    <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                    <div className="relative z-10">
+                      {/* Logo or Icon */}
+                      {sponsor.logo ? (
+                        <div className="w-24 h-24 mx-auto mb-4 rounded-lg bg-white/5 border-2 border-gold-accent/30 flex items-center justify-center p-3 group-hover:border-gold-accent transition-all shadow-lg">
+                          <img
+                            src={sponsor.logo}
+                            alt={sponsor.name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-newari-red to-gold-accent flex items-center justify-center text-2xl shadow-lg group-hover:shadow-xl transition-shadow">
+                          🏢
+                        </div>
+                      )}
+                      <h4 className="text-primary-text font-bold text-lg mb-2 group-hover:text-gold-accent transition-colors">
+                        {sponsor.name}
+                      </h4>
+                      {sponsor.contact_person && (
+                        <p className="text-paragraph-text text-sm">
+                          {sponsor.contact_person}
+                        </p>
+                      )}
+                      {sponsor.description && (
+                        <p className="text-paragraph-text text-xs mt-2 line-clamp-3">
+                          {sponsor.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -125,22 +174,55 @@ const Supporters = () => {
 
         {/* Thank You Message */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 bg-gradient-to-r from-nepal-red/10 to-usa-blue/10 rounded-2xl p-8 text-center border border-nepal-red/20"
+          className="card-premium temple-corner p-12 text-center relative overflow-hidden"
         >
-          <h3 className="text-2xl font-bold text-white mb-4">
-            धन्यवाद (Thank You)
-          </h3>
-          <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Your generous support has made the Biskaa Jatra celebration possible
-            in the DMV region. Together, we are preserving our rich Newari
-            heritage and passing it on to future generations. This project
-            stands as a testament to our community's unity and dedication to
-            cultural preservation.
-          </p>
+          <motion.div
+            className="absolute inset-0 mandala-pattern opacity-10"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          ></motion.div>
+
+          <div className="relative z-10">
+            <motion.div
+              className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-newari-red via-gold-accent to-newari-red flex items-center justify-center text-4xl shadow-2xl"
+              animate={{
+                boxShadow: [
+                  "0 0 40px rgba(242, 201, 76, 0.5)",
+                  "0 0 60px rgba(196, 22, 28, 0.5)",
+                  "0 0 40px rgba(242, 201, 76, 0.5)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              🙏
+            </motion.div>
+
+            <h3 className="text-4xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-gold-accent via-newari-red to-gold-accent bg-clip-text text-transparent">
+                धन्यवाद (Thank You)
+              </span>
+            </h3>
+
+            <div className="pagoda-divider w-48 mx-auto mb-6"></div>
+
+            <p className="text-paragraph-text text-lg max-w-3xl mx-auto leading-relaxed">
+              Your generous support has made the Biskaa Jatra celebration
+              possible in the DMV region. Together, we are preserving our rich
+              Newari heritage and passing it on to future generations. This
+              project stands as a testament to our community's unity and
+              dedication to cultural preservation.
+            </p>
+
+            {/* Decorative Corners */}
+            <div className="absolute top-6 left-6 w-16 h-16 border-t-2 border-l-2 border-gold-accent"></div>
+            <div className="absolute top-6 right-6 w-16 h-16 border-t-2 border-r-2 border-gold-accent"></div>
+            <div className="absolute bottom-6 left-6 w-16 h-16 border-b-2 border-l-2 border-newari-red"></div>
+            <div className="absolute bottom-6 right-6 w-16 h-16 border-b-2 border-r-2 border-newari-red"></div>
+          </div>
         </motion.div>
       </div>
     </section>

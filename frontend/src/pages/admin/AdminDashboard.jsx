@@ -39,36 +39,79 @@ const AdminDashboard = () => {
   }
 
   const statCards = [
-    { title: 'Total Blogs', value: stats.blogs, icon: '📝', color: 'nepal-red', link: '/admin/blogs' },
-    { title: 'Team Members', value: stats.team, icon: '👥', color: 'usa-blue', link: '/admin/team' },
-    { title: 'Events', value: stats.events, icon: '📅', color: 'nepal-red', link: '/admin/events' },
-    { title: 'Supporters', value: stats.supporters, icon: '🤝', color: 'usa-blue', link: '/admin/supporters' }
-  ]
+    {
+      title: "Total Blogs",
+      value: stats.blogs,
+      icon: "📝",
+      color: "newari-red",
+      link: "/admin/blogs",
+    },
+    {
+      title: "Team Members",
+      value: stats.team,
+      icon: "👥",
+      color: "gold-accent",
+      link: "/admin/team",
+    },
+    {
+      title: "Events",
+      value: stats.events,
+      icon: "📅",
+      color: "newari-red",
+      link: "/admin/events",
+    },
+    {
+      title: "Supporters",
+      value: stats.supporters,
+      icon: "🤝",
+      color: "gold-accent",
+      link: "/admin/supporters",
+    },
+  ];
 
   if (loading) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-white text-xl">Loading dashboard...</div>
+          <div className="text-white text-xl animate-pulse">
+            Loading dashboard...
+          </div>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   return (
     <AdminLayout>
-      <div>
-        {/* Welcome Section */}
+      <div className="relative">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-0 right-0 w-64 h-64 animate-spin-slow"></div>
+        </div>
+
+        {/* Premium Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-8 relative"
         >
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back!</h1>
-          <p className="text-gray-400">Here's what's happening with your website today.</p>
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-gold-accent to-newari-red flex items-center justify-center shadow-lg shadow-gold-accent/20">
+              <span className="text-2xl">👋</span>
+            </div>
+            <div>
+              <h1 className="heading-xl !text-3xl bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent">
+                Welcome back!
+              </h1>
+              <p className="text-gold-accent/60 font-medium">
+                Here's what's happening with your website today
+              </p>
+            </div>
+          </div>
+          <div className="pagoda-divider opacity-30 my-4"></div>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* Premium Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((card, index) => (
             <motion.a
@@ -77,63 +120,135 @@ const AdminDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-accent-gray rounded-xl p-6 hover:shadow-xl hover:shadow-nepal-red/10 transition-all duration-300 group"
+              className="card-premium group hover:border-gold-accent/50 hover:shadow-lg hover:shadow-gold-accent/20 transition-all duration-300 relative overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-4xl">{card.icon}</span>
-                <span className={`text-${card.color} text-3xl font-bold group-hover:scale-110 transition-transform`}>
-                  {card.value}
-                </span>
+              {/* Animated Background Pattern */}
+              <div className="absolute inset-0 opacity-5 mandala-pattern group-hover:opacity-10 transition-opacity"></div>
+
+              {/* Temple Corner Decoration */}
+              <div className="absolute top-0 right-0 w-16 h-16 temple-corner opacity-10 group-hover:opacity-20 transition-opacity"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-4">
+                  <motion.div
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    className={`text-4xl p-3 rounded-xl bg-gradient-to-br ${
+                      card.color === "newari-red"
+                        ? "from-newari-red/20 to-newari-red/5"
+                        : "from-gold-accent/20 to-gold-accent/5"
+                    } shadow-lg`}
+                  >
+                    {card.icon}
+                  </motion.div>
+                  <motion.span
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    className={`text-${
+                      card.color
+                    } text-4xl font-bold bg-gradient-to-r ${
+                      card.color === "newari-red"
+                        ? "from-newari-red to-gold-accent"
+                        : "from-gold-accent to-newari-red"
+                    } bg-clip-text text-transparent drop-shadow-lg`}
+                  >
+                    {card.value}
+                  </motion.span>
+                </div>
+                <h3 className="text-muted-text text-sm font-semibold uppercase tracking-wider">
+                  {card.title}
+                </h3>
+                <div className="pagoda-divider opacity-20 mt-3"></div>
               </div>
-              <h3 className="text-gray-400 text-sm font-medium">{card.title}</h3>
             </motion.a>
           ))}
         </div>
 
-        {/* Quick Actions */}
+        {/* Premium Quick Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-accent-gray rounded-xl p-6"
+          className="card-premium relative overflow-hidden"
         >
-          <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a
-              href="/admin/blogs"
-              className="flex items-center space-x-3 p-4 bg-deep-black rounded-lg hover:bg-nepal-red/10 transition-colors group"
-            >
-              <span className="text-2xl">📝</span>
-              <div>
-                <h3 className="text-white font-medium group-hover:text-nepal-red transition-colors">New Blog Post</h3>
-                <p className="text-gray-400 text-sm">Create a new article</p>
-              </div>
-            </a>
-            <a
-              href="/admin/events"
-              className="flex items-center space-x-3 p-4 bg-deep-black rounded-lg hover:bg-usa-blue/10 transition-colors group"
-            >
-              <span className="text-2xl">📅</span>
-              <div>
-                <h3 className="text-white font-medium group-hover:text-usa-blue transition-colors">Add Event</h3>
-                <p className="text-gray-400 text-sm">Schedule new event</p>
-              </div>
-            </a>
-            <a
-              href="/admin/team"
-              className="flex items-center space-x-3 p-4 bg-deep-black rounded-lg hover:bg-nepal-red/10 transition-colors group"
-            >
-              <span className="text-2xl">👥</span>
-              <div>
-                <h3 className="text-white font-medium group-hover:text-nepal-red transition-colors">Add Team Member</h3>
-                <p className="text-gray-400 text-sm">Manage your team</p>
-              </div>
-            </a>
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
+              <h2 className="heading-lg bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                Quick Actions
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <motion.a
+                whileHover={{ y: -4 }}
+                href="/admin/blogs"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-newari-red/30 rounded-lg hover:border-newari-red hover:bg-newari-red/10 transition-all duration-300 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-newari-red/0 via-newari-red/5 to-newari-red/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="p-3 bg-gradient-to-br from-newari-red/20 to-newari-red/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
+                  <span className="text-3xl">📝</span>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-white font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
+                    New Blog Post
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </h3>
+                  <p className="text-muted-text text-sm">
+                    Create a new article
+                  </p>
+                </div>
+              </motion.a>
+
+              <motion.a
+                whileHover={{ y: -4 }}
+                href="/admin/events"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-gold-accent/30 rounded-lg hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gold-accent/0 via-gold-accent/5 to-gold-accent/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="p-3 bg-gradient-to-br from-gold-accent/20 to-gold-accent/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
+                  <span className="text-3xl">📅</span>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-white font-semibold group-hover:text-gold-accent transition-colors flex items-center gap-2">
+                    Add Event
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </h3>
+                  <p className="text-muted-text text-sm">Schedule new event</p>
+                </div>
+              </motion.a>
+
+              <motion.a
+                whileHover={{ y: -4 }}
+                href="/admin/team"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-newari-red/30 rounded-lg hover:border-newari-red hover:bg-newari-red/10 transition-all duration-300 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-newari-red/0 via-newari-red/5 to-newari-red/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="p-3 bg-gradient-to-br from-newari-red/20 to-newari-red/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
+                  <span className="text-3xl">👥</span>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-white font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
+                    Add Team Member
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </h3>
+                  <p className="text-muted-text text-sm">Manage your team</p>
+                </div>
+              </motion.a>
+            </div>
           </div>
         </motion.div>
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminDashboard

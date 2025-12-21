@@ -1,117 +1,445 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import workshop1 from '../assets/images/posts/430057563_377416895039960_1581867728642530497_n.jpg'
-import workshop2 from '../assets/images/posts/433421627_946258180277784_6165530352102042076_n.jpg'
-import madalBanner from '../assets/images/posts/Madal and Dhimay Picture Banner_1.png'
-import danceImg from '../assets/images/posts/438077842_407204048727911_1401114441457624925_n.jpg'
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import workshop1 from "../assets/images/posts/430057563_377416895039960_1581867728642530497_n.jpg";
+import workshop2 from "../assets/images/posts/433421627_946258180277784_6165530352102042076_n.jpg";
+import madalBanner from "../assets/images/posts/Madal and Dhimay Picture Banner_1.png";
+import danceImg from "../assets/images/posts/438077842_407204048727911_1401114441457624925_n.jpg";
 
 const KidsActivities = () => {
+  const [flippedCard, setFlippedCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+
   const activities = [
     {
-      title: 'Culture Workshop Session 1',
-      description: 'Interactive sessions teaching children about Newari traditions, customs, and cultural practices.',
+      title: "Culture Workshop Session 1",
+      description:
+        "Interactive sessions teaching children about Newari traditions, customs, and cultural practices.",
+      detailedInfo:
+        "Our foundational workshop introduces children to the rich tapestry of Newari culture through storytelling, traditional games, and hands-on activities. Perfect for ages 5-12.",
+      benefits: [
+        "Cultural Identity",
+        "Community Building",
+        "Heritage Learning",
+      ],
       image: workshop1,
-      category: 'Workshop'
+      category: "Workshop",
+      icon: "📚",
+      ageGroup: "5-12 years",
     },
     {
-      title: 'Culture Workshop Session 2',
-      description: 'Advanced cultural education programs focusing on historical significance and contemporary relevance.',
+      title: "Culture Workshop Session 2",
+      description:
+        "Advanced cultural education programs focusing on historical significance and contemporary relevance.",
+      detailedInfo:
+        "Deep dive into Newari history, art forms, and philosophical traditions. Students explore ancient manuscripts, architectural heritage, and cultural evolution.",
+      benefits: [
+        "Historical Knowledge",
+        "Critical Thinking",
+        "Cultural Appreciation",
+      ],
       image: workshop2,
-      category: 'Workshop'
+      category: "Workshop",
+      icon: "🏛️",
+      ageGroup: "10-16 years",
     },
     {
-      title: 'Madal and Dhimay Workshop',
-      description: 'Hands-on musical instrument training, teaching children the art of traditional Newari percussion.',
+      title: "Madal and Dhimay Workshop",
+      description:
+        "Hands-on musical instrument training, teaching children the art of traditional Newari percussion.",
+      detailedInfo:
+        "Learn authentic rhythms and techniques from experienced musicians. Children get hands-on practice with traditional instruments and perform in cultural events.",
+      benefits: [
+        "Musical Skills",
+        "Rhythm & Coordination",
+        "Performance Confidence",
+      ],
       image: madalBanner,
-      category: 'Music'
+      category: "Music",
+      icon: "🥁",
+      ageGroup: "8-16 years",
     },
     {
-      title: 'Dance, Music & Literature',
-      description: 'Comprehensive programs covering traditional dance forms, musical expressions, and language learning.',
+      title: "Dance, Music & Literature",
+      description:
+        "Comprehensive programs covering traditional dance forms, musical expressions, and language learning.",
+      detailedInfo:
+        "Holistic cultural education combining Newari dance, music theory, and language lessons. Students learn to read, write, and speak while expressing through movement.",
+      benefits: ["Language Skills", "Artistic Expression", "Cultural Fluency"],
       image: danceImg,
-      category: 'Arts'
-    }
-  ]
+      category: "Arts",
+      icon: "💃",
+      ageGroup: "All ages",
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote:
+        "My kids love the workshops! They're so excited to learn about our culture.",
+      parent: "Anita D.",
+      rating: 5,
+    },
+    {
+      quote:
+        "The music program is exceptional. My son can now play the Madal beautifully!",
+      parent: "Rajesh M.",
+      rating: 5,
+    },
+    {
+      quote:
+        "Best cultural program for kids in the DMV area. Highly recommend!",
+      parent: "Sunita S.",
+      rating: 5,
+    },
+  ];
+
+  const handleFlip = (index) => {
+    setFlippedCard(flippedCard === index ? null : index);
+  };
 
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      className="relative"
     >
-      <h2 className="text-3xl font-bold text-white mb-8">
-        Kids <span className="text-nepal-red">Activities</span>
-      </h2>
+      {/* Section Header */}
+      <div className="mb-12 text-center">
+        <h2 className="heading-lg mb-6 relative inline-block">
+          Kids{" "}
+          <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+            Activities
+          </span>
+          <div className="absolute -top-3 -left-3 w-8 h-8 border-t-2 border-l-2 border-gold-accent"></div>
+          <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-2 border-r-2 border-newari-red"></div>
+        </h2>
+        <div className="pagoda-divider w-48 mx-auto mb-4"></div>
+        <p className="text-paragraph-text text-lg max-w-2xl mx-auto">
+          Engaging cultural programs designed to connect young hearts with their
+          heritage
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {activities.map((activity, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-accent-gray rounded-xl overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-nepal-red/20 transition-all duration-300"
+            className="relative h-[450px]"
+            style={{ perspective: "1000px" }}
+            onMouseEnter={() => setHoveredCard(index)}
+            onMouseLeave={() => setHoveredCard(null)}
           >
-            {/* Image */}
-            <div className="relative h-48 overflow-hidden">
-              <img
-                src={activity.image}
-                alt={activity.title}
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 to-transparent"></div>
-              
-              {/* Category Badge */}
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 bg-usa-blue text-white text-xs font-semibold rounded-full">
-                  {activity.category}
-                </span>
-              </div>
-            </div>
+            <motion.div
+              className="relative w-full h-full"
+              style={{ transformStyle: "preserve-3d" }}
+              animate={{
+                rotateY: flippedCard === index ? 180 : 0,
+              }}
+              transition={{ duration: 0.6 }}
+            >
+              {/* Front of Card */}
+              <div
+                className="absolute w-full h-full backface-hidden"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="card-premium temple-corner h-full overflow-hidden group cursor-pointer"
+                  onClick={() => handleFlip(index)}
+                >
+                  <div className="relative h-full flex flex-col">
+                    {/* Image with Overlay */}
+                    <div className="relative h-56 overflow-hidden">
+                      <img
+                        src={activity.image}
+                        alt={activity.title}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
 
-            {/* Content */}
-            <div className="p-6">
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-nepal-red transition-colors duration-300">
-                {activity.title}
-              </h3>
-              <p className="text-gray-300 text-sm mb-4">
-                {activity.description}
-              </p>
-              <button className="text-usa-blue font-semibold hover:text-nepal-red transition-colors duration-300 inline-flex items-center">
-                Learn More
-                <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform duration-300" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                  <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </button>
-            </div>
-          </motion.div>
+                      {/* Mandala Overlay */}
+                      <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+
+                      {/* Category Badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg">
+                          {activity.icon} {activity.category}
+                        </span>
+                      </div>
+
+                      {/* Age Group Badge */}
+                      <div className="absolute top-4 right-4">
+                        <span className="px-3 py-1 bg-charcoal-black/80 border border-gold-accent text-gold-accent text-xs font-semibold rounded-full">
+                          {activity.ageGroup}
+                        </span>
+                      </div>
+
+                      {/* Flip Indicator */}
+                      <motion.div
+                        className="absolute bottom-4 right-4"
+                        animate={{
+                          rotate: hoveredCard === index ? 180 : 0,
+                          scale: hoveredCard === index ? 1.2 : 1,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center text-charcoal-black font-bold shadow-lg">
+                          ↻
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 p-6 relative">
+                      <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
+                          {activity.title}
+                        </h3>
+                        <p className="text-paragraph-text mb-4 leading-relaxed">
+                          {activity.description}
+                        </p>
+
+                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gold-accent/20">
+                          <span className="text-gold-accent font-semibold text-sm">
+                            Click to flip →
+                          </span>
+                          <motion.div
+                            className="w-8 h-8 rounded-full bg-gradient-to-br from-gold-accent to-newari-red"
+                            animate={{
+                              boxShadow:
+                                hoveredCard === index
+                                  ? "0 0 20px rgba(242, 201, 76, 0.6)"
+                                  : "0 0 10px rgba(242, 201, 76, 0.3)",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Back of Card */}
+              <div
+                className="absolute w-full h-full backface-hidden"
+                style={{
+                  backfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                }}
+              >
+                <motion.div
+                  className="card-premium temple-corner h-full p-8 cursor-pointer"
+                  onClick={() => handleFlip(index)}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="relative h-full flex flex-col">
+                    <div className="absolute inset-0 mandala-pattern opacity-10"></div>
+
+                    <div className="relative z-10 flex-1 flex flex-col">
+                      {/* Back Header */}
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="text-4xl">{activity.icon}</div>
+                        <motion.div
+                          animate={{ rotate: 180 }}
+                          className="w-10 h-10 rounded-full bg-gradient-to-br from-newari-red to-gold-accent flex items-center justify-center text-charcoal-black font-bold"
+                        >
+                          ↻
+                        </motion.div>
+                      </div>
+
+                      <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+                        Program Details
+                      </h3>
+
+                      <div className="pagoda-divider w-24 mb-6"></div>
+
+                      <p className="text-paragraph-text mb-6 leading-relaxed flex-1">
+                        {activity.detailedInfo}
+                      </p>
+
+                      {/* Benefits */}
+                      <div className="space-y-3 mb-6">
+                        <h4 className="text-gold-accent font-semibold text-sm uppercase tracking-wider">
+                          Key Benefits:
+                        </h4>
+                        <div className="grid grid-cols-1 gap-2">
+                          {activity.benefits.map((benefit, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: idx * 0.1 }}
+                              className="flex items-center text-paragraph-text"
+                            >
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center mr-3 flex-shrink-0">
+                                <span className="text-charcoal-black font-bold text-xs">
+                                  ✓
+                                </span>
+                              </div>
+                              <span>{benefit}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CTA Button */}
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
+                      >
+                        Register Interest
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         ))}
       </div>
+
+      {/* Parent Testimonials */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="mt-16"
+      >
+        <div className="text-center mb-10">
+          <h3 className="text-3xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+              Parent
+            </span>{" "}
+            Testimonials
+          </h3>
+          <div className="pagoda-divider w-48 mx-auto"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="card-premium temple-corner p-8 relative"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+
+                <div className="relative z-10">
+                  {/* Stars */}
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 + i * 0.1 }}
+                        className="text-gold-accent text-xl"
+                      >
+                        ⭐
+                      </motion.span>
+                    ))}
+                  </div>
+
+                  {/* Quote */}
+                  <p className="text-paragraph-text italic mb-6 text-lg leading-relaxed">
+                    "{testimonial.quote}"
+                  </p>
+
+                  {/* Parent Name */}
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center text-charcoal-black font-bold mr-3">
+                      {testimonial.parent.charAt(0)}
+                    </div>
+                    <span className="text-gold-accent font-semibold">
+                      {testimonial.parent}
+                    </span>
+                  </div>
+
+                  {/* Decorative Corner */}
+                  <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-gradient-to-br from-gold-accent to-newari-red rounded-full opacity-10 blur-xl"></div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
 
       {/* Additional Info */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="mt-8 bg-gradient-to-r from-nepal-red/10 to-usa-blue/10 rounded-xl p-6 border border-nepal-red/20"
+        className="mt-16 card-premium temple-corner p-8 relative"
       >
-        <div className="flex items-start">
+        <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+
+        <div className="flex items-start relative z-10">
           <div className="flex-shrink-0">
-            <svg className="w-8 h-8 text-nepal-red" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center shadow-lg">
+              <svg
+                className="w-8 h-8 text-charcoal-black"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
           </div>
-          <div className="ml-4">
-            <h4 className="text-lg font-semibold text-white mb-2">Regular Programs</h4>
-            <p className="text-gray-300">
-              We conduct regular workshops and activities throughout the year. These programs are designed to engage children of all ages in learning about their heritage through fun and interactive methods including dance, music, language lessons, and cultural literature.
+          <div className="ml-6">
+            <h4 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+              Regular Programs Throughout the Year
+            </h4>
+            <div className="pagoda-divider w-32 mb-4"></div>
+            <p className="text-paragraph-text text-lg leading-relaxed">
+              We conduct regular workshops and activities throughout the year.
+              These programs are designed to engage children of all ages in
+              learning about their heritage through fun and interactive methods
+              including dance, music, language lessons, and cultural literature.
+              Join us in preserving and celebrating our beautiful Newari
+              traditions!
             </p>
+
+            {/* Quick Info Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+              <div className="bg-gradient-to-br from-charcoal-black/50 to-dark-navy/50 p-4 rounded-lg border border-gold-accent/20">
+                <div className="text-gold-accent text-2xl mb-2">📅</div>
+                <div className="text-sm text-paragraph-text">
+                  Weekly Sessions
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-charcoal-black/50 to-dark-navy/50 p-4 rounded-lg border border-gold-accent/20">
+                <div className="text-gold-accent text-2xl mb-2">👥</div>
+                <div className="text-sm text-paragraph-text">Small Groups</div>
+              </div>
+              <div className="bg-gradient-to-br from-charcoal-black/50 to-dark-navy/50 p-4 rounded-lg border border-gold-accent/20">
+                <div className="text-gold-accent text-2xl mb-2">🎓</div>
+                <div className="text-sm text-paragraph-text">
+                  Expert Teachers
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>
     </motion.section>
-  )
-}
+  );
+};
 
-export default KidsActivities
+export default KidsActivities;

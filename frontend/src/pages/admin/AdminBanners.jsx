@@ -134,12 +134,30 @@ const AdminBanners = () => {
 
   return (
     <AdminLayout>
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Banners Management
-          </h1>
-          <button
+      <div className="relative">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-10 right-10 w-64 h-64 animate-spin-slow"></div>
+        </div>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-8 relative z-10"
+        >
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+              Banners Management
+            </h1>
+            <p className="text-gold-accent/60">
+              Manage website banners and hero images
+            </p>
+            <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (showForm) {
                 resetForm();
@@ -148,233 +166,274 @@ const AdminBanners = () => {
                 setShowForm(true);
               }
             }}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+            className="px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold flex items-center gap-2"
           >
-            {showForm ? "Cancel" : "+ New Banner"}
-          </button>
-        </div>
+            <span className="text-xl">{showForm ? "✕" : "+"}</span>
+            {showForm ? "Cancel" : "New Banner"}
+          </motion.button>
+        </motion.div>
 
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-lg shadow-md mb-8"
+            className="card-premium mb-8 relative overflow-hidden"
           >
-            <h2 className="text-xl font-bold mb-4 text-gray-900">
-              {editingBanner ? "Edit Banner" : "Add New Banner"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                  {editingBanner ? "Edit Banner" : "Add New Banner"}
+                </h2>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
-                  Description (Optional)
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows="3"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
-                    Position
-                  </label>
-                  <select
-                    value={formData.position}
-                    onChange={(e) =>
-                      setFormData({ ...formData, position: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
-                  >
-                    <option value="hero">Home</option>
-                    <option value="about">About</option>
-                    <option value="blogs">Blogs</option>
-                    <option value="culture">Culture</option>
-                    <option value="contact">Contact</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
-                    Display Order
+                  <label className="block text-gold-accent/80 font-medium mb-2">
+                    Title <span className="text-newari-red">*</span>
                   </label>
                   <input
-                    type="number"
-                    value={formData.order_index}
+                    type="text"
+                    required
+                    value={formData.title}
                     onChange={(e) =>
-                      setFormData({ ...formData, order_index: e.target.value })
+                      setFormData({ ...formData, title: e.target.value })
                     }
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    placeholder="Banner title"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
-                  Link (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={formData.link}
-                  onChange={(e) =>
-                    setFormData({ ...formData, link: e.target.value })
-                  }
-                  placeholder="/about or https://example.com"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
-              </div>
+                <div>
+                  <label className="block text-gold-accent/80 font-medium mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    rows="3"
+                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    placeholder="Banner description"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-700">
-                  Banner Image
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    setImageFile(file);
-                    setFormData({ ...formData, image: file });
-                  }}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
-
-                {/* Show current banner image when editing */}
-                {editingBanner && editingBanner.image && !imageFile && (
-                  <div className="mt-4">
-                    <p className="text-gray-600 text-sm mb-2">
-                      Current banner:
-                    </p>
-                    <img
-                      src={getImageUrl(editingBanner.image)}
-                      alt="Current banner"
-                      className="w-48 h-32 object-cover rounded-lg border border-gray-300"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                      }}
-                    />
-                    <p className="text-gray-500 text-xs mt-1">
-                      Upload a new image to replace this one
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Position <span className="text-newari-red">*</span>
+                    </label>
+                    <select
+                      value={formData.position}
+                      onChange={(e) =>
+                        setFormData({ ...formData, position: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    >
+                      <option value="hero">Home</option>
+                      <option value="about">About</option>
+                      <option value="blogs">Blogs</option>
+                      <option value="culture">Culture</option>
+                      <option value="contact">Contact</option>
+                    </select>
                   </div>
-                )}
 
-                {/* Show new image preview */}
-                {imageFile && (
-                  <div className="mt-4">
-                    <p className="text-gray-600 text-sm mb-2">
-                      New banner preview:
-                    </p>
-                    <img
-                      src={URL.createObjectURL(imageFile)}
-                      alt="New banner preview"
-                      className="w-48 h-32 object-cover rounded-lg border border-gray-300"
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Display Order
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.order_index}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          order_index: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      placeholder="0"
                     />
                   </div>
-                )}
-              </div>
+                </div>
 
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="active"
-                  checked={formData.active}
-                  onChange={(e) =>
-                    setFormData({ ...formData, active: e.target.checked })
-                  }
-                  className="mr-2"
-                />
-                <label
-                  htmlFor="active"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Active (Display on website)
-                </label>
-              </div>
+                <div>
+                  <label className="block text-gold-accent/80 font-medium mb-2">
+                    Link
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.link}
+                    onChange={(e) =>
+                      setFormData({ ...formData, link: e.target.value })
+                    }
+                    placeholder="/about or https://example.com"
+                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                  />
+                </div>
 
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  {editingBanner ? "Update" : "Create"}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <div>
+                  <label className="block text-gold-accent/80 font-medium mb-2">
+                    Banner Image{" "}
+                    {!editingBanner && (
+                      <span className="text-newari-red">*</span>
+                    )}
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      setImageFile(file);
+                      setFormData({ ...formData, image: file });
+                    }}
+                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
+                  />
+
+                  {/* Show current banner image when editing */}
+                  {editingBanner && editingBanner.image && !imageFile && (
+                    <div className="mt-4">
+                      <p className="text-gold-accent/70 text-sm mb-2">
+                        Current banner:
+                      </p>
+                      <img
+                        src={getImageUrl(editingBanner.image)}
+                        alt="Current banner"
+                        className="w-48 h-32 object-cover rounded-lg border-2 border-gold-accent/30"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                      <p className="text-muted-text text-xs mt-1">
+                        Upload a new image to replace this one
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Show new image preview */}
+                  {imageFile && (
+                    <div className="mt-4">
+                      <p className="text-gold-accent/70 text-sm mb-2">
+                        New banner preview:
+                      </p>
+                      <img
+                        src={URL.createObjectURL(imageFile)}
+                        alt="New banner preview"
+                        className="w-48 h-32 object-cover rounded-lg border-2 border-gold-accent/30"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    checked={formData.active}
+                    onChange={(e) =>
+                      setFormData({ ...formData, active: e.target.checked })
+                    }
+                    className="w-4 h-4 text-gold-accent bg-dark-navy/50 border-gold-accent/30 rounded focus:ring-gold-accent"
+                  />
+                  <label
+                    htmlFor="active"
+                    className="text-gold-accent/80 font-medium"
+                  >
+                    Active (Display on website)
+                  </label>
+                </div>
+
+                <div className="pagoda-divider opacity-20 my-4"></div>
+
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="px-8 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold"
+                  >
+                    {editingBanner ? "Update Banner" : "Create Banner"}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={resetForm}
+                    className="px-8 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-dark-navy transition-all duration-300 font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </form>
+            </div>
           </motion.div>
         )}
 
-        <div className="grid grid-cols-1 gap-6">
-          {banners.map((banner) => (
+        {/* Banners Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 gap-6"
+        >
+          {banners.map((banner, index) => (
             <motion.div
               key={banner.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-white rounded-lg shadow-md overflow-hidden flex"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="card-premium overflow-hidden flex flex-col md:flex-row relative group"
             >
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
               {banner.image && (
-                <img
-                  src={getImageUrl(banner.image)}
-                  alt={banner.title}
-                  className="w-64 h-40 object-cover"
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
+                <div className="relative w-full md:w-64 h-48 md:h-auto overflow-hidden">
+                  <img
+                    src={getImageUrl(banner.image)}
+                    alt={banner.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-charcoal-black/50"></div>
+                </div>
               )}
-              <div className="flex-1 p-6">
-                <div className="flex justify-between items-start mb-2">
+              <div className="flex-1 p-6 relative z-10">
+                <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold">{banner.title}</h3>
+                    <h3 className="text-xl font-bold text-white group-hover:text-gold-accent transition-colors mb-2">
+                      {banner.title}
+                    </h3>
                     {banner.description && (
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-muted-text">
                         {banner.description}
                       </p>
                     )}
                   </div>
-                  <div className="flex gap-2 ml-4">
+                  <div className="flex gap-2 ml-4 flex-wrap">
                     <span
-                      className={`px-3 py-1 text-xs rounded ${
+                      className={`px-3 py-1 text-xs font-semibold rounded-full ${
                         banner.active === 1
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+                          ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                          : "bg-red-500/20 text-red-400 border border-red-500/30"
                       }`}
                     >
-                      {banner.active === 1 ? "Active" : "Inactive"}
+                      {banner.active === 1 ? "● Active" : "○ Inactive"}
                     </span>
-                    <span className="px-3 py-1 text-xs rounded bg-blue-100 text-blue-800">
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gold-accent/20 text-gold-accent border border-gold-accent/30">
                       {banner.position}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 mt-4">
-                  <span className="text-sm text-gray-500">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-sm text-gold-accent/70 flex items-center gap-1">
+                    <span>📊</span>
                     Order: {banner.order_index}
                   </span>
                   {banner.link && (
@@ -382,44 +441,61 @@ const AdminBanners = () => {
                       href={banner.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-gold-accent hover:text-newari-red transition-colors flex items-center gap-1"
                     >
-                      🔗 Link
+                      <span>🔗</span>
+                      External Link
                     </a>
                   )}
                 </div>
-                <div className="flex gap-2 mt-4">
-                  <button
+                <div className="pagoda-divider opacity-20 mb-4"></div>
+                <div className="flex gap-2 flex-wrap">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => toggleActive(banner.id, banner.active)}
-                    className={`px-4 py-2 rounded text-sm ${
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                       banner.active === 1
-                        ? "bg-yellow-600 text-white hover:bg-yellow-700"
-                        : "bg-green-600 text-white hover:bg-green-700"
+                        ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30"
+                        : "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30"
                     }`}
                   >
                     {banner.active === 1 ? "Deactivate" : "Activate"}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => handleEdit(banner)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                    className="px-4 py-2 bg-gradient-to-r from-gold-accent/20 to-newari-red/20 text-gold-accent border border-gold-accent/30 rounded-lg hover:bg-gold-accent/30 transition-all duration-300 text-sm font-semibold"
                   >
                     Edit
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => handleDelete(banner.id)}
-                    className="px-4 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                    className="px-4 py-2 bg-newari-red/20 text-newari-red border border-newari-red/30 rounded-lg hover:bg-newari-red/30 transition-all duration-300 text-sm font-semibold"
                   >
                     Delete
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
+
         {banners.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            No banners yet. Click "+ New Banner" to add one.
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="card-premium text-center py-16"
+          >
+            <div className="text-6xl mb-4 opacity-20">🖼️</div>
+            <p className="text-gold-accent/60 text-lg">No banners yet</p>
+            <p className="text-muted-text text-sm mt-2">
+              Click "New Banner" to add one
+            </p>
+          </motion.div>
         )}
       </div>
     </AdminLayout>

@@ -42,10 +42,10 @@ const Culture = () => {
   };
 
   return (
-    <div className="min-h-screen bg-deep-black">
+    <div className="min-h-screen bg-charcoal-black">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Premium Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
@@ -60,7 +60,7 @@ const Culture = () => {
             alt="Culture Background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-deep-black/85"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/90 via-charcoal-black/85 to-charcoal-black"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -68,24 +68,49 @@ const Culture = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Newari <span className="text-nepal-red">Culture</span>
-            </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <div className="relative inline-block mb-6">
+              {/* Decorative Cultural Patterns */}
+              <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-gold-accent/40 rounded-tl-lg"></div>
+              <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-gold-accent/40 rounded-tr-lg"></div>
+
+              <h1 className="text-5xl md:text-7xl font-bold text-white px-8">
+                Newari{" "}
+                <span className="bg-gradient-to-r from-newari-red to-gold-accent bg-clip-text text-transparent">
+                  Culture
+                </span>
+              </h1>
+
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 border-b-2 border-l-2 border-gold-accent/40 rounded-bl-lg"></div>
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-gold-accent/40 rounded-br-lg"></div>
+            </div>
+
+            {/* Pagoda Divider */}
+            <div className="flex justify-center mb-6">
+              <div className="pagoda-divider w-64"></div>
+            </div>
+
+            <p className="text-xl text-paragraph-text max-w-3xl mx-auto">
               Discover the rich heritage, traditions, and festivals that define
               the Newari civilization
             </p>
           </motion.div>
 
-          {/* Major Festivals */}
+          {/* Premium Major Festivals */}
           <div className="mb-20">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              Major <span className="text-nepal-red">Festivals</span>
-            </h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="heading-xl text-center mb-12"
+            >
+              Major <span className="text-gold-accent">Festivals</span>
+            </motion.h2>
             {loading ? (
-              <p className="text-gray-400 text-center">Loading festivals...</p>
+              <p className="text-muted-text text-center animate-pulse">
+                Loading festivals...
+              </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {festivals.map((festival, index) => {
@@ -98,35 +123,48 @@ const Culture = () => {
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.2, duration: 0.5 }}
-                      className="bg-accent-gray rounded-xl overflow-hidden group hover:shadow-2xl hover:shadow-nepal-red/20 transition-all duration-300"
+                      transition={{ delay: index * 0.15, duration: 0.6 }}
+                      className="card-premium group hover:border-gold-accent/50 hover:shadow-gold transition-all duration-500 temple-corner"
                     >
                       {festival.image && (
-                        <div className="relative h-48 overflow-hidden">
+                        <div className="relative h-56 overflow-hidden rounded-t-xl">
+                          {/* Mandala Pattern Overlay */}
+                          <div className="absolute inset-0 mandala-pattern opacity-20 z-10"></div>
+
                           <img
                             src={getImageUrl(festival.image)}
                             alt={festival.title}
-                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-deep-black/90 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent z-20"></div>
+
+                          {/* Gold Corner Accent with Traditional Pattern */}
+                          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-gold-accent/30 to-transparent rounded-bl-3xl z-30">
+                            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-newari-red"></div>
+                          </div>
+
+                          {/* Bottom Left Cultural Accent */}
+                          <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-newari-red/20 to-transparent rounded-tr-3xl z-30">
+                            <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-gold-accent"></div>
+                          </div>
                         </div>
                       )}
                       <div className="p-6">
-                        <h3 className="text-2xl font-bold text-white mb-3">
+                        <h3 className="heading-md mb-3 group-hover:text-gold-accent transition-colors">
                           {festival.title}
                         </h3>
-                        <p className="text-gray-300 mb-4">
+                        <p className="text-paragraph-text mb-4 leading-relaxed">
                           {festival.description}
                         </p>
                         {highlights.length > 0 && (
-                          <div className="space-y-2">
+                          <div className="space-y-2 pt-4 border-t border-border-line">
                             {highlights.map((highlight, idx) => (
                               <div
                                 key={idx}
-                                className="flex items-center text-sm text-gray-400"
+                                className="flex items-center text-sm text-muted-text group-hover:text-paragraph-text transition-colors"
                               >
                                 <svg
-                                  className="w-4 h-4 mr-2 text-usa-blue"
+                                  className="w-4 h-4 mr-2 text-gold-accent flex-shrink-0"
                                   fill="currentColor"
                                   viewBox="0 0 20 20"
                                 >
@@ -149,29 +187,38 @@ const Culture = () => {
             )}
           </div>
 
-          {/* Cultural Traditions */}
+          {/* Premium Cultural Traditions */}
           <div className="mb-20">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              Our <span className="text-nepal-red">Traditions</span>
-            </h2>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="heading-xl text-center mb-12"
+            >
+              Our <span className="text-gold-accent">Traditions</span>
+            </motion.h2>
             {loading ? (
-              <p className="text-gray-400 text-center">Loading traditions...</p>
+              <p className="text-muted-text text-center animate-pulse">
+                Loading traditions...
+              </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {traditions.map((tradition, index) => (
                   <motion.div
                     key={tradition.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                    className="bg-accent-gray rounded-xl p-6 hover:bg-gradient-to-br hover:from-accent-gray hover:to-nepal-red/10 transition-all duration-300 group"
+                    className="card-premium group hover:border-newari-red/50 hover:shadow-premium transition-all duration-500 text-center"
                   >
-                    <div className="text-4xl mb-4">{tradition.icon}</div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-nepal-red transition-colors duration-300">
+                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                      {tradition.icon}
+                    </div>
+                    <h3 className="heading-md mb-3 group-hover:text-newari-red transition-colors duration-300">
                       {tradition.title}
                     </h3>
-                    <p className="text-gray-300 text-sm">
+                    <p className="text-paragraph-text text-sm leading-relaxed">
                       {tradition.description}
                     </p>
                   </motion.div>
@@ -180,18 +227,23 @@ const Culture = () => {
             )}
           </div>
 
-          {/* About Newari Civilization */}
+          {/* Premium About Newari Civilization */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-20 bg-gradient-to-r from-nepal-red/10 to-usa-blue/10 rounded-2xl p-8 md:p-12 border border-nepal-red/20"
+            className="mt-20 card-premium border-gold-accent/30 bg-gradient-to-br from-dark-navy/50 to-charcoal-black/50"
           >
-            <h2 className="text-3xl font-bold text-white mb-6 text-center">
-              The Newari Civilization
-            </h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-accent"></div>
+              <h2 className="heading-lg text-center">
+                The{" "}
+                <span className="text-gold-accent">Newari Civilization</span>
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-accent"></div>
+            </div>
+            <div className="space-y-4 text-paragraph-text leading-relaxed">
+              <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-gold-accent first-letter:mr-2 first-letter:float-left">
                 The Newari people are the indigenous inhabitants of the
                 Kathmandu Valley in Nepal, with a rich cultural heritage
                 spanning over two millennia. Our civilization has contributed
@@ -207,6 +259,13 @@ const Culture = () => {
                 In America, we continue to preserve and celebrate these
                 traditions, ensuring that future generations remain connected to
                 their roots while embracing their new homeland.
+              </p>
+            </div>
+
+            {/* Decorative Border */}
+            <div className="mt-8 pt-8 border-t border-gold-accent/20 text-center">
+              <p className="text-sm text-muted-text italic">
+                "Preserving our heritage for generations to come"
               </p>
             </div>
           </motion.div>

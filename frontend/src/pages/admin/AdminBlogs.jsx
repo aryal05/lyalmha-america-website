@@ -93,14 +93,30 @@ const AdminBlogs = () => {
 
   return (
     <AdminLayout>
-      <div>
+      <div className="relative">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-10 right-10 w-64 h-64 animate-spin-slow"></div>
+        </div>
+
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-8 relative z-10"
+        >
           <div>
-            <h1 className="text-2xl font-bold text-white mb-1">Blog Posts</h1>
-            <p className="text-gray-400">Manage all blog posts</p>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+              Blog Posts
+            </h1>
+            <p className="text-gold-accent/60">
+              Create and manage all blog articles
+            </p>
+            <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (showForm) {
                 resetForm();
@@ -109,216 +125,310 @@ const AdminBlogs = () => {
                 setShowForm(true);
               }
             }}
-            className="px-6 py-3 bg-nepal-red text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            className="px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold flex items-center gap-2"
           >
-            {showForm ? "Cancel" : "+ New Blog"}
-          </button>
-        </div>
+            <span className="text-xl">{showForm ? "✕" : "+"}</span>
+            {showForm ? "Cancel" : "New Blog"}
+          </motion.button>
+        </motion.div>
 
         {/* Form */}
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-accent-gray rounded-xl p-6 mb-6"
+            className="card-premium mb-8 relative overflow-hidden"
           >
-            <h2 className="text-xl font-bold text-white mb-4">
-              {editingBlog ? "Edit Blog" : "Create New Blog"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  required
-                  className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-                />
-                <input
-                  type="text"
-                  placeholder="Author"
-                  value={formData.author}
-                  onChange={(e) =>
-                    setFormData({ ...formData, author: e.target.value })
-                  }
-                  required
-                  className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-                />
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                  {editingBlog ? "Edit Blog" : "Create New Blog"}
+                </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Category"
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
-                  }
-                  required
-                  className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-                />
-                <select
-                  value={formData.status}
-                  onChange={(e) =>
-                    setFormData({ ...formData, status: e.target.value })
-                  }
-                  className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                </select>
-              </div>
-              <textarea
-                placeholder="Excerpt (short description)"
-                value={formData.excerpt}
-                onChange={(e) =>
-                  setFormData({ ...formData, excerpt: e.target.value })
-                }
-                required
-                rows="2"
-                className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-              />
-              <textarea
-                placeholder="Content (full article)"
-                value={formData.content}
-                onChange={(e) =>
-                  setFormData({ ...formData, content: e.target.value })
-                }
-                required
-                rows="6"
-                className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
-              />
-              <div>
-                <label className="block text-white mb-2">Banner Image</label>
-                {editingBlog && editingBlog.banner && !imageFile && (
-                  <div className="mb-4">
-                    <p className="text-gray-400 text-sm mb-2">
-                      Current banner:
-                    </p>
-                    <img
-                      src={`http://localhost:5000${editingBlog.banner}`}
-                      alt="Current banner"
-                      className="w-48 h-32 object-cover rounded-lg border border-gray-700"
-                    />
-                    <p className="text-gray-500 text-xs mt-1">
-                      Upload a new image to replace this one
-                    </p>
-                  </div>
-                )}
-                {imageFile && (
-                  <div className="mb-4">
-                    <p className="text-gray-400 text-sm mb-2">
-                      New banner preview:
-                    </p>
-                    <img
-                      src={URL.createObjectURL(imageFile)}
-                      alt="New banner preview"
-                      className="w-48 h-32 object-cover rounded-lg border border-gray-700"
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Title <span className="text-newari-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Blog title"
+                      value={formData.title}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
+                      required
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
                     />
                   </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files[0])}
-                  className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-nepal-red file:text-white file:cursor-pointer"
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Author <span className="text-newari-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Author name"
+                      value={formData.author}
+                      onChange={(e) =>
+                        setFormData({ ...formData, author: e.target.value })
+                      }
+                      required
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Category <span className="text-newari-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Category"
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                      required
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Status <span className="text-newari-red">*</span>
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </div>
+                </div>
+
+                <textarea
+                  placeholder="Excerpt (short description)"
+                  value={formData.excerpt}
+                  onChange={(e) =>
+                    setFormData({ ...formData, excerpt: e.target.value })
+                  }
+                  required
+                  rows="2"
+                  className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
                 />
-              </div>
-              <div className="flex space-x-4">
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-nepal-red text-white rounded-lg hover:bg-opacity-90 transition-colors"
-                >
-                  {editingBlog ? "Update Blog" : "Create Blog"}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <textarea
+                  placeholder="Content (full article)"
+                  value={formData.content}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
+                  required
+                  rows="6"
+                  className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                />
+                <div>
+                  <label className="block text-gold-accent/80 font-medium mb-2">
+                    Banner Image
+                  </label>
+                  {editingBlog && editingBlog.banner && !imageFile && (
+                    <div className="mb-4">
+                      <p className="text-gold-accent/60 text-sm mb-2">
+                        Current banner:
+                      </p>
+                      <img
+                        src={`http://localhost:5000${editingBlog.banner}`}
+                        alt="Current banner"
+                        className="w-48 h-32 object-cover rounded-lg border border-gold-accent/30"
+                      />
+                      <p className="text-muted-text text-xs mt-1">
+                        Upload a new image to replace this one
+                      </p>
+                    </div>
+                  )}
+                  {imageFile && (
+                    <div className="mb-4">
+                      <p className="text-gold-accent/60 text-sm mb-2">
+                        New banner preview:
+                      </p>
+                      <img
+                        src={URL.createObjectURL(imageFile)}
+                        alt="New banner preview"
+                        className="w-48 h-32 object-cover rounded-lg border border-gold-accent/30"
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
+                  />
+                </div>
+
+                <div className="pagoda-divider opacity-20 my-4"></div>
+
+                <div className="flex space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="px-8 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold"
+                  >
+                    {editingBlog ? "Update Blog" : "Create Blog"}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={resetForm}
+                    className="px-8 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-dark-navy transition-all duration-300 font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </form>
+            </div>
           </motion.div>
         )}
 
         {/* Blog List */}
-        <div className="bg-accent-gray rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="card-premium overflow-hidden relative"
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+          <div className="relative z-10 overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-deep-black">
-                <tr>
-                  <th className="px-6 py-4 text-left text-white font-semibold">
+              <thead>
+                <tr className="border-b border-gold-accent/20">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Title
                   </th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Author
                   </th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-right text-white font-semibold">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gold-accent uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {blogs.map((blog) => (
-                  <tr
+              <tbody className="divide-y divide-gold-accent/10">
+                {blogs.map((blog, index) => (
+                  <motion.tr
                     key={blog.id}
-                    className="border-t border-gray-800 hover:bg-deep-black/30 transition-colors"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="hover:bg-gold-accent/5 transition-colors"
                   >
-                    <td className="px-6 py-4 text-white">{blog.title}</td>
-                    <td className="px-6 py-4 text-gray-400">{blog.author}</td>
-                    <td className="px-6 py-4 text-gray-400">{blog.category}</td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-semibold text-white">
+                        {blog.title}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-muted-text">{blog.author}</td>
+                    <td className="px-6 py-4 text-muted-text">
+                      {blog.category}
+                    </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs ${
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           blog.status === "published"
-                            ? "bg-green-500/20 text-green-500"
-                            : "bg-yellow-500/20 text-yellow-500"
+                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                            : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
                         }`}
                       >
                         {blog.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">
+                    <td className="px-6 py-4 text-muted-text">
                       {new Date(blog.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button
-                        onClick={() => handleEdit(blog)}
-                        className="px-4 py-2 bg-usa-blue text-white rounded hover:bg-opacity-90 transition-colors text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(blog.id)}
-                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-opacity-90 transition-colors text-sm"
-                      >
-                        Delete
-                      </button>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleEdit(blog)}
+                          className="p-2 text-gold-accent hover:bg-gold-accent/10 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDelete(blog.id)}
+                          className="p-2 text-newari-red hover:bg-newari-red/10 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </motion.button>
+                      </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
             {blogs.length === 0 && (
-              <div className="text-center py-12 text-gray-400">
-                No blogs yet. Create your first blog post!
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4 opacity-20">📝</div>
+                <p className="text-gold-accent/60 text-lg">No blogs yet</p>
+                <p className="text-muted-text text-sm mt-2">
+                  Click "New Blog" to add one
+                </p>
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </AdminLayout>
   );

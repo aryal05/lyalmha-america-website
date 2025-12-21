@@ -96,10 +96,10 @@ const Teams = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl font-bold text-white mb-8">
-          Our <span className="text-nepal-red">Team</span>
+        <h2 className="heading-lg mb-8">
+          Our <span className="text-gold-accent">Team</span>
         </h2>
-        <p className="text-gray-400">Loading team members...</p>
+        <p className="text-muted-text">Loading team members...</p>
       </motion.section>
     );
   }
@@ -110,9 +110,15 @@ const Teams = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <h2 className="text-3xl font-bold text-white mb-8">
-        Our <span className="text-nepal-red">Team</span>
-      </h2>
+      <div className="text-center mb-12">
+        <h2 className="heading-lg mb-4">
+          Our <span className="text-gold-accent">Team</span>
+        </h2>
+        {/* Pagoda Divider */}
+        <div className="flex justify-center">
+          <div className="pagoda-divider w-48"></div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {teamCategories.map((team, index) => {
@@ -127,45 +133,57 @@ const Teams = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`bg-accent-gray rounded-xl p-6 hover:shadow-lg hover:shadow-nepal-red/20 transition-all duration-300 group cursor-pointer ${
-                isExpanded ? "ring-2 ring-nepal-red" : ""
+              className={`card-premium group cursor-pointer temple-corner relative ${
+                isExpanded
+                  ? "border-gold-accent shadow-gold"
+                  : "hover:border-gold-accent/50"
               }`}
               onClick={() => toggleCategory(team.category)}
             >
-              <div
-                className={`w-16 h-16 bg-${team.color} rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
-              >
-                <div className="text-white">{team.icon}</div>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-nepal-red transition-colors duration-300">
-                {team.title}
-              </h3>
-              <p className="text-gray-300 text-sm mb-2">{team.description}</p>
-              {membersCount > 0 && (
-                <p className="text-gray-400 text-xs">
-                  {membersCount} member{membersCount > 1 ? "s" : ""}
+              {/* Mandala Pattern Background */}
+              <div className="absolute inset-0 mandala-pattern opacity-5 rounded-xl pointer-events-none"></div>
+
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <div className="text-charcoal-black">{team.icon}</div>
+                </div>
+                <h3 className="text-xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
+                  {team.title}
+                </h3>
+                <p className="text-paragraph-text text-sm mb-2 leading-relaxed">
+                  {team.description}
                 </p>
-              )}
-              <button className="mt-4 text-usa-blue font-semibold hover:text-nepal-red transition-colors duration-300 inline-flex items-center">
-                {isExpanded ? "Show Less" : "Learn More"}
-                <svg
-                  className={`w-4 h-4 ml-2 transition-transform duration-300 ${
-                    isExpanded ? "rotate-180" : "group-hover:translate-x-2"
-                  }`}
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  {isExpanded ? (
-                    <path d="M5 15l7-7 7 7"></path>
-                  ) : (
-                    <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                  )}
-                </svg>
-              </button>
+                {membersCount > 0 && (
+                  <div className="flex items-center gap-2 text-muted-text text-xs mb-4">
+                    <div className="w-6 h-6 bg-gold-accent/20 rounded-full flex items-center justify-center">
+                      <span className="text-gold-accent font-bold text-xs">
+                        {membersCount}
+                      </span>
+                    </div>
+                    <span>member{membersCount > 1 ? "s" : ""}</span>
+                  </div>
+                )}
+                <button className="text-gold-accent font-semibold hover:text-newari-red transition-colors duration-300 inline-flex items-center">
+                  {isExpanded ? "Show Less" : "Learn More"}
+                  <svg
+                    className={`w-4 h-4 ml-2 transition-transform duration-300 ${
+                      isExpanded ? "rotate-180" : "group-hover:translate-x-2"
+                    }`}
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    {isExpanded ? (
+                      <path d="M5 15l7-7 7 7"></path>
+                    ) : (
+                      <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    )}
+                  </svg>
+                </button>
+              </div>
             </motion.div>
           );
         })}
@@ -185,86 +203,92 @@ const Teams = () => {
               initial={{ y: 20 }}
               animate={{ y: 0 }}
               exit={{ y: 20 }}
-              className="bg-gradient-to-br from-accent-gray to-deep-black rounded-2xl p-8 border border-nepal-red/20"
+              className="card-premium temple-corner relative"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-white">
-                  {
-                    teamCategories.find((t) => t.category === expandedCategory)
-                      ?.title
-                  }
-                  <span className="text-nepal-red"> Members</span>
-                </h3>
-                <button
-                  onClick={() => setExpandedCategory(null)}
-                  className="text-gray-400 hover:text-nepal-red transition-colors"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              {/* Decorative Pattern */}
+              <div className="absolute inset-0 mandala-pattern opacity-5 rounded-xl pointer-events-none"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-primary-text">
+                    {
+                      teamCategories.find(
+                        (t) => t.category === expandedCategory
+                      )?.title
+                    }
+                    <span className="text-gold-accent"> Members</span>
+                  </h3>
+                  <button
+                    onClick={() => setExpandedCategory(null)}
+                    className="text-muted-text hover:text-newari-red transition-colors p-2 hover:bg-newari-red/10 rounded-lg"
                   >
-                    <path d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamMembers
-                  .filter((member) => member.category === expandedCategory)
-                  .map((member, idx) => (
-                    <motion.div
-                      key={member.id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: idx * 0.05 }}
-                      className="bg-deep-black/50 rounded-xl p-6 border border-gray-700 hover:border-nepal-red/50 transition-all duration-300"
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      {/* Member Avatar */}
-                      <div className="w-20 h-20 bg-gradient-to-br from-nepal-red to-usa-blue rounded-full flex items-center justify-center mb-4 mx-auto">
-                        <span className="text-white text-2xl font-bold">
-                          {member.name.charAt(0)}
-                        </span>
-                      </div>
-
-                      {/* Member Info */}
-                      <div className="text-center">
-                        <h4 className="text-lg font-bold text-white mb-1">
-                          {member.name}
-                        </h4>
-                        <p className="text-usa-blue text-sm font-semibold mb-3">
-                          {member.role}
-                        </p>
-                        {member.bio && (
-                          <p className="text-gray-400 text-xs leading-relaxed">
-                            {member.bio}
-                          </p>
-                        )}
-                        {member.email && (
-                          <a
-                            href={`mailto:${member.email}`}
-                            className="inline-block mt-3 text-nepal-red text-xs hover:underline"
-                          >
-                            Contact
-                          </a>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-              </div>
-
-              {teamMembers.filter((m) => m.category === expandedCategory)
-                .length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-gray-400">
-                    No members in this category yet.
-                  </p>
+                      <path d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {teamMembers
+                    .filter((member) => member.category === expandedCategory)
+                    .map((member, idx) => (
+                      <motion.div
+                        key={member.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className="bg-dark-navy/50 rounded-xl p-6 border border-border-line hover:border-gold-accent/50 transition-all duration-300 group temple-corner"
+                      >
+                        {/* Member Avatar */}
+                        <div className="w-20 h-20 bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-charcoal-black text-2xl font-bold">
+                            {member.name.charAt(0)}
+                          </span>
+                        </div>
+
+                        {/* Member Info */}
+                        <div className="text-center">
+                          <h4 className="text-lg font-bold text-primary-text mb-1 group-hover:text-gold-accent transition-colors">
+                            {member.name}
+                          </h4>
+                          <p className="text-gold-accent text-sm font-semibold mb-3">
+                            {member.role}
+                          </p>
+                          {member.bio && (
+                            <p className="text-paragraph-text text-xs leading-relaxed">
+                              {member.bio}
+                            </p>
+                          )}
+                          {member.email && (
+                            <a
+                              href={`mailto:${member.email}`}
+                              className="inline-block mt-3 text-newari-red text-xs hover:text-gold-accent hover:underline transition-colors"
+                            >
+                              Contact
+                            </a>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                </div>
+
+                {teamMembers.filter((m) => m.category === expandedCategory)
+                  .length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-gray-400">
+                      No members in this category yet.
+                    </p>
+                  </div>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}

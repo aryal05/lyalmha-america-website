@@ -51,12 +51,12 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-deep-black">
+    <div className="min-h-screen bg-charcoal-black">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Premium Hero Section with Cultural Elements */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        {/* Background Image */}
+        {/* Background Image with Mandala */}
         <div className="absolute inset-0 z-0">
           <img
             src={
@@ -69,7 +69,8 @@ const Contact = () => {
             alt="Contact Background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-deep-black/85"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/90 via-charcoal-black/85 to-charcoal-black"></div>
+          <div className="absolute inset-0 mandala-pattern opacity-10"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -79,190 +80,230 @@ const Contact = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Get in <span className="text-nepal-red">Touch</span>
-            </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            {/* Title with Traditional Corner Decorations */}
+            <div className="relative inline-block mb-6">
+              <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-gold-accent/40 rounded-tl-lg"></div>
+              <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-gold-accent/40 rounded-tr-lg"></div>
+
+              <h1 className="text-5xl md:text-7xl font-bold text-white px-8">
+                Get in{" "}
+                <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+                  Touch
+                </span>
+              </h1>
+
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 border-b-2 border-l-2 border-gold-accent/40 rounded-bl-lg"></div>
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-gold-accent/40 rounded-br-lg"></div>
+            </div>
+
+            {/* Pagoda Divider */}
+            <div className="flex justify-center mb-6">
+              <div className="pagoda-divider w-64"></div>
+            </div>
+
+            <p className="text-xl text-paragraph-text max-w-3xl mx-auto">
               Have questions or want to get involved? We'd love to hear from
               you!
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contact Form */}
+            {/* Premium Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-2"
             >
-              <div className="bg-accent-gray rounded-xl p-8">
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Send us a Message
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+              <div className="card-premium temple-corner relative">
+                {/* Subtle Mandala Pattern Background */}
+                <div className="absolute inset-0 mandala-pattern opacity-5 rounded-xl pointer-events-none"></div>
+
+                <div className="relative z-10">
+                  <h2 className="heading-lg mb-8">
+                    Send us a <span className="text-gold-accent">Message</span>
+                  </h2>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-white mb-2 font-semibold text-sm"
+                        >
+                          Your Name *
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-border-line focus:border-gold-accent focus:ring-2 focus:ring-gold-accent/20 focus:outline-none transition-all duration-300 placeholder:text-muted-text"
+                          placeholder="Enter your name"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-white mb-2 font-semibold text-sm"
+                        >
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-border-line focus:border-gold-accent focus:ring-2 focus:ring-gold-accent/20 focus:outline-none transition-all duration-300 placeholder:text-muted-text"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
+                    </div>
+
                     <div>
                       <label
-                        htmlFor="name"
-                        className="block text-white mb-2 font-medium"
+                        htmlFor="subject"
+                        className="block text-white mb-2 font-semibold text-sm"
                       >
-                        Your Name *
+                        Subject *
                       </label>
                       <input
                         type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none transition-colors duration-300"
-                        placeholder="Enter your name"
+                        className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-border-line focus:border-gold-accent focus:ring-2 focus:ring-gold-accent/20 focus:outline-none transition-all duration-300 placeholder:text-muted-text"
+                        placeholder="What is this about?"
                       />
                     </div>
+
                     <div>
                       <label
-                        htmlFor="email"
-                        className="block text-white mb-2 font-medium"
+                        htmlFor="message"
+                        className="block text-white mb-2 font-semibold text-sm"
                       >
-                        Email Address *
+                        Message *
                       </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none transition-colors duration-300"
-                        placeholder="your.email@example.com"
-                      />
+                        rows="6"
+                        className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-border-line focus:border-gold-accent focus:ring-2 focus:ring-gold-accent/20 focus:outline-none transition-all duration-300 resize-none placeholder:text-muted-text"
+                        placeholder="Tell us more about your inquiry..."
+                      ></textarea>
                     </div>
-                  </div>
 
-                  <div>
-                    <label
-                      htmlFor="subject"
-                      className="block text-white mb-2 font-medium"
+                    <button
+                      type="submit"
+                      className="btn-gold w-full justify-center text-lg py-4"
                     >
-                      Subject *
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none transition-colors duration-300"
-                      placeholder="What is this about?"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-white mb-2 font-medium"
-                    >
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows="6"
-                      className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none transition-colors duration-300 resize-none"
-                      placeholder="Tell us more about your inquiry..."
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full px-8 py-4 bg-nepal-red text-white font-semibold rounded-lg hover:bg-opacity-90 transform hover:scale-[1.02] transition-all duration-300"
-                  >
-                    Send Message
-                  </button>
-                </form>
+                      Send Message
+                      <svg
+                        className="w-5 h-5 ml-2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
               </div>
             </motion.div>
 
-            {/* Contact Information */}
+            {/* Premium Contact Information */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="space-y-6"
             >
-              {/* Contact Details */}
-              <div className="bg-accent-gray rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-6">
-                  Contact Information
+              {/* Premium Contact Details */}
+              <div className="card-premium group hover:border-gold-accent/50 transition-all duration-300 temple-corner">
+                <h3 className="heading-md mb-6">
+                  Contact <span className="text-gold-accent">Information</span>
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-start">
-                    <svg
-                      className="w-6 h-6 text-nepal-red mr-3 flex-shrink-0 mt-1"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                    <div>
-                      <p className="text-white font-medium">Email</p>
-                      <a
-                        href="mailto:info@lyalmha-america.org"
-                        className="text-gray-400 hover:text-nepal-red transition-colors duration-300"
+                  <a
+                    href="mailto:info@lyalmha-america.org"
+                    className="flex items-start gap-3 p-4 rounded-lg bg-dark-navy/30 border border-border-line hover:border-gold-accent/50 hover:bg-dark-navy/50 transition-all duration-300 group"
+                  >
+                    <div className="p-2 bg-gold-accent/10 rounded-lg">
+                      <svg
+                        className="w-5 h-5 text-gold-accent"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold mb-1">Email</p>
+                      <p className="text-paragraph-text text-sm group-hover:text-gold-accent transition-colors">
                         info@lyalmha-america.org
-                      </a>
+                      </p>
                     </div>
-                  </div>
+                  </a>
 
-                  <div className="flex items-start">
-                    <svg
-                      className="w-6 h-6 text-nepal-red mr-3 flex-shrink-0 mt-1"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                    </svg>
-                    <div>
-                      <p className="text-white font-medium">Phone</p>
-                      <a
-                        href="tel:+15551234567"
-                        className="text-gray-400 hover:text-nepal-red transition-colors duration-300"
+                  <a
+                    href="tel:+15551234567"
+                    className="flex items-start gap-3 p-4 rounded-lg bg-dark-navy/30 border border-border-line hover:border-gold-accent/50 hover:bg-dark-navy/50 transition-all duration-300 group"
+                  >
+                    <div className="p-2 bg-gold-accent/10 rounded-lg">
+                      <svg
+                        className="w-5 h-5 text-gold-accent"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        +1 (555) 123-4567
-                      </a>
+                        <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                      </svg>
                     </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <svg
-                      className="w-6 h-6 text-nepal-red mr-3 flex-shrink-0 mt-1"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
                     <div>
-                      <p className="text-white font-medium">Location</p>
-                      <p className="text-gray-400">
+                      <p className="text-white font-semibold mb-1">Phone</p>
+                      <p className="text-paragraph-text text-sm group-hover:text-gold-accent transition-colors">
+                        +1 (555) 123-4567
+                      </p>
+                    </div>
+                  </a>
+
+                  <div className="flex items-start gap-3 p-4 rounded-lg bg-dark-navy/30 border border-border-line">
+                    <div className="p-2 bg-gold-accent/10 rounded-lg">
+                      <svg
+                        className="w-5 h-5 text-gold-accent"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold mb-1">Location</p>
+                      <p className="text-paragraph-text text-sm">
                         DMV Region
                         <br />
                         (DC, Maryland, Virginia)
@@ -274,16 +315,21 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Social Media */}
-              <div className="bg-accent-gray rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-6">Follow Us</h3>
-                <div className="flex space-x-4">
+              {/* Premium Social Media */}
+              <div className="card-premium group hover:border-newari-red/50 transition-all duration-300 temple-corner relative">
+                {/* Decorative Pattern */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gold-accent/10 to-transparent rounded-tr-xl"></div>
+
+                <h3 className="heading-md mb-6 relative z-10">
+                  Follow <span className="text-newari-red">Us</span>
+                </h3>
+                <div className="flex gap-4">
                   <a
                     href="#"
-                    className="w-12 h-12 bg-usa-blue rounded-full flex items-center justify-center hover:bg-nepal-red transition-colors duration-300"
+                    className="flex-1 h-14 bg-gradient-to-br from-dark-navy to-dark-navy/50 border border-border-line rounded-lg flex items-center justify-center hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group"
                   >
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-paragraph-text group-hover:text-gold-accent transition-colors"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -292,10 +338,10 @@ const Contact = () => {
                   </a>
                   <a
                     href="#"
-                    className="w-12 h-12 bg-usa-blue rounded-full flex items-center justify-center hover:bg-nepal-red transition-colors duration-300"
+                    className="flex-1 h-14 bg-gradient-to-br from-dark-navy to-dark-navy/50 border border-border-line rounded-lg flex items-center justify-center hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group"
                   >
                     <svg
-                      className="w-6 h-6 text-white"
+                      className="w-6 h-6 text-paragraph-text group-hover:text-gold-accent transition-colors"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -305,18 +351,33 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Call to Action */}
-              <div className="bg-gradient-to-br from-nepal-red to-usa-blue rounded-xl p-6 text-center">
+              {/* Premium Call to Action */}
+              <div className="card-premium bg-gradient-to-br from-gold-accent/20 to-newari-red/20 border-gold-accent/30 text-center group hover:border-gold-accent transition-all duration-300">
+                <div className="mb-4">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gold-accent to-gold-accent/80 rounded-full flex items-center justify-center shadow-gold">
+                    <svg
+                      className="w-8 h-8 text-charcoal-black"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                  </div>
+                </div>
                 <h3 className="text-xl font-bold text-white mb-3">
                   Join Our Community
                 </h3>
-                <p className="text-white/90 text-sm mb-4">
+                <p className="text-paragraph-text text-sm mb-6">
                   Become a part of our mission to preserve and celebrate Newari
                   culture
                 </p>
                 <Link
                   to="/about"
-                  className="inline-block px-6 py-3 bg-white text-nepal-red font-semibold rounded-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300"
+                  className="btn-secondary w-full justify-center"
                 >
                   Learn More
                 </Link>

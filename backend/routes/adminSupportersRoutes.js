@@ -1,8 +1,31 @@
 import express from 'express'
 import { getDatabase } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
+import multer from 'multer'
+import cloudinary from '../config/cloudinary.js'
 
 const router = express.Router()
+
+// Configure multer for memory storage (upload to Cloudinary)
+const storage = multer.memoryStorage()
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }
+})
+
+// Helper function to upload to Cloudinary
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'lyalmha-america/supporters' },
+      (error, result) => {
+        if (error) reject(error)
+        else resolve(result.secure_url)
+      }
+    )
+    uploadStream.end(buffer)
+  })
+}
 
 // GET all supporters (public - no auth)
 router.get('/', async (req, res) => {
@@ -30,7 +53,7 @@ router.get('/type/:type', async (req, res) => {
 router.use(authenticateToken)
 
 // POST create supporter
-router.post('/', async (req, res) => {
+router.post('/', upload.single('logo'), async (req, res) => {
   const db = getDatabase()
   try {
     const { name, type, contact_person, description } = req.body
@@ -42,10 +65,15 @@ router.post('/', async (req, res) => {
       })
     }
     
+    let logoUrl = null
+    if (req.file) {
+      logoUrl = await uploadToCloudinary(req.file.buffer)
+    }
+    
     const result = await db.run(`
-      INSERT INTO supporters (name, type, contact_person, description)
-      VALUES (?, ?, ?, ?)
-    `, [name, type, contact_person, description])
+      INSERT INTO supporters (name, type, logo, contact_person, description)
+      VALUES (?, ?, ?, ?, ?)
+    `, [name, type, logoUrl, contact_person, description])
     
     const newSupporter = await db.get('SELECT * FROM supporters WHERE id = ?', [result.lastID])
     
@@ -56,7 +84,7 @@ router.post('/', async (req, res) => {
 })
 
 // PUT update supporter
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('logo'), async (req, res) => {
   const db = getDatabase()
   try {
     const { name, type, contact_person, description } = req.body
@@ -66,13 +94,19 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Supporter not found' })
     }
     
+    let logoUrl = supporter.logo
+    if (req.file) {
+      logoUrl = await uploadToCloudinary(req.file.buffer)
+    }
+    
     await db.run(`
       UPDATE supporters 
-      SET name = ?, type = ?, contact_person = ?, description = ?
+      SET name = ?, type = ?, logo = ?, contact_person = ?, description = ?
       WHERE id = ?
     `, [
       name || supporter.name,
       type || supporter.type,
+      logoUrl,
       contact_person || supporter.contact_person,
       description || supporter.description,
       req.params.id

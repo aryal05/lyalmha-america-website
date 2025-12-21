@@ -13,77 +13,123 @@ const AdminSupporters = () => {
     contact_person: '',
     description: ''
   })
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
 
   useEffect(() => {
-    fetchSupporters()
-  }, [])
+    fetchSupporters();
+  }, []);
 
   const fetchSupporters = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.SUPPORTERS.GET_ALL)
-      setSupporters(response.data.data)
+      const response = await apiClient.get(API_ENDPOINTS.SUPPORTERS.GET_ALL);
+      setSupporters(response.data.data);
     } catch (error) {
-      console.error('Error fetching supporters:', error)
+      console.error("Error fetching supporters:", error);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+    if (logoFile) {
+      data.append("logo", logoFile);
+    }
+
     try {
       if (editingSupporter) {
-        await apiClient.put(API_ENDPOINTS.SUPPORTERS.UPDATE(editingSupporter.id), formData)
+        await apiClient.put(
+          API_ENDPOINTS.SUPPORTERS.UPDATE(editingSupporter.id),
+          data
+        );
       } else {
-        await apiClient.post(API_ENDPOINTS.SUPPORTERS.CREATE, formData)
+        await apiClient.post(API_ENDPOINTS.SUPPORTERS.CREATE, data);
       }
-      fetchSupporters()
-      resetForm()
+      fetchSupporters();
+      resetForm();
     } catch (error) {
-      console.error('Error saving supporter:', error)
-      alert('Error saving supporter: ' + (error.response?.data?.error || error.message))
+      console.error("Error saving supporter:", error);
+      alert(
+        "Error saving supporter: " +
+          (error.response?.data?.error || error.message)
+      );
     }
-  }
+  };
 
   const handleEdit = (supporter) => {
-    setEditingSupporter(supporter)
+    setEditingSupporter(supporter);
     setFormData({
       name: supporter.name,
       type: supporter.type,
-      contact_person: supporter.contact_person || '',
-      description: supporter.description || ''
-    })
-    setShowForm(true)
-  }
+      contact_person: supporter.contact_person || "",
+      description: supporter.description || "",
+    });
+    setLogoFile(null);
+    setLogoPreview(supporter.logo || null);
+    setShowForm(true);
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this supporter?')) {
+    if (window.confirm("Are you sure you want to delete this supporter?")) {
       try {
-        await apiClient.delete(API_ENDPOINTS.SUPPORTERS.DELETE(id))
-        fetchSupporters()
+        await apiClient.delete(API_ENDPOINTS.SUPPORTERS.DELETE(id));
+        fetchSupporters();
       } catch (error) {
-        console.error('Error deleting supporter:', error)
+        console.error("Error deleting supporter:", error);
       }
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      name: '',
-      type: 'financial',
-      contact_person: '',
-      description: ''
-    })
-    setEditingSupporter(null)
-    setShowForm(false)
-  }
+      name: "",
+      type: "financial",
+      contact_person: "",
+      description: "",
+    });
+    setEditingSupporter(null);
+    setShowForm(false);
+  };
 
   return (
     <AdminLayout>
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Supporters Management
-          </h1>
-          <button
+      <div className="relative">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-10 right-10 w-64 h-64 animate-spin-slow"></div>
+        </div>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-8 relative z-10"
+        >
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+              Supporters Management
+            </h1>
+            <p className="text-gold-accent/60">
+              Manage financial supporters and corporate sponsors
+            </p>
+            <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (showForm) {
                 resetForm();
@@ -92,171 +138,308 @@ const AdminSupporters = () => {
                 setShowForm(true);
               }
             }}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+            className="px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold flex items-center gap-2"
           >
-            {showForm ? "Cancel" : "+ New Supporter"}
-          </button>
-        </div>
+            <span className="text-xl">{showForm ? "✕" : "+"}</span>
+            {showForm ? "Cancel" : "New Supporter"}
+          </motion.button>
+        </motion.div>
 
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-lg shadow-md mb-8"
+            className="card-premium mb-8 relative overflow-hidden"
           >
-            <h2 className="text-xl font-bold mb-4">
-              {editingSupporter ? "Edit Supporter" : "Add New Supporter"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Name/Organization
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
-                />
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                  {editingSupporter ? "Edit Supporter" : "Add New Supporter"}
+                </h2>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Type
-                </label>
-                <select
-                  value={formData.type}
-                  onChange={(e) =>
-                    setFormData({ ...formData, type: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="financial">Financial Supporter</option>
-                  <option value="corporate">Corporate Partner</option>
-                </select>
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Name/Organization{" "}
+                      <span className="text-newari-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      placeholder="Enter name or organization"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Person (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={formData.contact_person}
-                  onChange={(e) =>
-                    setFormData({ ...formData, contact_person: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Type <span className="text-newari-red">*</span>
+                    </label>
+                    <select
+                      value={formData.type}
+                      onChange={(e) =>
+                        setFormData({ ...formData, type: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    >
+                      <option value="financial">Financial Supporter</option>
+                      <option value="corporate">Corporate Partner</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description (Optional)
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows="3"
-                  className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Logo Upload - Only for Corporate */}
+                {formData.type === "corporate" && (
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Corporate Logo
+                    </label>
+                    <div className="flex items-center gap-4">
+                      {logoPreview && (
+                        <div className="w-24 h-24 rounded-lg border-2 border-gold-accent/30 overflow-hidden bg-white/5 flex items-center justify-center p-2">
+                          <img
+                            src={logoPreview}
+                            alt="Logo preview"
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleLogoChange}
+                          className="hidden"
+                          id="logo-upload"
+                        />
+                        <label
+                          htmlFor="logo-upload"
+                          className="inline-flex items-center gap-2 px-4 py-3 bg-gold-accent/10 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-gold-accent/20 cursor-pointer transition-colors"
+                        >
+                          <span className="text-lg">🖼️</span>
+                          <span>Choose Logo</span>
+                        </label>
+                        <p className="text-muted-text text-sm mt-2">
+                          Recommended: Square image, max 5MB
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-                >
-                  {editingSupporter ? "Update" : "Create"}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Contact Person
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.contact_person}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          contact_person: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      placeholder="Contact person name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gold-accent/80 font-medium mb-2">
+                      Description
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      placeholder="Brief description"
+                    />
+                  </div>
+                </div>
+
+                <div className="pagoda-divider opacity-20 my-4"></div>
+
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="px-8 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold"
+                  >
+                    {editingSupporter ? "Update Supporter" : "Create Supporter"}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={resetForm}
+                    className="px-8 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-dark-navy transition-all duration-300 font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </form>
+            </div>
           </motion.div>
         )}
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contact Person
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {supporters.map((supporter) => (
-                <tr key={supporter.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {supporter.name}
-                    </div>
-                    {supporter.description && (
-                      <div className="text-sm text-gray-500">
-                        {supporter.description}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        supporter.type === "financial"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-purple-100 text-purple-800"
-                      }`}
-                    >
-                      {supporter.type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {supporter.contact_person || "-"}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => handleEdit(supporter)}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(supporter.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        {/* Supporters Table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="card-premium overflow-hidden relative"
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+          <div className="relative z-10 overflow-x-auto">
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b border-gold-accent/20">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                    Supporter
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                    Contact
+                  </th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {supporters.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
-              No supporters yet. Click "+ New Supporter" to add one.
-            </div>
-          )}
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gold-accent/10">
+                {supporters.map((supporter, index) => (
+                  <motion.tr
+                    key={supporter.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="hover:bg-gold-accent/5 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {supporter.logo && supporter.type === "corporate" && (
+                          <div className="w-12 h-12 rounded-lg border border-gold-accent/30 overflow-hidden bg-white/5 flex items-center justify-center p-1 flex-shrink-0">
+                            <img
+                              src={supporter.logo}
+                              alt={supporter.name}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-white truncate">
+                            {supporter.name}
+                          </div>
+                          {supporter.description && (
+                            <div className="text-sm text-muted-text truncate">
+                              {supporter.description}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${
+                          supporter.type === "financial"
+                            ? "bg-newari-red/20 text-newari-red border border-newari-red/30"
+                            : "bg-gold-accent/20 text-gold-accent border border-gold-accent/30"
+                        }`}
+                      >
+                        {supporter.type === "financial"
+                          ? "💰 Financial"
+                          : "🏢 Corporate"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-muted-text">
+                        {supporter.contact_person || "-"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleEdit(supporter)}
+                          className="p-2 text-gold-accent hover:bg-gold-accent/10 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDelete(supporter.id)}
+                          className="p-2 text-newari-red hover:bg-newari-red/10 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </motion.button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+            {supporters.length === 0 && (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4 opacity-20">🤝</div>
+                <p className="text-gold-accent/60 text-lg">No supporters yet</p>
+                <p className="text-muted-text text-sm mt-2">
+                  Click "New Supporter" to add one
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
       </div>
     </AdminLayout>
   );
