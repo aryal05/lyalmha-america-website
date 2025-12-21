@@ -5,8 +5,8 @@ const router = express.Router()
 
 // GET all published blogs (public route)
 router.get('/', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const blogs = await db.all(`
       SELECT * FROM blogs 
       WHERE status = 'published' 
@@ -25,8 +25,8 @@ router.get('/', async (req, res) => {
 
 // GET single blog by ID (public route)
 router.get('/:id', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const blog = await db.get('SELECT * FROM blogs WHERE id = ? AND status = ?', [req.params.id, 'published'])
     
     if (!blog) {
