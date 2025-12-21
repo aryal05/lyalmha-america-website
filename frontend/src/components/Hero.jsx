@@ -1,26 +1,46 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import logo from '../assets/images/logo/lyama (1) (1).png'
-import banner1 from '../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg'
-import banner2 from '../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg'
-import heroBg1 from '../assets/images/posts/471944315_555366943987150_1453996420800501859_n.jpg'
-import heroBg2 from '../assets/images/posts/467736461_487936857446592_6777699176984050234_n (1).jpg'
-import heroBg3 from '../assets/images/posts/462650425_598936739649734_2260957587124948845_n.jpg'
+import { apiClient, API_ENDPOINTS, API_URL } from "../config/api";
+import logo from "../assets/images/logo/lyama (1) (1).png";
 
 const Hero = () => {
-  const [currentBg, setCurrentBg] = useState(0)
-  
-  const backgroundImages = [heroBg1, heroBg2, heroBg3]
+  const [currentBg, setCurrentBg] = useState(0);
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Use banners from database
+  const backgroundImages = banners.map((banner) => `${API_URL}${banner.image}`);
+
+  // Fetch banners from API
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  const fetchBanners = async () => {
+    try {
+      const response = await apiClient.get(
+        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("hero")
+      );
+      setBanners(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching banners:", error);
+      setBanners([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Auto-change background every 6 seconds
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentBg((prev) => (prev + 1) % backgroundImages.length)
-    }, 6000)
+    if (backgroundImages.length > 0) {
+      const timer = setInterval(() => {
+        setCurrentBg((prev) => (prev + 1) % backgroundImages.length);
+      }, 6000);
 
-    return () => clearInterval(timer)
-  }, [backgroundImages.length])
+      return () => clearInterval(timer);
+    }
+  }, [backgroundImages.length]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -35,11 +55,13 @@ const Hero = () => {
             transition={{ duration: 1.5 }}
             className="absolute inset-0"
           >
-            <img
-              src={backgroundImages[currentBg]}
-              alt="Cultural background"
-              className="w-full h-full object-cover"
-            />
+            {backgroundImages.length > 0 && (
+              <img
+                src={backgroundImages[currentBg]}
+                alt="Cultural background"
+                className="w-full h-full object-cover"
+              />
+            )}
           </motion.div>
         </AnimatePresence>
         {/* Dark Overlay for text readability */}
@@ -48,11 +70,14 @@ const Hero = () => {
 
       {/* Animated Pattern Overlay */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25px 25px, #C4161C 2%, transparent 0%), 
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, #C4161C 2%, transparent 0%), 
                            radial-gradient(circle at 75px 75px, #1F3C88 2%, transparent 0%)`,
-          backgroundSize: '100px 100px'
-        }}></div>
+            backgroundSize: "100px 100px",
+          }}
+        ></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
@@ -61,7 +86,7 @@ const Hero = () => {
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, type: 'spring' }}
+            transition={{ duration: 0.8, type: "spring" }}
             className="flex justify-center mb-8"
           >
             <img
@@ -100,8 +125,9 @@ const Hero = () => {
             transition={{ delay: 0.7, duration: 0.6 }}
             className="text-base md:text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
           >
-            Discover the rich heritage, traditions, festivals, and stories of the Newari community 
-            thriving in the United States. Join us on a journey through culture, cuisine, and community.
+            Discover the rich heritage, traditions, festivals, and stories of
+            the Newari community thriving in the United States. Join us on a
+            journey through culture, cuisine, and community.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -111,10 +137,16 @@ const Hero = () => {
             transition={{ delay: 0.9, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <Link to="/blogs" className="px-8 py-4 bg-nepal-red text-white font-semibold rounded-lg hover:bg-opacity-90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-nepal-red/50">
+            <Link
+              to="/blogs"
+              className="px-8 py-4 bg-nepal-red text-white font-semibold rounded-lg hover:bg-opacity-90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-nepal-red/50"
+            >
               Explore Blogs
             </Link>
-            <Link to="/about" className="px-8 py-4 bg-usa-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-usa-blue/50">
+            <Link
+              to="/about"
+              className="px-8 py-4 bg-usa-blue text-white font-semibold rounded-lg hover:bg-opacity-90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-usa-blue/50"
+            >
               Learn More
             </Link>
           </motion.div>
@@ -148,7 +180,7 @@ const Hero = () => {
         </motion.div>
       </motion.div>
     </section>
-  )
-}
+  );
+};
 
 export default Hero
