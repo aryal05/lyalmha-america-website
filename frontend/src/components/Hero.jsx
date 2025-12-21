@@ -12,9 +12,17 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
 
   // Use banners from database - handle both local and Cloudinary URLs
+  // Filter out local paths that won't work on Railway
+  const validBanners = banners.filter(
+    (banner) =>
+      banner.image &&
+      (banner.image.startsWith("http://") ||
+        banner.image.startsWith("https://"))
+  );
+
   const backgroundImages =
-    banners.length > 0
-      ? banners.map((banner) => getImageUrl(banner.image)).filter(Boolean)
+    validBanners.length > 0
+      ? validBanners.map((banner) => getImageUrl(banner.image)).filter(Boolean)
       : [fallbackBanner];
 
   // Fetch banners from API
