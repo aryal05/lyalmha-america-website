@@ -48,11 +48,7 @@ const Culture = () => {
         <div className="absolute inset-0 z-0">
           {heroBanner && (
             <img
-              src={
-                heroBanner.image.startsWith("http")
-                  ? heroBanner.image
-                  : `${API_URL}${heroBanner.image}`
-              }
+              src={getImageUrl(heroBanner.image)}
               alt="Culture Background"
               className="w-full h-full object-cover"
             />
