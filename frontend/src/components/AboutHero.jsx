@@ -16,6 +16,7 @@ const AboutHero = () => {
       const response = await apiClient.get(
         API_ENDPOINTS.BANNERS.GET_BY_LOCATION("about")
       );
+      console.log("About banner response:", response.data.data);
       if (response.data.data && response.data.data.length > 0) {
         setHeroBanner(response.data.data[0]);
       }

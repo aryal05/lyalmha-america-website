@@ -24,6 +24,8 @@ const Culture = () => {
         apiClient.get(API_ENDPOINTS.BANNERS.GET_BY_LOCATION("culture")),
       ]);
 
+      console.log("Culture banner response:", bannerRes.data.data);
+      console.log("Festivals response:", festivalsRes.data.data);
       setFestivals(festivalsRes.data.data || []);
       setTraditions(traditionsRes.data.data || []);
 

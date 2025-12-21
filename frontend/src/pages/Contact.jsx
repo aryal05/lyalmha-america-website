@@ -22,6 +22,7 @@ const Contact = () => {
         const response = await apiClient.get(
           API_ENDPOINTS.BANNERS.GET_BY_LOCATION("contact")
         );
+        console.log("Contact banner response:", response.data.data);
         const banners = response.data.data || [];
         if (banners.length > 0) {
           setHeroBanner(banners[0]);

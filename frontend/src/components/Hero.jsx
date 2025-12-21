@@ -25,9 +25,10 @@ const Hero = () => {
       const response = await apiClient.get(
         API_ENDPOINTS.BANNERS.GET_BY_LOCATION("hero")
       );
+      console.log("Hero banners response:", response.data.data);
       setBanners(response.data.data || []);
     } catch (error) {
-      console.error("Error fetching banners:", error);
+      console.error("Error fetching hero banners:", error);
       setBanners([]);
     } finally {
       setLoading(false);

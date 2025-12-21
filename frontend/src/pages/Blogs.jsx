@@ -22,6 +22,7 @@ const Blogs = () => {
         const blogsData = blogsRes.data.data || blogsRes.data;
         setBlogPosts(Array.isArray(blogsData) ? blogsData : []);
 
+        console.log("Blogs banner response:", bannerRes.data.data);
         const banners = bannerRes.data.data || [];
         if (banners.length > 0) {
           setHeroBanner(banners[0]);
