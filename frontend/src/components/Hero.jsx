@@ -11,12 +11,9 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
 
   // Use banners from database - handle both local and Cloudinary URLs
-  const backgroundImages =
-    banners.length > 0
-      ? banners.map((banner) => getImageUrl(banner.image)).filter(Boolean)
-      : [
-          "https://images.unsplash.com/photo-1525026198548-4baa812f1183?w=1920&h=1080&fit=crop",
-        ]; // Static fallback
+  const backgroundImages = banners
+    .map((banner) => getImageUrl(banner.image))
+    .filter(Boolean);
 
   // Fetch banners from API
   useEffect(() => {

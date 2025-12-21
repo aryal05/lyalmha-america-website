@@ -29,19 +29,16 @@ const AboutHero = () => {
     <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src={
-            heroBanner?.image
-              ? getImageUrl(heroBanner.image)
-              : "https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=1920&h=1080&fit=crop"
-          }
-          alt="About Lyalmha America"
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.src =
-              "https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=1920&h=1080&fit=crop";
-          }}
-        />
+        {heroBanner && heroBanner.image && (
+          <img
+            src={getImageUrl(heroBanner.image)}
+            alt="About Lyalmha America"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+        )}
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-deep-black/90 via-deep-black/80 to-deep-black/70"></div>
       </div>
