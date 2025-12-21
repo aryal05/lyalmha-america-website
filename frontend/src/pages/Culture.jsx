@@ -97,7 +97,7 @@ const Culture = () => {
                       {festival.image && (
                         <div className="relative h-48 overflow-hidden">
                           <img
-                            src={`http://localhost:5000${festival.image}`}
+                            src={getImageUrl(festival.image)}
                             alt={festival.title}
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                           />
