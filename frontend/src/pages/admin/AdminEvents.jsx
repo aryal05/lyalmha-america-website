@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { apiClient, API_ENDPOINTS, API_URL } from '../../config/api'
+import { apiClient, API_ENDPOINTS } from '../../config/api'
+import { getImageUrl } from '../../utils/imageHelper'
 import AdminLayout from '../../components/admin/AdminLayout'
 
 const AdminEvents = () => {
@@ -239,16 +240,9 @@ const AdminEvents = () => {
             >
               {event.image && (
                 <img
-                  src={
-                    event.image
-                      ? event.image.startsWith("http")
-                        ? event.image
-                        : `${API_URL}${event.image}`
-                      : "https://via.placeholder.com/150"
-                  }
-                  alt={event.title}
-                  className="w-full h-48 object-cover"
-                />
+                  src={getImageUrl(event.image) || \"https://via.placeholder.com/150\"}\n                  alt={event.title}
+                  className=\"w-full h-48 object-cover\"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}\n                />
               )}
               <div className="p-6">
                 <div className="flex justify-between items-start mb-2">

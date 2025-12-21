@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { apiClient, API_ENDPOINTS, API_URL } from "../config/api";
+import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
 
 const Hero = () => {
@@ -10,9 +11,9 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
 
   // Use banners from database - handle both local and Cloudinary URLs
-  const backgroundImages = banners.map((banner) =>
-    banner.image.startsWith("http") ? banner.image : `${API_URL}${banner.image}`
-  );
+  const backgroundImages = banners
+    .map((banner) => getImageUrl(banner.image))
+    .filter(Boolean);
 
   // Fetch banners from API
   useEffect(() => {

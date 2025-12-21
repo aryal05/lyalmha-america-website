@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { apiClient, API_ENDPOINTS, API_URL } from '../../config/api'
+import { apiClient, API_ENDPOINTS } from '../../config/api'
+import { getImageUrl } from '../../utils/imageHelper'
 import AdminLayout from '../../components/admin/AdminLayout'
 
 const AdminBanners = () => {
@@ -237,13 +238,10 @@ const AdminBanners = () => {
                       Current banner:
                     </p>
                     <img
-                      src={
-                        editingBanner.image.startsWith("http")
-                          ? editingBanner.image
-                          : `${API_URL}${editingBanner.image}`
-                      }
+                      src={getImageUrl(editingBanner.image)}
                       alt="Current banner"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-300"
+                      onError={(e) => { e.target.style.display = 'none'; }}
                     />
                     <p className="text-gray-500 text-xs mt-1">
                       Upload a new image to replace this one
@@ -313,14 +311,10 @@ const AdminBanners = () => {
             >
               {banner.image && (
                 <img
-                  src={
-                    banner.image.startsWith("http")
-                      ? banner.image
-                      : `${API_URL}${banner.image}`
-                  }
+                  src={getImageUrl(banner.image)}
                   alt={banner.title}
                   className="w-64 h-40 object-cover"
-                />
+                  onError={(e) => { e.target.style.display = 'none'; }}\n                />
               )}
               <div className="flex-1 p-6">
                 <div className="flex justify-between items-start mb-2">

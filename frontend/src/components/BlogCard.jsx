@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { API_URL } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 
 const BlogCard = ({ blog, index }) => {
   return (
@@ -17,14 +17,13 @@ const BlogCard = ({ blog, index }) => {
         <div className="relative h-56 overflow-hidden">
           <img
             src={
-              blog.banner
-                ? blog.banner.startsWith("http")
-                  ? blog.banner
-                  : `${API_URL}${blog.banner}`
-                : "https://via.placeholder.com/400x300"
+              getImageUrl(blog.banner) || "https://via.placeholder.com/400x300"
             }
             alt={blog.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/400x300";
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 to-transparent"></div>
 

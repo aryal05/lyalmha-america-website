@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
-import { apiClient, API_ENDPOINTS, API_URL } from "../config/api";
+import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 
 const Contact = () => {
   const [heroBanner, setHeroBanner] = useState(null);

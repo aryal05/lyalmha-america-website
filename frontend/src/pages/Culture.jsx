@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
-import { apiClient, API_ENDPOINTS, API_URL } from "../config/api";
+import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 
 const Culture = () => {
   const [festivals, setFestivals] = useState([]);
