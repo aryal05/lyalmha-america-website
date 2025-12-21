@@ -205,8 +205,7 @@ const AdminBanners = () => {
                     }
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
-                    <option value="hero">Hero</option>
-                    <option value="home">Home</option>
+                    <option value="hero">Home</option>
                     <option value="about">About</option>
                     <option value="blogs">Blogs</option>
                     <option value="culture">Culture</option>
