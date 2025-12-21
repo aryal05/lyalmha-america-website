@@ -2,33 +2,30 @@ import express from 'express'
 import { getDatabase } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
+import cloudinary from '../config/cloudinary.js'
 
 const router = express.Router()
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
-// Configure multer for image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads/banners')
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true })
-    }
-    cb(null, uploadDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
-  }
-})
-
+// Configure multer for memory storage (upload to Cloudinary)
+const storage = multer.memoryStorage()
 const upload = multer({ 
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }
 })
+
+// Helper function to upload to Cloudinary
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'lyalmha-america/banners' },
+      (error, result) => {
+        if (error) reject(error)
+        else resolve(result.secure_url)
+      }
+    )
+    uploadStream.end(buffer)
+  })
+}
 
 // GET all banners (public - no auth)
 router.get('/', async (req, res) => {
@@ -87,7 +84,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     
-    const image = `/uploads/banners/${req.file.filename}`
+    // Upload to Cloudinary
+    const imageUrl = await uploadToCloudinary(req.file.buffer)
     
     const result = await db.run(`
       INSERT INTO banners (title, description, image, position, order_index, link, active)
@@ -95,7 +93,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     `,
       title,
       description,
-      image,
+      imageUrl,
       position || 'hero',
       order_index || 0,
       link,
@@ -121,7 +119,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       return res.status(404).json({ success: false, error: 'Banner not found' })
     }
     
-    const image = req.file ? `/uploads/banners/${req.file.filename}` : banner.image
+    // Upload to Cloudinary if new image provided
+    const imageUrl = req.file ? await uploadToCloudinary(req.file.buffer) : banner.image
     
     await db.run(`
       UPDATE banners 
@@ -131,21 +130,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     `,
       title || banner.title,
       description || banner.description,
-      image,
+      imageUrl,
       position || banner.position,
       order_index !== undefined ? order_index : banner.order_index,
       link !== undefined ? link : banner.link,
       active !== undefined ? (active === 'true' || active === true || active === 1 ? 1 : 0) : banner.active,
       req.params.id
     )
-    
-    // Delete old image if new one uploaded
-    if (req.file && banner.image) {
-      const oldImagePath = path.join(__dirname, '..', banner.image)
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath)
-      }
-    }
     
     const updatedBanner = await db.get('SELECT * FROM banners WHERE id = ?', req.params.id)
     
@@ -163,14 +154,6 @@ router.delete('/:id', async (req, res) => {
     
     if (!banner) {
       return res.status(404).json({ success: false, error: 'Banner not found' })
-    }
-    
-    // Delete image file
-    if (banner.image) {
-      const imagePath = path.join(__dirname, '..', banner.image)
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath)
-      }
     }
     
     await db.run('DELETE FROM banners WHERE id = ?', req.params.id)
