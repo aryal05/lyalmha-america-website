@@ -2,33 +2,30 @@ import express from 'express'
 import { getDatabase } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
+import cloudinary from '../config/cloudinary.js'
 
 const router = express.Router()
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
-// Configure multer for image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads/events')
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true })
-    }
-    cb(null, uploadDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
-  }
-})
-
+// Configure multer for memory storage (upload to Cloudinary)
+const storage = multer.memoryStorage()
 const upload = multer({ 
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }
 })
+
+// Helper function to upload to Cloudinary
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'lyalmha-america/events' },
+      (error, result) => {
+        if (error) reject(error)
+        else resolve(result.secure_url)
+      }
+    )
+    uploadStream.end(buffer)
+  })
+}
 
 // GET all events (public - no auth)
 router.get('/', async (req, res) => {
@@ -75,11 +72,10 @@ router.get('/past', async (req, res) => {
 router.use(authenticateToken)
 
 // POST create event
-router.post('/', upload.single('image'), (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   const db = getDatabase()
   try {
     const { title, description, event_date, location, event_type } = req.body
-    const image = req.file ? `/uploads/events/${req.file.filename}` : null
     
     if (!title || !event_date) {
       return res.status(400).json({ 
@@ -87,6 +83,9 @@ router.post('/', upload.single('image'), (req, res) => {
         error: 'Title and event date are required' 
       })
     }
+    
+    // Upload to Cloudinary if image provided
+    const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
     
     const stmt = db.prepare(`
       INSERT INTO events (title, description, event_date, location, event_type, image)
@@ -103,7 +102,7 @@ router.post('/', upload.single('image'), (req, res) => {
 })
 
 // PUT update event
-router.put('/:id', upload.single('image'), (req, res) => {
+router.put('/:id', upload.single('image'), async (req, res) => {
   const db = getDatabase()
   try {
     const { title, description, event_date, location, event_type } = req.body
@@ -113,7 +112,8 @@ router.put('/:id', upload.single('image'), (req, res) => {
       return res.status(404).json({ success: false, error: 'Event not found' })
     }
     
-    const image = req.file ? `/uploads/events/${req.file.filename}` : event.image
+    // Upload to Cloudinary if new image provided
+    const image = req.file ? await uploadToCloudinary(req.file.buffer) : event.image
     
     const stmt = db.prepare(`
       UPDATE events 
@@ -132,14 +132,6 @@ router.put('/:id', upload.single('image'), (req, res) => {
       req.params.id
     )
     
-    // Delete old image if new one uploaded
-    if (req.file && event.image) {
-      const oldImagePath = path.join(__dirname, '..', event.image)
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath)
-      }
-    }
-    
     const updatedEvent = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id)
     
     res.json({ success: true, data: updatedEvent })
@@ -156,14 +148,6 @@ router.delete('/:id', (req, res) => {
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
-    }
-    
-    // Delete image file
-    if (event.image) {
-      const imagePath = path.join(__dirname, '..', event.image)
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath)
-      }
     }
     
     db.prepare('DELETE FROM events WHERE id = ?').run(req.params.id)
