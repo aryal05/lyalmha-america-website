@@ -204,10 +204,33 @@ const AdminEvents = () => {
                   }
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
-                {editingEvent?.image && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    Current: {editingEvent.image}
-                  </p>
+                
+                {/* Show current image preview when editing */}
+                {editingEvent?.image && !formData.image && (
+                  <div className="mt-4">
+                    <p className="text-gray-600 text-sm mb-2">Current image:</p>
+                    <img
+                      src={getImageUrl(editingEvent.image)}
+                      alt="Current event"
+                      className="w-48 h-32 object-cover rounded-lg border border-gray-300"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <p className="text-gray-500 text-xs mt-1">
+                      Upload a new image to replace this one
+                    </p>
+                  </div>
+                )}
+                
+                {/* Show new image preview */}
+                {formData.image && (
+                  <div className="mt-4">
+                    <p className="text-gray-600 text-sm mb-2">New image preview:</p>
+                    <img
+                      src={URL.createObjectURL(formData.image)}
+                      alt="New event preview"
+                      className="w-48 h-32 object-cover rounded-lg border border-gray-300"
+                    />
+                  </div>
                 )}
               </div>
 
