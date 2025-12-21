@@ -102,7 +102,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 
 // PUT update event
 router.put('/:id', upload.single('image'), async (req, res) => {
-  const db = getDatabase()
   try {
     const db = await getDatabase()
     const { title, description, event_date, location, event_type } = req.body
@@ -130,7 +129,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       req.params.id
     )
     
-    const updatedEvent = await db.get('SELECT * FROM events WHERE id = ?', 
+    const updatedEvent = await db.get('SELECT * FROM events WHERE id = ?', req.params.id)
+    
     res.json({ success: true, data: updatedEvent })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -138,10 +138,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 })
 
 // DELETE event
-router.delete('/:id', (req, res) => {
-  const db = getDatabase()
-  try {
-    const event = db.pasync (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const db = await getDatabase()
     const event = await db.get('SELECT * FROM events WHERE id = ?', req.params.id)
@@ -150,7 +147,10 @@ router.delete('/:id', (req, res) => {
       return res.status(404).json({ success: false, error: 'Event not found' })
     }
     
-    await db.run('DELETE FROM events WHERE id = ?', 
+    await db.run('DELETE FROM events WHERE id = ?', req.params.id)
+    
+    res.json({ success: true, message: 'Event deleted successfully' })
+  } catch (error) {
     res.status(500).json({ success: false, error: error.message })
   }
 })
