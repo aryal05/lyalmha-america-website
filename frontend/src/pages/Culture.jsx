@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
+import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 
 const Culture = () => {
   const [festivals, setFestivals] = useState([]);
@@ -48,13 +49,13 @@ const Culture = () => {
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          {heroBanner && (
-            <img
-              src={getImageUrl(heroBanner.image)}
-              alt="Culture Background"
-              className="w-full h-full object-cover"
-            />
-          )}
+          <img
+            src={
+              heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+            }
+            alt="Culture Background"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-deep-black/85"></div>
         </div>
 

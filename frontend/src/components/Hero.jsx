@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
+import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 
 const Hero = () => {
   const [currentBg, setCurrentBg] = useState(0);
@@ -11,9 +12,10 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
 
   // Use banners from database - handle both local and Cloudinary URLs
-  const backgroundImages = banners
-    .map((banner) => getImageUrl(banner.image))
-    .filter(Boolean);
+  const backgroundImages =
+    banners.length > 0
+      ? banners.map((banner) => getImageUrl(banner.image)).filter(Boolean)
+      : [fallbackBanner];
 
   // Fetch banners from API
   useEffect(() => {

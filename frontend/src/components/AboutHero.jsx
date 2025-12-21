@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
+import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const AboutHero = () => {
   const [heroBanner, setHeroBanner] = useState(null);
@@ -29,16 +30,13 @@ const AboutHero = () => {
     <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
-        {heroBanner && heroBanner.image && (
-          <img
-            src={getImageUrl(heroBanner.image)}
-            alt="About Lyalmha America"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-        )}
+        <img
+          src={
+            heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+          }
+          alt="About Lyalmha America"
+          className="w-full h-full object-cover"
+        />
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-deep-black/90 via-deep-black/80 to-deep-black/70"></div>
       </div>
