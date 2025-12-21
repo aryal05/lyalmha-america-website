@@ -34,28 +34,49 @@ const AdminBanners = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    console.log("Form submission - editingBanner:", editingBanner);
+    console.log("Form submission - formData.image:", formData.image);
+    console.log("Form submission - imageFile:", imageFile);
+
+    // Validate that image is provided for new banners
+    if (!editingBanner && !formData.image) {
+      alert("Please select an image for the banner");
+      return;
+    }
+
     try {
-      const data = new FormData()
-      data.append('title', formData.title)
-      data.append('description', formData.description)
-      data.append('position', formData.position)
-      data.append('order_index', formData.order_index)
-      data.append('link', formData.link)
-      data.append('active', formData.active ? '1' : '0')
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("position", formData.position);
+      data.append("order_index", formData.order_index);
+      data.append("link", formData.link);
+      data.append("active", formData.active ? "1" : "0");
       if (formData.image) {
-        data.append('image', formData.image)
+        data.append("image", formData.image);
+      }
+
+      console.log("FormData entries:");
+      for (let pair of data.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
       }
 
       if (editingBanner) {
-        await apiClient.put(API_ENDPOINTS.BANNERS.UPDATE(editingBanner.id), data)
+        await apiClient.put(
+          API_ENDPOINTS.BANNERS.UPDATE(editingBanner.id),
+          data
+        );
       } else {
-        await apiClient.post(API_ENDPOINTS.BANNERS.CREATE, data)
+        await apiClient.post(API_ENDPOINTS.BANNERS.CREATE, data);
       }
-      fetchBanners()
-      resetForm()
+      fetchBanners();
+      resetForm();
     } catch (error) {
-      console.error('Error saving banner:', error)
-      alert('Error saving banner: ' + (error.response?.data?.error || error.message))
+      console.error("Error saving banner:", error);
+      alert(
+        "Error saving banner: " + (error.response?.data?.error || error.message)
+      );
     }
   }
 
