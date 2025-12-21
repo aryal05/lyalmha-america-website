@@ -80,12 +80,21 @@ const AdminSupporters = () => {
     <AdminLayout>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Supporters Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Supporters Management
+          </h1>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              } else {
+                setEditingSupporter(null);
+                setShowForm(true);
+              }
+            }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
-            {showForm ? 'Cancel' : '+ New Supporter'}
+            {showForm ? "Cancel" : "+ New Supporter"}
           </button>
         </div>
 
@@ -96,25 +105,33 @@ const AdminSupporters = () => {
             className="bg-white p-6 rounded-lg shadow-md mb-8"
           >
             <h2 className="text-xl font-bold mb-4">
-              {editingSupporter ? 'Edit Supporter' : 'Add New Supporter'}
+              {editingSupporter ? "Edit Supporter" : "Add New Supporter"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name/Organization</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Name/Organization
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Type
+                </label>
                 <select
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="financial">Financial Supporter</option>
@@ -123,20 +140,28 @@ const AdminSupporters = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Contact Person (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Contact Person (Optional)
+                </label>
                 <input
                   type="text"
                   value={formData.contact_person}
-                  onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, contact_person: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description (Optional)
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows="3"
                   className="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500"
                 />
@@ -147,7 +172,7 @@ const AdminSupporters = () => {
                   type="submit"
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
                 >
-                  {editingSupporter ? 'Update' : 'Create'}
+                  {editingSupporter ? "Update" : "Create"}
                 </button>
                 <button
                   type="button"
@@ -183,22 +208,30 @@ const AdminSupporters = () => {
               {supporters.map((supporter) => (
                 <tr key={supporter.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{supporter.name}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {supporter.name}
+                    </div>
                     {supporter.description && (
-                      <div className="text-sm text-gray-500">{supporter.description}</div>
+                      <div className="text-sm text-gray-500">
+                        {supporter.description}
+                      </div>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      supporter.type === 'financial' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-purple-100 text-purple-800'
-                    }`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        supporter.type === "financial"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
                       {supporter.type}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{supporter.contact_person || '-'}</div>
+                    <div className="text-sm text-gray-500">
+                      {supporter.contact_person || "-"}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
@@ -226,7 +259,7 @@ const AdminSupporters = () => {
         </div>
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminSupporters

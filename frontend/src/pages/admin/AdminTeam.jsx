@@ -82,10 +82,17 @@ const AdminTeam = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Team Management</h1>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              } else {
+                setEditingMember(null);
+                setShowForm(true);
+              }
+            }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
-            {showForm ? 'Cancel' : '+ New Member'}
+            {showForm ? "Cancel" : "+ New Member"}
           </button>
         </div>
 
@@ -96,7 +103,7 @@ const AdminTeam = () => {
             className="bg-white p-6 rounded-lg shadow-md mb-8"
           >
             <h2 className="text-xl font-bold mb-4">
-              {editingMember ? 'Edit Team Member' : 'Add New Team Member'}
+              {editingMember ? "Edit Team Member" : "Add New Team Member"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -105,7 +112,9 @@ const AdminTeam = () => {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -116,16 +125,22 @@ const AdminTeam = () => {
                   type="text"
                   required
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Category</label>
+                <label className="block text-sm font-medium mb-2">
+                  Category
+                </label>
                 <select
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="leadership">Leadership</option>
@@ -135,10 +150,14 @@ const AdminTeam = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Bio (Optional)</label>
+                <label className="block text-sm font-medium mb-2">
+                  Bio (Optional)
+                </label>
                 <textarea
                   value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bio: e.target.value })
+                  }
                   rows="4"
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -149,7 +168,7 @@ const AdminTeam = () => {
                   type="submit"
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
                 >
-                  {editingMember ? 'Update' : 'Create'}
+                  {editingMember ? "Update" : "Create"}
                 </button>
                 <button
                   type="button"
@@ -185,7 +204,9 @@ const AdminTeam = () => {
               {team.map((member) => (
                 <tr key={member.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{member.name}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {member.name}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500">{member.role}</div>
@@ -221,7 +242,7 @@ const AdminTeam = () => {
         </div>
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminTeam

@@ -101,10 +101,17 @@ const AdminBlogs = () => {
             <p className="text-gray-400">Manage all blog posts</p>
           </div>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              } else {
+                setEditingBlog(null);
+                setShowForm(true);
+              }
+            }}
             className="px-6 py-3 bg-nepal-red text-white rounded-lg hover:bg-opacity-90 transition-colors"
           >
-            {showForm ? 'Cancel' : '+ New Blog'}
+            {showForm ? "Cancel" : "+ New Blog"}
           </button>
         </div>
 
@@ -116,7 +123,7 @@ const AdminBlogs = () => {
             className="bg-accent-gray rounded-xl p-6 mb-6"
           >
             <h2 className="text-xl font-bold text-white mb-4">
-              {editingBlog ? 'Edit Blog' : 'Create New Blog'}
+              {editingBlog ? "Edit Blog" : "Create New Blog"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -124,7 +131,9 @@ const AdminBlogs = () => {
                   type="text"
                   placeholder="Title"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
                   className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
                 />
@@ -132,7 +141,9 @@ const AdminBlogs = () => {
                   type="text"
                   placeholder="Author"
                   value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, author: e.target.value })
+                  }
                   required
                   className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
                 />
@@ -142,13 +153,17 @@ const AdminBlogs = () => {
                   type="text"
                   placeholder="Category"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
                   required
                   className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
                 />
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, status: e.target.value })
+                  }
                   className="px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
                 >
                   <option value="draft">Draft</option>
@@ -158,7 +173,9 @@ const AdminBlogs = () => {
               <textarea
                 placeholder="Excerpt (short description)"
                 value={formData.excerpt}
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, excerpt: e.target.value })
+                }
                 required
                 rows="2"
                 className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
@@ -166,7 +183,9 @@ const AdminBlogs = () => {
               <textarea
                 placeholder="Content (full article)"
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, content: e.target.value })
+                }
                 required
                 rows="6"
                 className="w-full px-4 py-3 bg-deep-black text-white rounded-lg border border-gray-700 focus:border-nepal-red focus:outline-none"
@@ -175,21 +194,27 @@ const AdminBlogs = () => {
                 <label className="block text-white mb-2">Banner Image</label>
                 {editingBlog && editingBlog.banner && !imageFile && (
                   <div className="mb-4">
-                    <p className="text-gray-400 text-sm mb-2">Current banner:</p>
-                    <img 
-                      src={`http://localhost:5000${editingBlog.banner}`} 
-                      alt="Current banner" 
+                    <p className="text-gray-400 text-sm mb-2">
+                      Current banner:
+                    </p>
+                    <img
+                      src={`http://localhost:5000${editingBlog.banner}`}
+                      alt="Current banner"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-700"
                     />
-                    <p className="text-gray-500 text-xs mt-1">Upload a new image to replace this one</p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      Upload a new image to replace this one
+                    </p>
                   </div>
                 )}
                 {imageFile && (
                   <div className="mb-4">
-                    <p className="text-gray-400 text-sm mb-2">New banner preview:</p>
-                    <img 
-                      src={URL.createObjectURL(imageFile)} 
-                      alt="New banner preview" 
+                    <p className="text-gray-400 text-sm mb-2">
+                      New banner preview:
+                    </p>
+                    <img
+                      src={URL.createObjectURL(imageFile)}
+                      alt="New banner preview"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-700"
                     />
                   </div>
@@ -206,7 +231,7 @@ const AdminBlogs = () => {
                   type="submit"
                   className="px-6 py-3 bg-nepal-red text-white rounded-lg hover:bg-opacity-90 transition-colors"
                 >
-                  {editingBlog ? 'Update Blog' : 'Create Blog'}
+                  {editingBlog ? "Update Blog" : "Create Blog"}
                 </button>
                 <button
                   type="button"
@@ -226,30 +251,49 @@ const AdminBlogs = () => {
             <table className="w-full">
               <thead className="bg-deep-black">
                 <tr>
-                  <th className="px-6 py-4 text-left text-white font-semibold">Title</th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">Author</th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">Category</th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">Status</th>
-                  <th className="px-6 py-4 text-left text-white font-semibold">Date</th>
-                  <th className="px-6 py-4 text-right text-white font-semibold">Actions</th>
+                  <th className="px-6 py-4 text-left text-white font-semibold">
+                    Title
+                  </th>
+                  <th className="px-6 py-4 text-left text-white font-semibold">
+                    Author
+                  </th>
+                  <th className="px-6 py-4 text-left text-white font-semibold">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left text-white font-semibold">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-white font-semibold">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-right text-white font-semibold">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {blogs.map((blog) => (
-                  <tr key={blog.id} className="border-t border-gray-800 hover:bg-deep-black/30 transition-colors">
+                  <tr
+                    key={blog.id}
+                    className="border-t border-gray-800 hover:bg-deep-black/30 transition-colors"
+                  >
                     <td className="px-6 py-4 text-white">{blog.title}</td>
                     <td className="px-6 py-4 text-gray-400">{blog.author}</td>
                     <td className="px-6 py-4 text-gray-400">{blog.category}</td>
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs ${
-                        blog.status === 'published' 
-                          ? 'bg-green-500/20 text-green-500' 
-                          : 'bg-yellow-500/20 text-yellow-500'
-                      }`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs ${
+                          blog.status === "published"
+                            ? "bg-green-500/20 text-green-500"
+                            : "bg-yellow-500/20 text-yellow-500"
+                        }`}
+                      >
                         {blog.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">{new Date(blog.created_at).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-gray-400">
+                      {new Date(blog.created_at).toLocaleDateString()}
+                    </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       <button
                         onClick={() => handleEdit(blog)}
@@ -277,7 +321,7 @@ const AdminBlogs = () => {
         </div>
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminBlogs

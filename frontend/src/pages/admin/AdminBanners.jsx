@@ -119,7 +119,14 @@ const AdminBanners = () => {
             Banners Management
           </h1>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              } else {
+                setEditingBanner(null);
+                setShowForm(true);
+              }
+            }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
             {showForm ? "Cancel" : "+ New Banner"}
