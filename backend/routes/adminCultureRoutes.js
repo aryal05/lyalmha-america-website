@@ -6,8 +6,8 @@ const router = express.Router()
 
 // GET all festivals (public - no auth)
 router.get('/festivals', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const festivals = await db.all('SELECT * FROM culture_festivals WHERE active = 1 ORDER BY order_index')
     res.json({ success: true, data: festivals })
   } catch (error) {
@@ -17,8 +17,8 @@ router.get('/festivals', async (req, res) => {
 
 // GET all traditions (public - no auth)
 router.get('/traditions', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const traditions = await db.all('SELECT * FROM culture_traditions WHERE active = 1 ORDER BY order_index')
     res.json({ success: true, data: traditions })
   } catch (error) {
@@ -31,8 +31,8 @@ router.use(authenticateToken)
 
 // POST create festival
 router.post('/festivals', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { title, description, highlights, order_index } = req.body
     
     if (!title || !description) {
@@ -57,8 +57,8 @@ router.post('/festivals', async (req, res) => {
 
 // PUT update festival
 router.put('/festivals/:id', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { title, description, highlights, order_index, active } = req.body
     const festival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
     
@@ -89,8 +89,8 @@ router.put('/festivals/:id', async (req, res) => {
 
 // DELETE festival
 router.delete('/festivals/:id', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const festival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
     
     if (!festival) {
@@ -107,8 +107,8 @@ router.delete('/festivals/:id', async (req, res) => {
 
 // POST create tradition
 router.post('/traditions', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { icon, title, description, order_index } = req.body
     
     if (!icon || !title || !description) {
@@ -133,8 +133,8 @@ router.post('/traditions', async (req, res) => {
 
 // PUT update tradition
 router.put('/traditions/:id', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { icon, title, description, order_index, active } = req.body
     const tradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
     
@@ -165,8 +165,8 @@ router.put('/traditions/:id', async (req, res) => {
 
 // DELETE tradition
 router.delete('/traditions/:id', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const tradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
     
     if (!tradition) {

@@ -29,8 +29,8 @@ const uploadToCloudinary = (buffer) => {
 
 // GET all events (public - no auth)
 router.get('/', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const events = await db.all('SELECT * FROM events ORDER BY event_date DESC')
     res.json({ success: true, data: events })
   } catch (error) {
@@ -40,8 +40,8 @@ router.get('/', async (req, res) => {
 
 // GET upcoming events
 router.get('/upcoming', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const events = await db.all(`
       SELECT * FROM events 
       WHERE event_date >= date('now') 
@@ -55,8 +55,8 @@ router.get('/upcoming', async (req, res) => {
 
 // GET past events
 router.get('/past', async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const events = await db.all(`
       SELECT * FROM events 
       WHERE event_date < date('now') 
@@ -73,8 +73,8 @@ router.use(authenticateToken)
 
 // POST create event
 router.post('/', upload.single('image'), async (req, res) => {
-  const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { title, description, event_date, location, event_type } = req.body
     
     if (!title || !event_date) {
@@ -87,13 +87,12 @@ router.post('/', upload.single('image'), async (req, res) => {
     // Upload to Cloudinary if image provided
     const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
     
-    const stmt = db.prepare(`
+    const result = await db.run(`
       INSERT INTO events (title, description, event_date, location, event_type, image)
       VALUES (?, ?, ?, ?, ?, ?)
-    `)
+    `, title, description, event_date, location, event_type, image)
     
-    const result = stmt.run(title, description, event_date, location, event_type, image)
-    const newEvent = db.prepare('SELECT * FROM events WHERE id = ?').get(result.lastInsertRowid)
+    const newEvent = await db.get('SELECT * FROM events WHERE id = ?', result.lastID)
     
     res.status(201).json({ success: true, data: newEvent })
   } catch (error) {
@@ -105,8 +104,9 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
   const db = getDatabase()
   try {
+    const db = await getDatabase()
     const { title, description, event_date, location, event_type } = req.body
-    const event = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id)
+    const event = await db.get('SELECT * FROM events WHERE id = ?', req.params.id)
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
@@ -115,14 +115,12 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     // Upload to Cloudinary if new image provided
     const image = req.file ? await uploadToCloudinary(req.file.buffer) : event.image
     
-    const stmt = db.prepare(`
+    await db.run(`
       UPDATE events 
       SET title = ?, description = ?, event_date = ?, 
           location = ?, event_type = ?, image = ?
       WHERE id = ?
-    `)
-    
-    stmt.run(
+    `,
       title || event.title,
       description || event.description,
       event_date || event.event_date,
@@ -132,8 +130,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       req.params.id
     )
     
-    const updatedEvent = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id)
-    
+    const updatedEvent = await db.get('SELECT * FROM events WHERE id = ?', 
     res.json({ success: true, data: updatedEvent })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -144,16 +141,16 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 router.delete('/:id', (req, res) => {
   const db = getDatabase()
   try {
-    const event = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id)
+    const event = db.pasync (req, res) => {
+  try {
+    const db = await getDatabase()
+    const event = await db.get('SELECT * FROM events WHERE id = ?', req.params.id)
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
     }
     
-    db.prepare('DELETE FROM events WHERE id = ?').run(req.params.id)
-    
-    res.json({ success: true, message: 'Event deleted successfully' })
-  } catch (error) {
+    await db.run('DELETE FROM events WHERE id = ?', 
     res.status(500).json({ success: false, error: error.message })
   }
 })
