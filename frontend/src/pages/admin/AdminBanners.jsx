@@ -241,7 +241,9 @@ const AdminBanners = () => {
                       src={getImageUrl(editingBanner.image)}
                       alt="Current banner"
                       className="w-48 h-32 object-cover rounded-lg border border-gray-300"
-                      onError={(e) => { e.target.style.display = 'none'; }}
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
                     />
                     <p className="text-gray-500 text-xs mt-1">
                       Upload a new image to replace this one
@@ -314,7 +316,10 @@ const AdminBanners = () => {
                   src={getImageUrl(banner.image)}
                   alt={banner.title}
                   className="w-64 h-40 object-cover"
-                  onError={(e) => { e.target.style.display = 'none'; }}\n                />
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
               )}
               <div className="flex-1 p-6">
                 <div className="flex justify-between items-start mb-2">
