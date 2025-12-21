@@ -313,7 +313,11 @@ const AdminBanners = () => {
             >
               {banner.image && (
                 <img
-                  src={`${API_URL}${banner.image}`}
+                  src={
+                    banner.image.startsWith("http")
+                      ? banner.image
+                      : `${API_URL}${banner.image}`
+                  }
                   alt={banner.title}
                   className="w-64 h-40 object-cover"
                 />

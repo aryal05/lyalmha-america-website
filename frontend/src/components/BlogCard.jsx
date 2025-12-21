@@ -18,7 +18,9 @@ const BlogCard = ({ blog, index }) => {
           <img
             src={
               blog.banner
-                ? `${API_URL}${blog.banner}`
+                ? blog.banner.startsWith("http")
+                  ? blog.banner
+                  : `${API_URL}${blog.banner}`
                 : "https://via.placeholder.com/400x300"
             }
             alt={blog.title}

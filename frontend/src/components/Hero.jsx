@@ -9,8 +9,10 @@ const Hero = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Use banners from database
-  const backgroundImages = banners.map((banner) => `${API_URL}${banner.image}`);
+  // Use banners from database - handle both local and Cloudinary URLs
+  const backgroundImages = banners.map((banner) =>
+    banner.image.startsWith("http") ? banner.image : `${API_URL}${banner.image}`
+  );
 
   // Fetch banners from API
   useEffect(() => {
