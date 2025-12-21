@@ -263,9 +263,11 @@ const AdminEvents = () => {
             >
               {event.image && (
                 <img
-                  src={getImageUrl(event.image) || \"https://via.placeholder.com/150\"}\n                  alt={event.title}
-                  className=\"w-full h-48 object-cover\"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}\n                />
+                  src={getImageUrl(event.image) || "https://via.placeholder.com/150"}
+                  alt={event.title}
+                  className="w-full h-48 object-cover"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}
+                />
               )}
               <div className="p-6">
                 <div className="flex justify-between items-start mb-2">
