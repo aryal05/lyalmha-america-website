@@ -32,11 +32,7 @@ const AboutHero = () => {
       <div className="absolute inset-0">
         <img
           src={
-            heroBanner?.image &&
-            (heroBanner.image.startsWith("http://") ||
-              heroBanner.image.startsWith("https://"))
-              ? getImageUrl(heroBanner.image)
-              : fallbackBanner
+            heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
           }
           alt="About Lyalmha America"
           className="w-full h-full object-cover"

@@ -60,11 +60,7 @@ const Contact = () => {
         <div className="absolute inset-0 z-0">
           <img
             src={
-              heroBanner?.image &&
-              (heroBanner.image.startsWith("http://") ||
-                heroBanner.image.startsWith("https://"))
-                ? getImageUrl(heroBanner.image)
-                : fallbackBanner
+              heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
             }
             alt="Contact Background"
             className="w-full h-full object-cover"

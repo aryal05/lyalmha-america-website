@@ -70,12 +70,8 @@ const Hero = () => {
     },
   ];
 
-  const validBanners = banners.filter(
-    (banner) =>
-      banner.image &&
-      (banner.image.startsWith("http://") ||
-        banner.image.startsWith("https://"))
-  );
+  // Filter banners with images and get their URLs
+  const validBanners = banners.filter((banner) => banner.image);
 
   const backgroundImages =
     validBanners.length > 0
