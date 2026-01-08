@@ -1,43 +1,9 @@
 import express from 'express'
 import { getDatabase } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
-import multer from 'multer'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
+import { upload, uploadToCloudinary } from '../utils/uploadHelper.js'
 
 const router = express.Router()
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Configure multer for disk storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../uploads/blogs')
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true })
-    }
-    cb(null, uploadPath)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    cb(null, 'blog-' + uniqueSuffix + path.extname(file.originalname))
-  },
-})
-
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|gif|webp/
-    const mimetype = filetypes.test(file.mimetype)
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
-    if (mimetype && extname) {
-      return cb(null, true)
-    }
-    cb(new Error('Only image files are allowed!'))
-  },
-})
 
 // GET all blogs (public - no auth)
 router.get('/', async (req, res) => {
@@ -101,8 +67,11 @@ router.post('/', upload.single('banner'), async (req, res) => {
       })
     }
     
-    // Use local file path if image provided
-    const banner = req.file ? `/uploads/blogs/${req.file.filename}` : null
+    // Upload to Cloudinary if image provided
+    let banner = null
+    if (req.file) {
+      banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+    }
     
     const readTime = Math.ceil(content.split(' ').length / 200)
     const date = new Date().toISOString().split('T')[0]
@@ -141,8 +110,12 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
       return res.status(404).json({ success: false, error: 'Blog not found' })
     }
     
-    // Use local file path if new image provided
-    const banner = req.file ? `/uploads/blogs/${req.file.filename}` : blog.banner
+    // Upload to Cloudinary if new image provided
+    let banner = blog.banner
+    if (req.file) {
+      banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+    }
+    
     const readTime = content ? Math.ceil(content.split(' ').length / 200) : blog.read_time
     
     await db.run(`

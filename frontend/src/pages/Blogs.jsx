@@ -118,7 +118,10 @@ const Blogs = () => {
                     <div className="absolute inset-0 mandala-pattern opacity-20 z-10 pointer-events-none"></div>
 
                     <img
-                      src={`http://localhost:5000${post.banner}`}
+                      src={
+                        getImageUrl(post.banner) ||
+                        "https://via.placeholder.com/400x300"
+                      }
                       alt={post.title}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />

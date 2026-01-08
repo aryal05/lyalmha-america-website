@@ -3,6 +3,7 @@ import BlogCard from './BlogCard'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 
 const BlogGrid = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -116,9 +117,8 @@ const BlogGrid = () => {
                 >
                   <img
                     src={
-                      featuredBlogs[currentSlide].banner
-                        ? `http://localhost:5000${featuredBlogs[currentSlide].banner}`
-                        : "https://via.placeholder.com/800x500"
+                      getImageUrl(featuredBlogs[currentSlide].banner) ||
+                      "https://via.placeholder.com/800x500"
                     }
                     alt={featuredBlogs[currentSlide].title}
                     className="w-full h-full object-cover"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 import event1 from "../assets/images/posts/471944315_555366943987150_1453996420800501859_n.jpg";
 import event2 from "../assets/images/posts/467736461_487936857446592_6777699176984050234_n (1).jpg";
 import event3 from "../assets/images/posts/462650425_598936739649734_2260957587124948845_n.jpg";
@@ -353,9 +354,8 @@ const EventsSidebar = () => {
                   <div className="relative h-40 rounded-lg overflow-hidden mb-3 border-2 border-gold-accent/20 group-hover:border-gold-accent transition-all">
                     <img
                       src={
-                        event.image
-                          ? `http://localhost:5000${event.image}`
-                          : fallbackImages[index % fallbackImages.length]
+                        getImageUrl(event.image) ||
+                        fallbackImages[index % fallbackImages.length]
                       }
                       alt={event.title}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
