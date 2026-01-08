@@ -108,12 +108,14 @@ const AdminBanners = () => {
 
   const toggleActive = async (id, currentStatus) => {
     try {
-      await apiClient.put(API_ENDPOINTS.BANNERS.UPDATE(id), {
-        active: currentStatus === 1 ? 0 : 1
-      })
+      const data = new FormData()
+      data.append('active', currentStatus === 1 ? '0' : '1')
+      
+      await apiClient.put(API_ENDPOINTS.BANNERS.UPDATE(id), data)
       fetchBanners()
     } catch (error) {
       console.error('Error toggling banner status:', error)
+      alert('Error updating banner status: ' + (error.response?.data?.error || error.message))
     }
   }
 
