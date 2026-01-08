@@ -6,9 +6,6 @@ export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
 // Add request interceptor to include token
@@ -17,6 +14,10 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+    }
+    // Only set Content-Type to JSON if it's not FormData
+    if (!(config.data instanceof FormData)) {
+      config.headers['Content-Type'] = 'application/json'
     }
     return config
   },
@@ -76,5 +77,33 @@ export const API_ENDPOINTS = {
     CREATE_TRADITION: '/api/admin/culture/traditions',
     UPDATE_TRADITION: (id) => `/api/admin/culture/traditions/${id}`,
     DELETE_TRADITION: (id) => `/api/admin/culture/traditions/${id}`,
+  },
+  ACTIVITIES: {
+    GET_ALL: '/api/admin/activities',
+    GET_BY_ID: (id) => `/api/admin/activities/${id}`,
+    CREATE: '/api/admin/activities',
+    UPDATE: (id) => `/api/admin/activities/${id}`,
+    DELETE: (id) => `/api/admin/activities/${id}`,
+  },
+  TESTIMONIALS: {
+    GET_ALL: '/api/admin/testimonials',
+    GET_BY_ID: (id) => `/api/admin/testimonials/${id}`,
+    CREATE: '/api/admin/testimonials',
+    UPDATE: (id) => `/api/admin/testimonials/${id}`,
+    DELETE: (id) => `/api/admin/testimonials/${id}`,
+  },
+  NEWS: {
+    GET_ALL: '/api/admin/news',
+    GET_BY_ID: (id) => `/api/admin/news/${id}`,
+    CREATE: '/api/admin/news',
+    UPDATE: (id) => `/api/admin/news/${id}`,
+    DELETE: (id) => `/api/admin/news/${id}`,
+  },
+  GALLERY: {
+    GET_ALL: '/api/admin/gallery',
+    GET_BY_ID: (id) => `/api/admin/gallery/${id}`,
+    CREATE: '/api/admin/gallery',
+    UPDATE: (id) => `/api/admin/gallery/${id}`,
+    DELETE: (id) => `/api/admin/gallery/${id}`,
   },
 }

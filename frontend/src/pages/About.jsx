@@ -6,11 +6,10 @@ import Footer from '../components/Footer'
 import AboutHero from '../components/AboutHero'
 import AboutMission from '../components/AboutMission'
 import Teams from '../components/Teams'
-import Projects from '../components/Projects'
-import KidsActivities from '../components/KidsActivities'
-import EventsSidebar from '../components/EventsSidebar'
-import Supporters from '../components/Supporters'
-import ScrollToTop from '../components/ScrollToTop'
+import Projects from "../components/Projects";
+import EventsSidebar from "../components/EventsSidebar";
+import Supporters from "../components/Supporters";
+import ScrollToTop from "../components/ScrollToTop";
 
 const About = () => {
   return (
@@ -28,48 +27,46 @@ const About = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-16">
             <AboutMission />
-            <Teams />
-            <Projects />
-            <KidsActivities />
-
-            {/* Premium News/Press Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="card-premium group hover:border-gold-accent/50 transition-all duration-300 temple-corner"
-            >
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-gold-accent to-gold-accent/80 rounded-xl shadow-gold">
-                  <svg
-                    className="w-6 h-6 text-charcoal-black"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h2 className="heading-lg mb-2">
-                    News & <span className="text-gold-accent">Press</span>
-                  </h2>
-                  <p className="text-paragraph-text">
-                    Stay updated with our latest announcements, press releases,
-                    and media coverage.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/blogs"
-                className="btn-gold w-full sm:w-auto justify-center"
+            <div id="executive">
+              <Teams />
+            </div>
+            <div id="projects">
+              <Projects />
+            </div>
+            <div id="advisors" className="scroll-mt-24">
+              {/* Advisors section - placeholder for now */}
+              <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="card-premium group hover:border-gold-accent/50 transition-all duration-300 temple-corner"
               >
-                View Press Releases
-              </Link>
-            </motion.section>
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 bg-gradient-to-br from-gold-accent to-gold-accent/80 rounded-xl shadow-gold">
+                    <svg
+                      className="w-6 h-6 text-charcoal-black"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="heading-lg mb-2">
+                      Our <span className="text-gold-accent">Advisors</span>
+                    </h2>
+                    <p className="text-paragraph-text">
+                      Guided by experienced advisors who provide strategic
+                      direction and cultural wisdom.
+                    </p>
+                  </div>
+                </div>
+              </motion.section>
+            </div>
 
             {/* Premium Contact Section */}
             <motion.section
@@ -170,6 +167,6 @@ const About = () => {
       <ScrollToTop />
     </div>
   );
-}
+};
 
 export default About

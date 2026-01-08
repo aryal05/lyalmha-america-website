@@ -34,3 +34,6 @@ export function isAdmin(req, res, next) {
     res.status(403).json({ error: 'Admin access required' })
   }
 }
+
+// Alias for authenticateToken (for backward compatibility)
+export const authenticateAdmin = authenticateToken

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/images/logo/lyama (1) (1).png";
+import logo from "../assets/images/logo/Letter pad copy.jpg";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,13 +18,76 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle hash navigation with navbar offset
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.substring(1));
+        if (element) {
+          const navbarHeight = 100; // Account for navbar height
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - navbarHeight;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    }
+  }, [location]);
+
+  const handleSubmenuClick = (e, path) => {
+    e.preventDefault();
+    const [pathname, hash] = path.split("#");
+
+    if (location.pathname === pathname && hash) {
+      // Already on the page, just scroll to section
+      const element = document.getElementById(hash);
+      if (element) {
+        const navbarHeight = 100; // Account for navbar height
+        const elementPosition =
+          element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      // Navigate to the page with hash
+      navigate(path);
+    }
+  };
+
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
     { path: "/", label: "Home" },
-    { path: "/about", label: "About Us" },
-    { path: "/blogs", label: "Blogs" },
+    {
+      path: "/about",
+      label: "About Us",
+      hasDropdown: true,
+      submenu: [
+        { path: "/about#executive", label: "Executive Members" },
+        { path: "/about#projects", label: "Project Biska" },
+        { path: "/about#advisors", label: "Advisors" },
+      ],
+    },
+    {
+      path: "/news",
+      label: "News & Press",
+      hasDropdown: true,
+      submenu: [
+        { path: "/news", label: "News" },
+        { path: "/blogs", label: "Blogs" },
+        { path: "/gallery", label: "Gallery" },
+      ],
+    },
     { path: "/culture", label: "Culture" },
+    { path: "/kids-activities", label: "Kids Activities" },
     { path: "/contact", label: "Contact" },
   ];
 
@@ -42,71 +107,99 @@ const Navbar = () => {
         <div className="absolute inset-0 mandala-pattern opacity-5 pointer-events-none"></div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex items-center justify-between h-20">
-          {/* Premium Logo with Traditional Corners */}
-          <Link to="/" className="flex items-center space-x-3 group relative">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
+        <div className="flex items-center justify-between py-2 sm:py-3">
+          {/* Premium Logo with Letterpad Image */}
+          <Link to="/" className="flex items-center group relative py-1">
             <div className="relative">
               {/* Traditional Corner Accents */}
               <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-tl"></div>
               <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-br"></div>
 
-              <div className="absolute inset-0 bg-gold-accent/20 rounded-full blur-xl group-hover:bg-gold-accent/30 transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-white/10 rounded-lg blur-xl group-hover:bg-gold-accent/20 transition-all duration-300"></div>
               <img
                 src={logo}
-                alt="Lyalmha America"
-                className="h-14 w-14 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                alt="Lyaymha America Guthi"
+                className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[340px] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[600px] relative z-10 transition-all duration-300 group-hover:scale-[1.02] object-contain bg-white/95 backdrop-blur-sm rounded-md px-2 sm:px-3 py-1 shadow-lg"
               />
-            </div>
-            <div className="hidden md:block">
-              <h1 className="text-xl font-bold text-primary-text group-hover:text-gold-accent transition-colors duration-300">
-                Lyalmha America
-              </h1>
-              <p className="text-xs text-gold-accent font-medium">
-                Newari Culture & Heritage
-              </p>
             </div>
           </Link>
 
           {/* Premium Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className="relative px-4 py-2 group"
-              >
-                <span
-                  className={`relative z-10 font-medium transition-colors duration-300 ${
-                    isActive(link.path)
-                      ? "text-gold-accent"
-                      : "text-paragraph-text group-hover:text-gold-accent"
-                  }`}
-                >
-                  {link.label}
-                </span>
-
-                {/* Pagoda-Style Active Indicator */}
-                {isActive(link.path) && (
-                  <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute bottom-0 left-0 right-0"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              <div key={link.path} className="relative group/dropdown">
+                <Link to={link.path} className="relative px-4 py-2 group block">
+                  <span
+                    className={`relative z-10 font-medium transition-colors duration-300 ${
+                      isActive(link.path)
+                        ? "text-gold-accent"
+                        : "text-paragraph-text group-hover:text-gold-accent"
+                    }`}
                   >
-                    {/* Pagoda Roof */}
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2">
-                      <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[5px] border-transparent border-b-newari-red"></div>
-                    </div>
-                    {/* Gradient Line */}
-                    <div className="h-0.5 bg-gradient-to-r from-newari-red via-gold-accent to-newari-red"></div>
-                  </motion.div>
-                )}
+                    {link.label}
+                    {link.hasDropdown && (
+                      <svg
+                        className="inline-block w-4 h-4 ml-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    )}
+                  </span>
 
-                {/* Traditional Corner Accents on Hover */}
-                <span className="absolute inset-0 rounded-lg transition-all duration-300 group-hover:shadow-[inset_0_0_0_1px_rgba(242,201,76,0.2)]"></span>
-                <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-gold-accent/0 group-hover:border-gold-accent/40 transition-all duration-300 rounded-tl"></span>
-                <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-gold-accent/0 group-hover:border-gold-accent/40 transition-all duration-300 rounded-br"></span>
-              </Link>
+                  {/* Pagoda-Style Active Indicator */}
+                  {isActive(link.path) && (
+                    <motion.div
+                      layoutId="navbar-indicator"
+                      className="absolute bottom-0 left-0 right-0"
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6,
+                      }}
+                    >
+                      {/* Pagoda Roof */}
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+                        <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[5px] border-transparent border-b-newari-red"></div>
+                      </div>
+                      {/* Gradient Line */}
+                      <div className="h-0.5 bg-gradient-to-r from-newari-red via-gold-accent to-newari-red"></div>
+                    </motion.div>
+                  )}
+
+                  {/* Traditional Corner Accents on Hover */}
+                  <span className="absolute inset-0 rounded-lg transition-all duration-300 group-hover:shadow-[inset_0_0_0_1px_rgba(242,201,76,0.2)]"></span>
+                  <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-gold-accent/0 group-hover:border-gold-accent/40 transition-all duration-300 rounded-tl"></span>
+                  <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-gold-accent/0 group-hover:border-gold-accent/40 transition-all duration-300 rounded-br"></span>
+                </Link>
+
+                {/* Dropdown Menu */}
+                {link.hasDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-300 bg-charcoal-black/95 backdrop-blur-lg border border-gold-accent/30 rounded-lg shadow-premium overflow-hidden">
+                    {link.submenu.map((sublink, index) => (
+                      <a
+                        key={sublink.path}
+                        href={sublink.path}
+                        onClick={(e) => handleSubmenuClick(e, sublink.path)}
+                        className="block px-4 py-3 text-paragraph-text hover:text-gold-accent hover:bg-gold-accent/10 transition-all duration-300 border-b border-border-line/20 last:border-b-0 cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold-accent"></span>
+                          {sublink.label}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
 
             {/* CTA Button */}

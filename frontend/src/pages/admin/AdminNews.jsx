@@ -1,0 +1,372 @@
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { apiClient, API_ENDPOINTS, API_URL } from '../../config/api'
+import AdminLayout from '../../components/admin/AdminLayout'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import './AdminBlogs.css'
+
+const AdminNews = () => {
+  const [newsItems, setNewsItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [editingNews, setEditingNews] = useState(null)
+  const [formData, setFormData] = useState({
+    title: '',
+    excerpt: '',
+    content: '',
+    category: 'announcement',
+    author: 'Admin',
+    published_date: new Date().toISOString().split('T')[0],
+    active: 1,
+    order_index: 0,
+  })
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
+
+  useEffect(() => {
+    fetchNews()
+  }, [])
+
+  const fetchNews = async () => {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.NEWS.GET_ALL)
+      setNewsItems(response.data.data)
+    } catch (error) {
+      console.error('Error fetching news:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const data = new FormData()
+    Object.keys(formData).forEach((key) => data.append(key, formData[key]))
+    if (imageFile) {
+      data.append('image', imageFile)
+    }
+
+    try {
+      if (editingNews) {
+        await apiClient.put(API_ENDPOINTS.NEWS.UPDATE(editingNews.id), data)
+      } else {
+        await apiClient.post(API_ENDPOINTS.NEWS.CREATE, data)
+      }
+      fetchNews()
+      resetForm()
+    } catch (error) {
+      console.error('Error saving news:', error)
+      alert('Error saving news: ' + (error.response?.data?.error || 'Unknown error'))
+    }
+  }
+
+  const handleEdit = (news) => {
+    setEditingNews(news)
+    setFormData({
+      title: news.title,
+      excerpt: news.excerpt,
+      content: news.content,
+      category: news.category,
+      author: news.author,
+      published_date: news.published_date,
+      active: news.active,
+      order_index: news.order_index,
+    })
+    setImagePreview(news.image)
+    setImageFile(null)
+    setShowForm(true)
+  }
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this news item?')) {
+      try {
+        await apiClient.delete(API_ENDPOINTS.NEWS.DELETE(id))
+        fetchNews()
+      } catch (error) {
+        console.error('Error deleting news:', error)
+      }
+    }
+  }
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      excerpt: '',
+      content: '',
+      category: 'announcement',
+      author: 'Admin',
+      published_date: new Date().toISOString().split('T')[0],
+      active: 1,
+      order_index: 0,
+    })
+    setImageFile(null)
+    setImagePreview(null)
+    setEditingNews(null)
+    setShowForm(false)
+  }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link'],
+      ['clean'],
+    ],
+  }
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gold-accent border-t-transparent"></div>
+        </div>
+      </AdminLayout>
+    )
+  }
+
+  return (
+    <AdminLayout>
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">News Management</h1>
+            <p className="text-gold-accent/70">Manage press releases, announcements, and media coverage</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowForm(!showForm)}
+            className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+          >
+            {showForm ? '📋 View All News' : '➕ Add News'}
+          </motion.button>
+        </div>
+
+        {/* Form */}
+        {showForm && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-dark-navy/90 backdrop-blur-xl p-6 rounded-xl border border-gold-accent/20"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">
+              {editingNews ? '✏️ Edit News' : '➕ Add New News'}
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gold-accent mb-2">Title *</label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gold-accent mb-2">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  >
+                    <option value="announcement">Announcement</option>
+                    <option value="press-release">Press Release</option>
+                    <option value="media-coverage">Media Coverage</option>
+                    <option value="event">Event</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gold-accent mb-2">Author</label>
+                  <input
+                    type="text"
+                    value={formData.author}
+                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gold-accent mb-2">Published Date</label>
+                  <input
+                    type="date"
+                    value={formData.published_date}
+                    onChange={(e) => setFormData({ ...formData, published_date: e.target.value })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gold-accent mb-2">Excerpt *</label>
+                <textarea
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  rows="3"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gold-accent mb-2">Content *</label>
+                <ReactQuill
+                  theme="snow"
+                  value={formData.content}
+                  onChange={(content) => setFormData({ ...formData, content })}
+                  modules={modules}
+                  className="quill-editor"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gold-accent mb-2">Featured Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                />
+                {imagePreview && (
+                  <img
+                    src={imagePreview.startsWith('blob:') || imagePreview.startsWith('http') ? imagePreview : `${API_URL}${imagePreview}`}
+                    alt="Preview"
+                    className="mt-4 w-full h-48 object-cover rounded-lg"
+                  />
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gold-accent mb-2">Order Index</label>
+                  <input
+                    type="number"
+                    value={formData.order_index}
+                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gold-accent mb-2">Status</label>
+                  <select
+                    value={formData.active}
+                    onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
+                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  >
+                    <option value={1}>Active</option>
+                    <option value={0}>Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="submit"
+                  className="px-6 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold"
+                >
+                  {editingNews ? 'Update News' : 'Create News'}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="button"
+                  onClick={resetForm}
+                  className="px-6 py-2 bg-charcoal-black/50 border border-gold-accent/30 text-gold-accent rounded-lg font-semibold"
+                >
+                  Cancel
+                </motion.button>
+              </div>
+            </form>
+          </motion.div>
+        )}
+
+        {/* News List */}
+        {!showForm && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {newsItems.map((news) => (
+              <motion.div
+                key={news.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-dark-navy/90 backdrop-blur-xl rounded-xl border border-gold-accent/20 overflow-hidden group hover:border-gold-accent/50 transition-all"
+              >
+                {news.image && (
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={news.image.startsWith('http') ? news.image : `${API_URL}${news.image}`}
+                      alt={news.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs px-2 py-1 bg-gold-accent/20 text-gold-accent rounded">
+                      {news.category}
+                    </span>
+                    <span className={`text-xs px-2 py-1 rounded ${news.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                      {news.active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                  <h3 className="text-white font-bold text-lg mb-2 line-clamp-2">
+                    {news.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{news.excerpt}</p>
+                  <div className="text-xs text-gold-accent/60 mb-4">
+                    {news.published_date} • {news.author}
+                  </div>
+                  <div className="flex gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleEdit(news)}
+                      className="flex-1 px-4 py-2 bg-gold-accent/20 text-gold-accent rounded-lg text-sm font-semibold hover:bg-gold-accent/30 transition-all"
+                    >
+                      ✏️ Edit
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleDelete(news.id)}
+                      className="flex-1 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-all"
+                    >
+                      🗑️ Delete
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {!showForm && newsItems.length === 0 && (
+          <div className="text-center py-12 text-gold-accent/50">
+            <p className="text-xl">No news items found. Create your first one!</p>
+          </div>
+        )}
+      </div>
+    </AdminLayout>
+  )
+}
+
+export default AdminNews

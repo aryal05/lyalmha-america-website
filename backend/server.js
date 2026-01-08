@@ -12,6 +12,10 @@ import adminEventsRoutes from './routes/adminEventsRoutes.js'
 import adminSupportersRoutes from './routes/adminSupportersRoutes.js'
 import adminBannersRoutes from './routes/adminBannersRoutes.js'
 import adminCultureRoutes from './routes/adminCultureRoutes.js'
+import adminActivitiesRoutes from './routes/adminActivitiesRoutes.js'
+import adminTestimonialsRoutes from './routes/adminTestimonialsRoutes.js'
+import adminNewsRoutes from './routes/adminNewsRoutes.js'
+import adminGalleryRoutes from './routes/adminGalleryRoutes.js'
 
 dotenv.config()
 
@@ -56,7 +60,11 @@ app.get('/', (req, res) => {
         events: '/api/admin/events',
         supporters: '/api/admin/supporters',
         banners: '/api/admin/banners',
-        culture: '/api/admin/culture'
+        culture: '/api/admin/culture',
+        activities: '/api/admin/activities',
+        testimonials: '/api/admin/testimonials',
+        news: '/api/admin/news',
+        gallery: '/api/admin/gallery'
       }
     }
   })
@@ -70,6 +78,10 @@ app.use('/api/admin/events', adminEventsRoutes)
 app.use('/api/admin/supporters', adminSupportersRoutes)
 app.use('/api/admin/banners', adminBannersRoutes)
 app.use('/api/admin/culture', adminCultureRoutes)
+app.use('/api/admin/activities', adminActivitiesRoutes)
+app.use('/api/admin/testimonials', adminTestimonialsRoutes)
+app.use('/api/admin/news', adminNewsRoutes)
+app.use('/api/admin/gallery', adminGalleryRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

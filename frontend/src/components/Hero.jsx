@@ -13,12 +13,62 @@ const Hero = () => {
   const [currentLanguage, setCurrentLanguage] = useState("english");
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentProject, setCurrentProject] = useState(0);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
   // Text content in both languages
   const textContent = {
-    english: ["Welcome", "to", "Lyalmha", "America"],
-    newari: ["ल्याल्म्हा", "अमेरिकायात", "स्वागत", "जुयाः"],
+    english: ["Welcome", "to", "Lyaymha", "America", "Guthi"],
+    newari: ["ल्याय्म्ह", "अमेरिका", "गुथि", "यात", "स्वागत"],
   };
+
+  // Featured Projects/Causes
+  const featuredProjects = [
+    {
+      icon: "🎭",
+      title: "Preserve Newari Culture",
+      description:
+        "Help us preserve and celebrate Newari culture for future generations. Your contribution supports cultural events, educational programs, and community initiatives.",
+      stats: [
+        { icon: "👥", label: "500+ Members" },
+        { icon: "📊", label: "25+ Events Yearly" },
+        { icon: "❤️", label: "Growing Strong" },
+      ],
+    },
+    {
+      icon: "🎪",
+      title: "Biskaa Jatraa Festival",
+      description:
+        "Support our annual Biskaa Jatraa celebration, bringing the community together to honor our traditional New Year festival with authentic rituals and celebrations.",
+      stats: [
+        { icon: "🎉", label: "Annual Event" },
+        { icon: "👨‍👩‍👧‍👦", label: "1000+ Attendees" },
+        { icon: "🏛️", label: "Traditional Rituals" },
+      ],
+    },
+    {
+      icon: "👶",
+      title: "Kids Cultural Programs",
+      description:
+        "Invest in the next generation. Our kids programs teach Newari language, traditional music, dance, and customs to keep our heritage alive.",
+      stats: [
+        { icon: "📚", label: "Weekly Classes" },
+        { icon: "🎨", label: "Art & Music" },
+        { icon: "🌟", label: "100+ Children" },
+      ],
+    },
+    {
+      icon: "🏠",
+      title: "Community Center Fund",
+      description:
+        "Help us establish a permanent community center where we can host events, classes, and gatherings to strengthen our cultural bonds.",
+      stats: [
+        { icon: "🎯", label: "Goal: $500K" },
+        { icon: "📈", label: "Growing Daily" },
+        { icon: "🤝", label: "Community Owned" },
+      ],
+    },
+  ];
 
   const validBanners = banners.filter(
     (banner) =>
@@ -61,6 +111,14 @@ const Hero = () => {
     }
   }, [backgroundImages.length]);
 
+  // Auto-change featured project every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentProject((prev) => (prev + 1) % featuredProjects.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Animated text effect - word by word with smooth transitions
   useEffect(() => {
     const words = textContent[currentLanguage];
@@ -99,7 +157,7 @@ const Hero = () => {
   const currentWords = textContent[currentLanguage];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Premium Background with Overlay */}
       <div className="absolute inset-0">
         <AnimatePresence mode="wait">
@@ -135,57 +193,16 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
-          {/* Traditional Newari Logo with Mandala Background */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-            className="flex justify-center mb-12"
-          >
-            <div className="relative">
-              {/* Mandala Pattern Background */}
-              <motion.div
-                className="absolute inset-0 w-64 h-64 md:w-80 md:h-80 -left-12 -top-12 md:-left-14 md:-top-14"
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  duration: 60,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              >
-                <div className="w-full h-full mandala-pattern opacity-40"></div>
-              </motion.div>
-
-              {/* Traditional Corner Decorations */}
-              <div className="absolute -top-8 -left-8 w-16 h-16 border-t-2 border-l-2 border-gold-accent opacity-60"></div>
-              <div className="absolute -top-8 -right-8 w-16 h-16 border-t-2 border-r-2 border-gold-accent opacity-60"></div>
-              <div className="absolute -bottom-8 -left-8 w-16 h-16 border-b-2 border-l-2 border-gold-accent opacity-60"></div>
-              <div className="absolute -bottom-8 -right-8 w-16 h-16 border-b-2 border-r-2 border-gold-accent opacity-60"></div>
-
-              {/* Glowing Aura */}
-              <div className="absolute inset-0 bg-gold-accent/30 rounded-full blur-2xl animate-pulse"></div>
-
-              {/* Logo */}
-              <img
-                src={logo}
-                alt="Lyalmha America Logo"
-                className="relative h-40 w-40 md:h-52 md:w-52 object-contain drop-shadow-2xl z-10"
-              />
-            </div>
-          </motion.div>
-
           {/* Premium Animated Title with Smooth Word Reveal */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="mb-6"
+            className="mb-4"
           >
-            <div className="min-h-[160px] md:min-h-[220px] flex items-center justify-center px-4">
+            <div className="min-h-[100px] md:min-h-[120px] flex items-center justify-center px-4">
               <AnimatePresence mode="wait">
                 <motion.h1
                   key={currentLanguage}
@@ -193,9 +210,9 @@ const Hero = () => {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-center"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
                 >
-                  <div className="flex flex-wrap justify-center items-center gap-3 md:gap-4">
+                  <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
                     {currentWords.map((word, index) => (
                       <motion.span
                         key={`${currentLanguage}-${index}`}
@@ -231,100 +248,340 @@ const Hero = () => {
                 </motion.h1>
               </AnimatePresence>
             </div>
-            {/* Traditional Pagoda-Style Divider */}
-            <motion.div
-              className="flex justify-center mt-6"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 2.5, duration: 0.8, ease: "easeOut" }}
-            >
-              <div className="relative w-48">
-                {/* Pagoda Roof Layers */}
-                <motion.div
-                  className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 3, duration: 0.5 }}
-                >
-                  <div className="flex flex-col items-center gap-1">
-                    {/* Top tier */}
-                    <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-b-[8px] border-transparent border-b-newari-red"></div>
-                    {/* Middle tier */}
-                    <div className="w-0 h-0 border-l-[12px] border-r-[12px] border-b-[10px] border-transparent border-b-gold-accent"></div>
-                    {/* Base tier */}
-                    <div className="w-0 h-0 border-l-[16px] border-r-[16px] border-b-[12px] border-transparent border-b-newari-red"></div>
-                  </div>
-                </motion.div>
-
-                {/* Decorative Line with Pattern */}
-                <motion.div
-                  className="h-1 w-full bg-gradient-to-r from-newari-red via-gold-accent to-newari-red rounded-full shadow-gold relative"
-                  animate={{
-                    boxShadow: [
-                      "0 0 10px rgba(242, 201, 76, 0.3)",
-                      "0 0 20px rgba(242, 201, 76, 0.6)",
-                      "0 0 10px rgba(242, 201, 76, 0.3)",
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  {/* Traditional Pattern Overlays */}
-                  <div className="absolute inset-0 flex justify-around items-center opacity-60\">
-                    <div className="w-1 h-1 bg-newari-red rounded-full\"></div>
-                    <div className="w-1 h-1 bg-gold-accent rounded-full\"></div>
-                    <div className="w-1 h-1 bg-newari-red rounded-full\"></div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
           </motion.div>
 
-          {/* Subtitle with Icon */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="mb-8"
-          >
-            <p className="text-xl md:text-3xl text-gold-accent font-semibold mb-4 flex items-center justify-center gap-3">
-              <span className="text-2xl">🏛️</span>
-              Celebrating Newari Culture in America
-              <span className="text-2xl">🎭</span>
-            </p>
-          </motion.div>
-
-          {/* Description */}
+          {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-base md:text-lg text-paragraph-text mb-12 max-w-3xl mx-auto leading-relaxed"
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="text-base md:text-lg text-gold-accent font-semibold mb-8 flex items-center justify-center gap-2"
           >
-            Discover the rich heritage, vibrant traditions, colorful festivals,
-            and inspiring stories of the Newari community thriving across the
-            United States. Join us in preserving our cultural legacy for
-            generations to come.
+            <span>🏛️</span>
+            Celebrating Newari Culture in America
+            <span>🎭</span>
           </motion.p>
 
-          {/* Premium CTA Buttons */}
+          {/* Featured Project Slider */}
+          <motion.div
+            initial={{ scale: 0, rotate: -10 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+            className="flex justify-center mb-8"
+          >
+            <div className="relative max-w-3xl w-full">
+              {/* Decorative Corner Elements */}
+              <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-gold-accent opacity-60"></div>
+              <div className="absolute -top-3 -right-3 w-10 h-10 border-t-2 border-r-2 border-gold-accent opacity-60"></div>
+              <div className="absolute -bottom-3 -left-3 w-10 h-10 border-b-2 border-l-2 border-newari-red opacity-60"></div>
+              <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-2 border-r-2 border-newari-red opacity-60"></div>
+
+              {/* Slider Container */}
+              <div className="glass-effect rounded-2xl p-6 border-2 border-gold-accent/30 hover:border-gold-accent/60 transition-all duration-300 backdrop-blur-xl overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentProject}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {/* Project Icon and Title */}
+                    <div className="flex items-center justify-center gap-3 mb-3">
+                      <span className="text-4xl">
+                        {featuredProjects[currentProject].icon}
+                      </span>
+                      <h3 className="text-2xl md:text-3xl font-bold text-gold-accent">
+                        {featuredProjects[currentProject].title}
+                      </h3>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-sm md:text-base text-white mb-4 leading-relaxed">
+                      {featuredProjects[currentProject].description}
+                    </p>
+
+                    {/* Stats */}
+                    <div className="flex flex-wrap gap-3 justify-center items-center">
+                      {featuredProjects[currentProject].stats.map(
+                        (stat, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-2 text-gold-accent text-sm"
+                          >
+                            <span className="text-lg">{stat.icon}</span>
+                            <span className="font-semibold">{stat.label}</span>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Slider Navigation Dots */}
+                <div className="flex justify-center space-x-2 mt-4">
+                  {featuredProjects.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentProject(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentProject === index
+                          ? "bg-gold-accent w-6"
+                          : "bg-gray-500 hover:bg-newari-red"
+                      }`}
+                      aria-label={`Go to project ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Premium CTA Buttons - Prominent Donate */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-start mb-6 relative z-10"
           >
+            {/* Donate Button - Prominent and Large with Dropdown */}
+            <div
+              className="relative z-20"
+              onMouseEnter={() => setShowPaymentOptions(true)}
+              onMouseLeave={() => setShowPaymentOptions(false)}
+            >
+              <a
+                href="https://www.paypal.com/donate"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (showPaymentOptions) {
+                    e.preventDefault();
+                  }
+                }}
+                className="relative group overflow-hidden px-10 py-5 bg-gradient-to-r from-newari-red to-deep-maroon text-white font-bold rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 border-2 border-newari-red hover:border-gold-accent inline-flex items-center"
+              >
+                <span className="relative z-10 flex items-center gap-3 text-xl">
+                  <svg
+                    className="w-7 h-7 animate-pulse"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  Donate Now
+                  <svg
+                    className={`w-6 h-6 transition-transform ${
+                      showPaymentOptions ? "rotate-90" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </span>
+                <div className="absolute inset-0 bg-gold-accent opacity-0 group-hover:opacity-20 transition-opacity"></div>
+              </a>
+
+              {/* Payment Options Dropdown */}
+              <AnimatePresence>
+                {showPaymentOptions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="absolute top-full mt-3 left-0 w-80 min-h-[300px] bg-charcoal-black/98 backdrop-blur-2xl rounded-xl p-4 border-2 border-gold-accent shadow-2xl shadow-gold-accent/30 z-[200] overflow-visible"
+                  >
+                    {/* Header */}
+                    <div className="text-center mb-3 pb-3 border-b border-gold-accent/40">
+                      <p className="text-gold-accent font-bold text-base flex items-center justify-center gap-2">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        Choose Payment Method
+                      </p>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {/* Credit Card Option */}
+                      <a
+                        href="https://www.paypal.com/donate"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-3 p-3.5 rounded-lg bg-gradient-to-r from-dark-navy/90 to-dark-navy/70 hover:from-dark-navy hover:to-dark-navy transition-all duration-300 hover:scale-[1.02] border border-gold-accent/40 hover:border-gold-accent hover:shadow-lg hover:shadow-gold-accent/30"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center">
+                          <svg
+                            className="w-5 h-5 text-charcoal-black"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                            <path
+                              fillRule="evenodd"
+                              d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="text-white font-semibold text-sm">
+                            Credit Card
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            Visa, Mastercard, Amex
+                          </p>
+                        </div>
+                        <svg
+                          className="w-4 h-4 text-gold-accent group-hover:translate-x-1 transition-transform flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </a>
+
+                      {/* PayPal Option */}
+                      <a
+                        href="https://www.paypal.com/donate"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-3 p-3.5 rounded-lg bg-gradient-to-r from-dark-navy/90 to-dark-navy/70 hover:from-dark-navy hover:to-dark-navy transition-all duration-300 hover:scale-[1.02] border border-gold-accent/40 hover:border-gold-accent hover:shadow-lg hover:shadow-gold-accent/30"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center">
+                          <svg
+                            className="w-5 h-5 text-charcoal-black"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="text-white font-semibold text-sm">
+                            PayPal
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            Quick & Secure
+                          </p>
+                        </div>
+                        <svg
+                          className="w-4 h-4 text-gold-accent group-hover:translate-x-1 transition-transform flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </a>
+
+                      {/* Bank Transfer Option */}
+                      <a
+                        href="mailto:info@lyalmha.org?subject=Bank Transfer Donation"
+                        className="group flex items-center gap-3 p-3.5 rounded-lg bg-gradient-to-r from-dark-navy/90 to-dark-navy/70 hover:from-dark-navy hover:to-dark-navy transition-all duration-300 hover:scale-[1.02] border border-gold-accent/40 hover:border-gold-accent hover:shadow-lg hover:shadow-gold-accent/30"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center">
+                          <svg
+                            className="w-5 h-5 text-charcoal-black"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="text-white font-semibold text-sm">
+                            Bank Transfer
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            Contact for details
+                          </p>
+                        </div>
+                        <svg
+                          className="w-4 h-4 text-gold-accent group-hover:translate-x-1 transition-transform flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Register Button */}
+            <Link
+              to="/contact"
+              className="px-8 py-4 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <span className="flex items-center gap-2">
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                </svg>
+                Register Here
+              </span>
+            </Link>
+
+            {/* Explore Stories */}
             <Link
               to="/blogs"
-              className="btn-primary group relative overflow-hidden"
+              className="px-8 py-4 border-2 border-gold-accent text-gold-accent font-semibold rounded-xl hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                Explore Our Stories
+              <span className="flex items-center gap-2">
+                Explore Stories
                 <svg
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                  className="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -338,54 +595,6 @@ const Hero = () => {
                 </svg>
               </span>
             </Link>
-            <Link to="/culture" className="btn-secondary group">
-              <span className="flex items-center gap-2">
-                Discover Culture
-                <svg
-                  className="w-5 h-5 group-hover:rotate-12 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </span>
-            </Link>
-          </motion.div>
-
-          {/* Stats/Features */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto"
-          >
-            {[
-              { icon: "📚", label: "Cultural Stories", value: "Endless" },
-              { icon: "🎉", label: "Festivals", value: "Year-Round" },
-              { icon: "🤝", label: "Community", value: "Growing" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2 + index * 0.1 }}
-                className="glass-effect rounded-xl p-6 hover:bg-dark-navy/90 transition-all duration-300 hover:scale-105 group"
-              >
-                <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">
-                  {stat.icon}
-                </div>
-                <div className="text-gold-accent font-bold text-2xl mb-1">
-                  {stat.value}
-                </div>
-                <div className="text-paragraph-text text-sm">{stat.label}</div>
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </div>
@@ -395,21 +604,21 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 transform -translate-x-1/2"
       >
         <motion.div
-          animate={{ y: [0, 12, 0] }}
+          animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
+          className="flex flex-col items-center gap-1"
         >
-          <span className="text-muted-text text-sm font-medium tracking-wider uppercase">
+          <span className="text-muted-text text-xs font-medium tracking-wider uppercase">
             Explore
           </span>
-          <div className="w-6 h-10 border-2 border-gold-accent rounded-full flex justify-center p-1">
+          <div className="w-5 h-8 border-2 border-gold-accent rounded-full flex justify-center p-1">
             <motion.div
-              animate={{ y: [0, 16, 0] }}
+              animate={{ y: [0, 12, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 bg-gold-accent rounded-full"
+              className="w-1 h-1 bg-gold-accent rounded-full"
             />
           </div>
         </motion.div>
@@ -421,15 +630,15 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.3 }}
-          className="absolute bottom-10 right-10 flex gap-2"
+          className="absolute bottom-6 right-6 flex gap-2"
         >
           {backgroundImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentBg(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentBg
-                  ? "bg-gold-accent w-8"
+                  ? "bg-gold-accent w-6"
                   : "bg-border-line hover:bg-paragraph-text"
               }`}
               aria-label={`Go to slide ${index + 1}`}

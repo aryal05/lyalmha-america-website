@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { apiClient, API_ENDPOINTS } from '../../config/api'
-import AdminLayout from '../../components/admin/AdminLayout'
+import { apiClient, API_ENDPOINTS, API_URL } from "../../config/api";
+import AdminLayout from "../../components/admin/AdminLayout";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./AdminBlogs.css";
@@ -301,7 +301,11 @@ const AdminBlogs = () => {
                       {editingBlog && editingBlog.banner && !imageFile && (
                         <div className="relative rounded-lg overflow-hidden border border-gold-accent/30">
                           <img
-                            src={`http://localhost:5000${editingBlog.banner}`}
+                            src={
+                              editingBlog.banner.startsWith("http")
+                                ? editingBlog.banner
+                                : `${API_URL}${editingBlog.banner}`
+                            }
                             alt="Current banner"
                             className="w-full h-32 object-cover"
                           />
