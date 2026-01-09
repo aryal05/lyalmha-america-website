@@ -19,13 +19,11 @@ const BlogCard = ({ blog, index }) => {
           <div className="absolute inset-0 mandala-pattern opacity-20 z-10 pointer-events-none"></div>
 
           <img
-            src={
-              getImageUrl(blog.banner) || "https://via.placeholder.com/400x300"
-            }
+            src={getImageUrl(blog.banner)}
             alt={blog.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/400x300";
+              e.target.style.display = "none";
             }}
           />
           {/* Gradient Overlay */}

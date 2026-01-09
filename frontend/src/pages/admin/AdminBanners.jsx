@@ -10,37 +10,33 @@ const AdminBanners = () => {
   const [editingBanner, setEditingBanner] = useState(null)
   const [imageFile, setImageFile] = useState(null)
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    position: 'hero',
-    order_index: 0,
-    link: '',
+    title: "",
+    description: "",
+    position: "home",
     active: true,
-    image: null
-  })
+  });
 
   useEffect(() => {
-    fetchBanners()
-  }, [])
+    fetchBanners();
+  }, []);
 
   const fetchBanners = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.BANNERS.GET_ALL)
-      setBanners(response.data.data)
+      const response = await apiClient.get(API_ENDPOINTS.BANNERS.GET_ALL);
+      setBanners(response.data.data);
     } catch (error) {
-      console.error('Error fetching banners:', error)
+      console.error("Error fetching banners:", error);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     console.log("Form submission - editingBanner:", editingBanner);
-    console.log("Form submission - formData.image:", formData.image);
     console.log("Form submission - imageFile:", imageFile);
 
     // Validate that image is provided for new banners
-    if (!editingBanner && !formData.image) {
+    if (!editingBanner && !imageFile) {
       alert("Please select an image for the banner");
       return;
     }
@@ -50,16 +46,18 @@ const AdminBanners = () => {
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("position", formData.position);
-      data.append("order_index", formData.order_index);
-      data.append("link", formData.link);
       data.append("active", formData.active ? "1" : "0");
-      if (formData.image) {
-        data.append("image", formData.image);
+
+      // Only append image if a new file was selected
+      if (imageFile) {
+        data.append("image", imageFile);
       }
 
       console.log("FormData entries:");
       for (let pair of data.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
+        console.log(
+          pair[0] + ": " + (pair[1] instanceof File ? pair[1].name : pair[1])
+        );
       }
 
       if (editingBanner) {
@@ -78,61 +76,116 @@ const AdminBanners = () => {
         "Error saving banner: " + (error.response?.data?.error || error.message)
       );
     }
-  }
+  };
 
   const handleEdit = (banner) => {
-    setEditingBanner(banner)
-    setImageFile(null)
+    setEditingBanner(banner);
+    setImageFile(null); // Clear any previous file selection
     setFormData({
       title: banner.title,
-      description: banner.description || '',
+      description: banner.description || "",
       position: banner.position,
-      order_index: banner.order_index,
-      link: banner.link || '',
       active: banner.active === 1,
-      image: null
-    })
-    setShowForm(true)
-  }
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this banner?')) {
+    if (window.confirm("Are you sure you want to delete this banner?")) {
       try {
-        await apiClient.delete(API_ENDPOINTS.BANNERS.DELETE(id))
-        fetchBanners()
+        await apiClient.delete(API_ENDPOINTS.BANNERS.DELETE(id));
+        fetchBanners();
       } catch (error) {
-        console.error('Error deleting banner:', error)
+        console.error("Error deleting banner:", error);
       }
     }
-  }
+  };
 
   const toggleActive = async (id, currentStatus) => {
     try {
-      const data = new FormData()
-      data.append('active', currentStatus === 1 ? '0' : '1')
-      
-      await apiClient.put(API_ENDPOINTS.BANNERS.UPDATE(id), data)
-      fetchBanners()
+      console.log("=".repeat(60));
+      console.log("🔄 TOGGLE OPERATION STARTED");
+      console.log("Banner ID:", id);
+      console.log(
+        "Current status:",
+        currentStatus,
+        "(type:",
+        typeof currentStatus,
+        ")"
+      );
+
+      // Get the full banner data first
+      const banner = banners.find((b) => b.id === id);
+      if (!banner) {
+        console.error("❌ Banner not found in list!");
+        alert("Banner not found");
+        return;
+      }
+
+      console.log("📦 Full banner object:", JSON.stringify(banner, null, 2));
+
+      const newActiveValue = currentStatus === 1 ? 0 : 1;
+      console.log(
+        "📤 New active value:",
+        newActiveValue,
+        "(type:",
+        typeof newActiveValue,
+        ")"
+      );
+
+      const data = new FormData();
+      data.append("title", banner.title);
+      data.append("description", banner.description || "");
+      data.append("position", banner.position);
+      data.append("active", String(newActiveValue));
+
+      console.log("📋 FormData contents:");
+      console.log("  - title:", banner.title);
+      console.log("  - description:", banner.description || "");
+      console.log("  - position:", banner.position);
+      console.log("  - active:", String(newActiveValue));
+
+      console.log(
+        "🌐 Sending PUT request to:",
+        API_ENDPOINTS.BANNERS.UPDATE(id)
+      );
+      const response = await apiClient.put(
+        API_ENDPOINTS.BANNERS.UPDATE(id),
+        data
+      );
+      console.log("✅ Server response:", response.data);
+
+      // Refresh banner list
+      console.log("🔄 Refreshing banner list...");
+      await fetchBanners();
+      console.log("✅ TOGGLE OPERATION COMPLETED");
+      console.log("=".repeat(60));
     } catch (error) {
-      console.error('Error toggling banner status:', error)
-      alert('Error updating banner status: ' + (error.response?.data?.error || error.message))
+      console.error("=".repeat(60));
+      console.error("❌ TOGGLE OPERATION FAILED");
+      console.error("Error object:", error);
+      console.error("Error message:", error.message);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      console.error("=".repeat(60));
+      alert(
+        "Error updating banner status: " +
+          (error.response?.data?.error || error.message)
+      );
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      position: 'hero',
-      order_index: 0,
-      link: '',
+      title: "",
+      description: "",
+      position: "home",
       active: true,
-      image: null
-    })
-    setImageFile(null)
-    setEditingBanner(null)
-    setShowForm(false)
-  }
+    });
+    setImageFile(null);
+    setEditingBanner(null);
+    setShowForm(false);
+  };
 
   return (
     <AdminLayout>
@@ -236,46 +289,16 @@ const AdminBanners = () => {
                       }
                       className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
                     >
-                      <option value="hero">Home</option>
-                      <option value="about">About</option>
+                      <option value="home">Home</option>
+                      <option value="about">About Us</option>
                       <option value="blogs">Blogs</option>
+                      <option value="news">News & Press</option>
+                      <option value="gallery">Gallery</option>
                       <option value="culture">Culture</option>
+                      <option value="kids-activities">Kids Activities</option>
                       <option value="contact">Contact</option>
                     </select>
                   </div>
-
-                  <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
-                      Display Order
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.order_index}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          order_index: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-gold-accent/80 font-medium mb-2">
-                    Link
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.link}
-                    onChange={(e) =>
-                      setFormData({ ...formData, link: e.target.value })
-                    }
-                    placeholder="/about or https://example.com"
-                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
-                  />
                 </div>
 
                 <div>
@@ -290,8 +313,9 @@ const AdminBanners = () => {
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      setImageFile(file);
-                      setFormData({ ...formData, image: file });
+                      if (file) {
+                        setImageFile(file);
+                      }
                     }}
                     className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
                   />
@@ -428,27 +452,32 @@ const AdminBanners = () => {
                     >
                       {banner.active === 1 ? "● Active" : "○ Inactive"}
                     </span>
-                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gold-accent/20 text-gold-accent border border-gold-accent/30">
-                      {banner.position}
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gold-accent/20 text-gold-accent border border-gold-accent/30 capitalize">
+                      {banner.position === "kids-activities"
+                        ? "Kids Activities"
+                        : banner.position.replace("-", " ")}
+                    </span>
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                      #{banner.order_index}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-sm text-gold-accent/70 flex items-center gap-1">
-                    <span>📊</span>
-                    Order: {banner.order_index}
+                    <span>🎯</span>
+                    Display Order: #{banner.order_index}
                   </span>
-                  {banner.link && (
-                    <a
-                      href={banner.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-gold-accent hover:text-newari-red transition-colors flex items-center gap-1"
-                    >
-                      <span>🔗</span>
-                      External Link
-                    </a>
-                  )}
+                  <span className="text-sm text-muted-text">
+                    {banner.order_index === 1
+                      ? "(Shown first)"
+                      : `(Shown ${
+                          banner.order_index === 2
+                            ? "second"
+                            : banner.order_index === 3
+                            ? "third"
+                            : `${banner.order_index}th`
+                        })`}
+                  </span>
                 </div>
                 <div className="pagoda-divider opacity-20 mb-4"></div>
                 <div className="flex gap-2 flex-wrap">

@@ -9,7 +9,8 @@ import { getImageUrl } from "../utils/imageHelper";
 import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const Contact = () => {
-  const [heroBanner, setHeroBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,16 +25,25 @@ const Contact = () => {
           API_ENDPOINTS.BANNERS.GET_BY_LOCATION("contact")
         );
         console.log("Contact banner response:", response.data.data);
-        const banners = response.data.data || [];
-        if (banners.length > 0) {
-          setHeroBanner(banners[0]);
-        }
+        const bannersData = response.data.data || [];
+        setBanners(bannersData.length > 0 ? bannersData : []);
       } catch (error) {
         console.error("Error fetching banner:", error);
       }
     };
     fetchBanner();
   }, []);
+
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const activeBanner = banners[currentBanner];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,7 +70,9 @@ const Contact = () => {
         <div className="absolute inset-0 z-0">
           <img
             src={
-              heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+              activeBanner?.image
+                ? getImageUrl(activeBanner.image)
+                : fallbackBanner
             }
             alt="Contact Background"
             className="w-full h-full object-cover"

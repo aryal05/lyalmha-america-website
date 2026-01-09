@@ -118,7 +118,7 @@ const BlogGrid = () => {
                   <img
                     src={
                       getImageUrl(featuredBlogs[currentSlide].banner) ||
-                      "https://via.placeholder.com/800x500"
+                      getImageUrl(blog.banner)
                     }
                     alt={featuredBlogs[currentSlide].title}
                     className="w-full h-full object-cover"

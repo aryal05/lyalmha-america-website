@@ -104,6 +104,10 @@ router.post('/', authenticateAdmin, upload.single('image'), async (req, res) => 
 // Update activity (Admin only)
 router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) => {
   try {
+    console.log('🎨 Updating activity:', req.params.id)
+    console.log('📦 Request body:', req.body)
+    console.log('📸 Has file:', !!req.file)
+    
     const { title, description, category, detailedInfo, benefits, ageGroup, icon, orderIndex } = req.body
     const db = getDatabase()
 
@@ -115,13 +119,23 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
     let imageUrl = existingActivity.image
 
     if (req.file) {
-      // Upload new image to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'lyalmha-activities',
-        transformation: [{ width: 800, height: 600, crop: 'limit' }],
-      })
-      imageUrl = result.secure_url
-      fs.unlinkSync(req.file.path)
+      try {
+        console.log('☁️  Uploading to Cloudinary...')
+        // Upload new image to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'lyalmha-activities',
+          transformation: [{ width: 800, height: 600, crop: 'limit' }],
+        })
+        imageUrl = result.secure_url
+        console.log('✅ Image uploaded:', imageUrl)
+        fs.unlinkSync(req.file.path)
+      } catch (uploadError) {
+        console.error('❌ Cloudinary upload error:', uploadError)
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Image upload failed: ' + uploadError.message 
+        })
+      }
     }
 
     await db.run(
@@ -133,9 +147,10 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
     )
 
     const updatedActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
+    console.log('✅ Activity updated successfully')
     res.json({ success: true, data: updatedActivity })
   } catch (error) {
-    console.error('Error updating activity:', error)
+    console.error('❌ Error updating activity:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })

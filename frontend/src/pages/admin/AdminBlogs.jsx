@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS, API_URL } from "../../config/api";
 import AdminLayout from "../../components/admin/AdminLayout";
 import ReactQuill from "react-quill";
@@ -20,6 +20,7 @@ const AdminBlogs = () => {
     status: "draft",
   });
   const [imageFile, setImageFile] = useState(null);
+  const quillRef = useRef(null);
 
   useEffect(() => {
     fetchBlogs();
@@ -187,6 +188,7 @@ const AdminBlogs = () => {
                   >
                     <div className="wordpress-editor">
                       <ReactQuill
+                        ref={quillRef}
                         theme="snow"
                         value={formData.content}
                         onChange={(value) =>
@@ -536,4 +538,4 @@ const AdminBlogs = () => {
   );
 };
 
-export default AdminBlogs
+export default AdminBlogs;

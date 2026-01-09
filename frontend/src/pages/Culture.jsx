@@ -11,11 +11,23 @@ const Culture = () => {
   const [festivals, setFestivals] = useState([]);
   const [traditions, setTraditions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [heroBanner, setHeroBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
     fetchCultureData();
   }, []);
+
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const activeBanner = banners[currentBanner];
 
   const fetchCultureData = async () => {
     try {
@@ -31,9 +43,7 @@ const Culture = () => {
       setTraditions(traditionsRes.data.data || []);
 
       const banners = bannerRes.data.data || [];
-      if (banners.length > 0) {
-        setHeroBanner(banners[0]);
-      }
+      setBanners(banners.length > 0 ? banners : []);
     } catch (error) {
       console.error("Error fetching culture data:", error);
     } finally {
@@ -51,7 +61,9 @@ const Culture = () => {
         <div className="absolute inset-0 z-0">
           <img
             src={
-              heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+              activeBanner?.image
+                ? getImageUrl(activeBanner.image)
+                : fallbackBanner
             }
             alt="Culture Background"
             className="w-full h-full object-cover"

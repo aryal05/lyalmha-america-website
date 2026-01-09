@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // API Configuration
 export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-production.up.railway.app'
-
+// export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -62,7 +62,7 @@ export const API_ENDPOINTS = {
     DELETE: (id) => `/api/admin/supporters/${id}`,
   },
   BANNERS: {
-    GET_ALL: '/api/admin/banners',
+    GET_ALL: '/api/admin/banners/admin/all',
     GET_BY_LOCATION: (location) => `/api/admin/banners/location/${location}`,
     CREATE: '/api/admin/banners',
     UPDATE: (id) => `/api/admin/banners/${id}`,

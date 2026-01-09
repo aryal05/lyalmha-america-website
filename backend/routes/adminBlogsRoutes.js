@@ -103,6 +103,10 @@ router.post('/', upload.single('banner'), async (req, res) => {
 router.put('/:id', upload.single('banner'), async (req, res) => {
   const db = getDatabase()
   try {
+    console.log('Updating blog:', req.params.id)
+    console.log('Request body:', req.body)
+    console.log('Has file:', !!req.file)
+    
     const { title, excerpt, content, category, author, status } = req.body
     const blog = await db.get('SELECT * FROM blogs WHERE id = ?', req.params.id)
     
@@ -113,7 +117,13 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
     // Upload to Cloudinary if new image provided
     let banner = blog.banner
     if (req.file) {
-      banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+      try {
+        banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+        console.log('Image uploaded to Cloudinary:', banner)
+      } catch (uploadError) {
+        console.error('Cloudinary upload error:', uploadError)
+        return res.status(500).json({ success: false, error: 'Image upload failed: ' + uploadError.message })
+      }
     }
     
     const readTime = content ? Math.ceil(content.split(' ').length / 200) : blog.read_time
@@ -140,7 +150,8 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
     
     res.json({ success: true, data: updatedBlog })
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message })
+    console.error('Error updating blog:', error)
+    res.status(500).json({ success: false, error: error.message, stack: error.stack })
   }
 })
 

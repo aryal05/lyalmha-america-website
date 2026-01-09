@@ -86,7 +86,7 @@ const Hero = () => {
   const fetchBanners = async () => {
     try {
       const response = await apiClient.get(
-        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("hero")
+        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("home")
       );
       setBanners(response.data.data || []);
     } catch (error) {

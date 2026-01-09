@@ -328,14 +328,11 @@ const AdminEvents = () => {
               {event.image && (
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={
-                      getImageUrl(event.image) ||
-                      "https://via.placeholder.com/150"
-                    }
+                    src={getImageUrl(event.image) || getImageUrl(event.image)}
                     alt={event.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/150";
+                      e.target.style.display = "none";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black/90 to-transparent"></div>

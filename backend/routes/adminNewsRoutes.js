@@ -85,6 +85,10 @@ router.post('/', upload.single('image'), async (req, res) => {
 // Update news
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
+    console.log('📰 Updating news:', req.params.id)
+    console.log('📦 Request body:', req.body)
+    console.log('📸 Has file:', !!req.file)
+    
     const { title, excerpt, content, category, author, published_date, active, order_index } = req.body
     const db = getDatabase()
 
@@ -96,7 +100,17 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     // Upload to Cloudinary if new image uploaded
     let image = newsItem.image
     if (req.file) {
-      image = await uploadToCloudinary(req.file.buffer, 'news')
+      try {
+        console.log('☁️  Uploading to Cloudinary...')
+        image = await uploadToCloudinary(req.file.buffer, 'news')
+        console.log('✅ Image uploaded:', image)
+      } catch (uploadError) {
+        console.error('❌ Cloudinary upload error:', uploadError)
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Image upload failed: ' + uploadError.message 
+        })
+      }
     }
 
     await db.run(
@@ -120,9 +134,10 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     )
 
     const updatedNews = await db.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    console.log('✅ News updated successfully')
     res.json({ success: true, data: updatedNews })
   } catch (error) {
-    console.error('Error updating news:', error)
+    console.error('❌ Error updating news:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })

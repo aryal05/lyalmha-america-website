@@ -6,25 +6,37 @@ import logo from "../assets/images/logo/lyama (1) (1).png";
 import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const AboutHero = () => {
-  const [heroBanner, setHeroBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
-    fetchBanner();
+    fetchBanners();
   }, []);
 
-  const fetchBanner = async () => {
+  const fetchBanners = async () => {
     try {
       const response = await apiClient.get(
         API_ENDPOINTS.BANNERS.GET_BY_LOCATION("about")
       );
       console.log("About banner response:", response.data.data);
-      if (response.data.data && response.data.data.length > 0) {
-        setHeroBanner(response.data.data[0]);
-      }
+      const bannersData = response.data.data || [];
+      setBanners(bannersData.length > 0 ? bannersData : []);
     } catch (error) {
       console.error("Error fetching about banner:", error);
+      setBanners([]);
     }
   };
+
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const activeBanner = banners[currentBanner];
 
   return (
     <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
@@ -32,7 +44,9 @@ const AboutHero = () => {
       <div className="absolute inset-0">
         <img
           src={
-            heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+            activeBanner?.image
+              ? getImageUrl(activeBanner.image)
+              : fallbackBanner
           }
           alt="About Lyalmha America"
           className="w-full h-full object-cover"

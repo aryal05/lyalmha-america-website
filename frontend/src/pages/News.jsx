@@ -11,41 +11,84 @@ const News = () => {
   const [news, setNews] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
-    fetchNews()
-  }, [])
+    fetchNews();
+    fetchBanners();
+  }, []);
 
   const fetchNews = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.NEWS.GET_ALL)
-      setNews(response.data.data || [])
+      const response = await apiClient.get(API_ENDPOINTS.NEWS.GET_ALL);
+      setNews(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching news:', error)
+      console.error("Error fetching news:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const categories = ['all', 'announcement', 'press-release', 'media-coverage', 'event']
-  const filteredNews = selectedCategory === 'all' 
-    ? news 
-    : news.filter(item => item.category === selectedCategory)
+  const fetchBanners = async () => {
+    try {
+      const response = await apiClient.get(
+        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("news")
+      );
+      setBanners(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching banners:", error);
+    }
+  };
+
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const activeBanner = banners[currentBanner];
+
+  const categories = [
+    "all",
+    "announcement",
+    "press-release",
+    "media-coverage",
+    "event",
+  ];
+  const filteredNews =
+    selectedCategory === "all"
+      ? news
+      : news.filter((item) => item.category === selectedCategory);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-charcoal-black">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 overflow-hidden">
+        {/* Background Banner Image */}
+        {activeBanner && (
+          <div className="absolute inset-0 z-0">
+            <img
+              src={getImageUrl(activeBanner.image)}
+              alt="News Background"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/90 via-charcoal-black/85 to-charcoal-black"></div>
+          </div>
+        )}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold-accent/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-newari-red/10 rounded-full blur-3xl" />
         <div className="absolute inset-0 mandala-pattern opacity-5 pointer-events-none" />
@@ -81,7 +124,8 @@ const News = () => {
               <span className="text-gold-accent">Press</span>
             </h1>
             <p className="text-xl text-paragraph-text max-w-3xl mx-auto leading-relaxed">
-              Stay updated with our latest announcements, press releases, and media coverage about Lyaymha America Guthi.
+              Stay updated with our latest announcements, press releases, and
+              media coverage about Lyaymha America Guthi.
             </p>
           </motion.div>
         </div>
@@ -97,11 +141,14 @@ const News = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                 selectedCategory === category
-                  ? 'bg-gold-accent text-charcoal-black shadow-gold'
-                  : 'bg-dark-navy text-paragraph-text hover:text-gold-accent border border-border-line hover:border-gold-accent'
+                  ? "bg-gold-accent text-charcoal-black shadow-gold"
+                  : "bg-dark-navy text-paragraph-text hover:text-gold-accent border border-border-line hover:border-gold-accent"
               }`}
             >
-              {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              {category
+                .split("-")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}
             </button>
           ))}
         </div>
@@ -132,15 +179,25 @@ const News = () => {
                       />
                       <div className="absolute top-3 right-3">
                         <span className="px-3 py-1 bg-gold-accent text-charcoal-black text-xs font-semibold rounded-full">
-                          {item.category.split('-').join(' ')}
+                          {item.category.split("-").join(" ")}
                         </span>
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center gap-2 text-sm text-paragraph-text mb-3">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                     <span>{formatDate(item.published_date)}</span>
                   </div>
@@ -154,7 +211,9 @@ const News = () => {
                   </p>
 
                   <div className="flex items-center justify-between pt-4 border-t border-border-line">
-                    <span className="text-sm text-paragraph-text">{item.author || 'Lyaymha America'}</span>
+                    <span className="text-sm text-paragraph-text">
+                      {item.author || "Lyaymha America"}
+                    </span>
                     <button className="text-gold-accent hover:text-gold-accent/80 transition-colors font-medium text-sm">
                       Read More →
                     </button>
@@ -167,7 +226,9 @@ const News = () => {
 
         {!loading && filteredNews.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-paragraph-text text-lg">No news articles found in this category.</p>
+            <p className="text-paragraph-text text-lg">
+              No news articles found in this category.
+            </p>
           </div>
         )}
       </section>
@@ -175,7 +236,7 @@ const News = () => {
       <Footer />
       <ScrollToTop />
     </div>
-  )
+  );
 }
 
 export default News

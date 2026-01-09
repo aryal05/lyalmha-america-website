@@ -10,7 +10,8 @@ import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrati
 const Blogs = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [heroBanner, setHeroBanner] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,10 +25,8 @@ const Blogs = () => {
         setBlogPosts(Array.isArray(blogsData) ? blogsData : []);
 
         console.log("Blogs banner response:", bannerRes.data.data);
-        const banners = bannerRes.data.data || [];
-        if (banners.length > 0) {
-          setHeroBanner(banners[0]);
-        }
+        const bannersData = bannerRes.data.data || [];
+        setBanners(bannersData.length > 0 ? bannersData : []);
       } catch (error) {
         console.error("Error fetching data:", error);
         setBlogPosts([]);
@@ -39,6 +38,17 @@ const Blogs = () => {
     fetchData();
   }, []);
 
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const activeBanner = banners[currentBanner];
+
   return (
     <div className="min-h-screen bg-charcoal-black">
       <Navbar />
@@ -49,7 +59,9 @@ const Blogs = () => {
         <div className="absolute inset-0 z-0">
           <img
             src={
-              heroBanner?.image ? getImageUrl(heroBanner.image) : fallbackBanner
+              activeBanner?.image
+                ? getImageUrl(activeBanner.image)
+                : fallbackBanner
             }
             alt="Blog Background"
             className="w-full h-full object-cover"
@@ -118,10 +130,7 @@ const Blogs = () => {
                     <div className="absolute inset-0 mandala-pattern opacity-20 z-10 pointer-events-none"></div>
 
                     <img
-                      src={
-                        getImageUrl(post.banner) ||
-                        "https://via.placeholder.com/400x300"
-                      }
+                      src={getImageUrl(post.banner) || getImageUrl(blog.banner)}
                       alt={post.title}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
