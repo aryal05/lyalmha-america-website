@@ -153,9 +153,9 @@ const Hero = () => {
   const currentWords = textContent[currentLanguage];
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-x-hidden">
       {/* Premium Background with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentBg}
@@ -338,11 +338,11 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-start mb-6 relative z-10"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6 relative z-10 overflow-visible"
           >
             {/* Donate Button - Prominent and Large with Dropdown */}
             <div
-              className="relative z-20"
+              className="relative z-50 overflow-visible"
               onMouseEnter={() => setShowPaymentOptions(true)}
               onMouseLeave={() => setShowPaymentOptions(false)}
             >
@@ -397,7 +397,7 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="absolute top-full mt-3 left-0 w-80 min-h-[300px] bg-charcoal-black/98 backdrop-blur-2xl rounded-xl p-4 border-2 border-gold-accent shadow-2xl shadow-gold-accent/30 z-[200] overflow-visible"
+                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-80 bg-charcoal-black/98 backdrop-blur-2xl rounded-xl p-4 border-2 border-gold-accent shadow-2xl shadow-gold-accent/30 z-[9999]"
                   >
                     {/* Header */}
                     <div className="text-center mb-3 pb-3 border-b border-gold-accent/40">
