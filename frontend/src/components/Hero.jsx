@@ -37,9 +37,9 @@ const Hero = () => {
     },
     {
       icon: "🎪",
-      title: "Biskaa Jatraa Festival",
+      title: "Biska Jatra Festival",
       description:
-        "Support our annual Biskaa Jatraa celebration, bringing the community together to honor our traditional New Year festival with authentic rituals and celebrations.",
+        "Support our annual Biska Jatra celebration, bringing the community together to honor our traditional New Year festival with authentic rituals and celebrations.",
       stats: [
         { icon: "🎉", label: "Annual Event" },
         { icon: "👨‍👩‍👧‍👦", label: "1000+ Attendees" },
