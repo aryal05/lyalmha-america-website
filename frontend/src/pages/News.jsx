@@ -73,11 +73,11 @@ const News = () => {
   };
 
   return (
-    <div className="min-h-screen bg-charcoal-black">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
+      <section className="relative pt-40 pb-16 overflow-hidden">
         {/* Background Banner Image */}
         {activeBanner && (
           <div className="absolute inset-0 z-0">
@@ -86,7 +86,7 @@ const News = () => {
               alt="News Background"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/90 via-charcoal-black/85 to-charcoal-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
           </div>
         )}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold-accent/10 rounded-full blur-3xl" />
@@ -120,10 +120,10 @@ const News = () => {
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="text-primary-text">News & </span>
+              <span className="text-white">News & </span>
               <span className="text-gold-accent">Press</span>
             </h1>
-            <p className="text-xl text-paragraph-text max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-cream-white/90 max-w-3xl mx-auto leading-relaxed">
               Stay updated with our latest announcements, press releases, and
               media coverage about Lyaymha America Guthi.
             </p>
@@ -141,8 +141,8 @@ const News = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                 selectedCategory === category
-                  ? "bg-gold-accent text-charcoal-black shadow-gold"
-                  : "bg-dark-navy text-paragraph-text hover:text-gold-accent border border-border-line hover:border-gold-accent"
+                  ? "bg-gold-accent text-white shadow-gold"
+                  : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
               }`}
             >
               {category
@@ -159,15 +159,21 @@ const News = () => {
             <div className="inline-block w-12 h-12 border-4 border-gold-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <AnimatePresence>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
               {filteredNews.map((item, index) => (
                 <motion.article
                   key={item.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 30 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                   className="card-premium group hover:border-gold-accent/50 transition-all duration-300"
                 >
                   {item.image && (
@@ -220,8 +226,8 @@ const News = () => {
                   </div>
                 </motion.article>
               ))}
-            </AnimatePresence>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         )}
 
         {!loading && filteredNews.length === 0 && (

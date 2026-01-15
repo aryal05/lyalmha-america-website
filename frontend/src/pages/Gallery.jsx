@@ -33,14 +33,22 @@ const Gallery = () => {
     : images.filter(img => img.category === filter)
 
   return (
-    <div className="min-h-screen bg-charcoal-black">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
       <Navbar />
-      
+
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gold-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-newari-red/10 rounded-full blur-3xl" />
-        <div className="absolute inset-0 mandala-pattern opacity-5 pointer-events-none" />
+      <section className="relative pt-40 pb-16 overflow-hidden">
+        {/* Blue gradient overlay matching Contact/Culture pages */}
+        <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white z-0"></div>
+
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gold-accent/10 rounded-full blur-3xl z-0" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-royal-blue/20 rounded-full blur-3xl z-0" />
+        <div className="absolute inset-0 mandala-pattern opacity-5 pointer-events-none z-0" />
+
+        {/* Decorative corner patterns */}
+        <div className="absolute top-8 left-8 w-20 h-20 border-t-2 border-l-2 border-gold-accent/30 z-0"></div>
+        <div className="absolute bottom-8 right-8 w-20 h-20 border-b-2 border-r-2 border-gold-accent/30 z-0"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
@@ -69,11 +77,12 @@ const Gallery = () => {
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="text-primary-text">Photo </span>
+              <span className="text-white">Photo </span>
               <span className="text-gold-accent">Gallery</span>
             </h1>
-            <p className="text-xl text-paragraph-text max-w-3xl mx-auto leading-relaxed">
-              Capturing moments of celebration, tradition, and community spirit through our cultural events and activities.
+            <p className="text-xl text-cream-white/90 max-w-3xl mx-auto leading-relaxed">
+              Capturing moments of celebration, tradition, and community spirit
+              through our cultural events and activities.
             </p>
           </motion.div>
         </div>
@@ -89,8 +98,8 @@ const Gallery = () => {
               onClick={() => setFilter(category)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                 filter === category
-                  ? 'bg-gold-accent text-charcoal-black shadow-gold'
-                  : 'bg-dark-navy text-paragraph-text hover:text-gold-accent border border-border-line hover:border-gold-accent'
+                  ? "bg-gold-accent text-white shadow-gold"
+                  : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
               }`}
             >
               {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -104,7 +113,7 @@ const Gallery = () => {
             <div className="inline-block w-12 h-12 border-4 border-gold-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             layout
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
@@ -126,9 +135,13 @@ const Gallery = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black/90 via-charcoal-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-white font-bold text-lg mb-1">{image.title}</h3>
+                      <h3 className="text-white font-bold text-lg mb-1">
+                        {image.title}
+                      </h3>
                       {image.description && (
-                        <p className="text-gray-300 text-sm">{image.description}</p>
+                        <p className="text-gray-300 text-sm">
+                          {image.description}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -140,7 +153,9 @@ const Gallery = () => {
 
         {!loading && filteredImages.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-paragraph-text text-lg">No images found in this category.</p>
+            <p className="text-paragraph-text text-lg">
+              No images found in this category.
+            </p>
           </div>
         )}
       </section>
@@ -166,8 +181,18 @@ const Gallery = () => {
                 onClick={() => setSelectedImage(null)}
                 className="absolute -top-12 right-0 text-white hover:text-gold-accent transition-colors"
               >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
               <img
@@ -176,7 +201,9 @@ const Gallery = () => {
                 className="w-full h-auto rounded-lg"
               />
               <div className="mt-4 text-center">
-                <h3 className="text-white font-bold text-xl mb-2">{selectedImage.title}</h3>
+                <h3 className="text-white font-bold text-xl mb-2">
+                  {selectedImage.title}
+                </h3>
                 {selectedImage.description && (
                   <p className="text-gray-300">{selectedImage.description}</p>
                 )}
@@ -189,7 +216,7 @@ const Gallery = () => {
       <Footer />
       <ScrollToTop />
     </div>
-  )
+  );
 }
 
 export default Gallery

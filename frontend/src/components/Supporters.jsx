@@ -28,10 +28,10 @@ const Supporters = () => {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-charcoal-black">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mandala-pattern opacity-10 h-32 flex items-center justify-center">
-            <p className="text-gold-accent text-xl font-semibold">
+            <p className="text-royal-blue text-xl font-semibold">
               Loading supporters...
             </p>
           </div>
@@ -41,7 +41,7 @@ const Supporters = () => {
   }
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-charcoal-black overflow-hidden">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-blue-50/20 to-slate-50 overflow-hidden">
       {/* Background Mandala */}
       <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
@@ -76,7 +76,7 @@ const Supporters = () => {
             viewport={{ once: true }}
             className="mb-16"
           >
-            <h3 className="text-2xl font-bold text-center text-primary-text mb-8">
+            <h3 className="text-2xl font-bold text-center text-royal-blue mb-8">
               Financial Supporters
             </h3>
 
@@ -119,7 +119,7 @@ const Supporters = () => {
             transition={{ delay: 0.2 }}
             className="mb-16"
           >
-            <h3 className="text-2xl font-bold text-center text-primary-text mb-8">
+            <h3 className="text-2xl font-bold text-center text-royal-blue mb-8">
               Corporate Sponsors
             </h3>
 

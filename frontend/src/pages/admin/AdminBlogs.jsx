@@ -103,7 +103,9 @@ const AdminBlogs = () => {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="text-white">Loading...</div>
+        <div className="text-royal-blue font-semibold text-xl animate-pulse">
+          Loading blogs...
+        </div>
       </AdminLayout>
     );
   }
@@ -123,10 +125,10 @@ const AdminBlogs = () => {
           className="flex justify-between items-center mb-8 relative z-10"
         >
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
               Blog Posts
             </h1>
-            <p className="text-gold-accent/60">
+            <p className="text-paragraph-text">
               Create and manage all blog articles
             </p>
             <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
@@ -165,7 +167,7 @@ const AdminBlogs = () => {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg hover:border-royal-blue transition-colors"
                   >
                     <input
                       type="text"
@@ -175,7 +177,7 @@ const AdminBlogs = () => {
                         setFormData({ ...formData, title: e.target.value })
                       }
                       required
-                      className="w-full px-6 py-4 bg-transparent text-white text-2xl font-bold border-0 focus:outline-none placeholder:text-muted-text"
+                      className="w-full px-6 py-4 bg-transparent text-gray-900 text-2xl font-bold border-0 focus:outline-none placeholder:text-gray-500"
                     />
                   </motion.div>
 
@@ -184,7 +186,7 @@ const AdminBlogs = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg hover:border-royal-blue transition-colors"
                   >
                     <div className="wordpress-editor">
                       <ReactQuill
@@ -214,9 +216,9 @@ const AdminBlogs = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg hover:border-royal-blue transition-colors p-5"
                   >
-                    <label className="block text-gold-accent font-semibold mb-3">
+                    <label className="block text-royal-blue font-semibold mb-3">
                       📝 Excerpt
                     </label>
                     <textarea
@@ -226,7 +228,7 @@ const AdminBlogs = () => {
                         setFormData({ ...formData, excerpt: e.target.value })
                       }
                       rows="3"
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     />
                   </motion.div>
                 </div>
@@ -237,17 +239,17 @@ const AdminBlogs = () => {
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gold-accent/20">
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-300">
                       <span className="text-2xl">📤</span>
-                      <h3 className="font-bold text-white">Publish</h3>
+                      <h3 className="font-bold text-royal-blue">Publish</h3>
                     </div>
 
                     <div className="space-y-4">
                       {/* Status Selector */}
                       <div>
-                        <label className="block text-gold-accent/80 text-sm mb-2">
+                        <label className="block text-royal-blue text-sm mb-2 font-semibold">
                           Status
                         </label>
                         <select
@@ -255,7 +257,7 @@ const AdminBlogs = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, status: e.target.value })
                           }
-                          className="w-full px-3 py-2 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors text-sm"
+                          className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
                         >
                           <option value="draft">📝 Draft</option>
                           <option value="published">✅ Published</option>
@@ -278,7 +280,7 @@ const AdminBlogs = () => {
                             onClick={resetForm}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full px-4 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:border-gold-accent transition-colors font-semibold"
+                            className="w-full px-4 py-3 bg-white text-royal-blue rounded-lg border-2 border-gray-300 hover:border-royal-blue transition-colors font-semibold"
                           >
                             ❌ Cancel
                           </motion.button>
@@ -292,11 +294,13 @@ const AdminBlogs = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gold-accent/20">
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-300">
                       <span className="text-2xl">🖼️</span>
-                      <h3 className="font-bold text-white">Featured Image</h3>
+                      <h3 className="font-bold text-royal-blue">
+                        Featured Image
+                      </h3>
                     </div>
 
                     <div className="space-y-3">
@@ -339,10 +343,10 @@ const AdminBlogs = () => {
                       />
                       <label
                         htmlFor="banner-upload"
-                        className="flex items-center justify-center gap-2 px-4 py-3 bg-dark-navy/50 rounded-lg border-2 border-dashed border-gold-accent/30 hover:border-gold-accent cursor-pointer transition-all hover:bg-dark-navy text-sm"
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-white rounded-lg border-2 border-dashed border-gray-300 hover:border-royal-blue cursor-pointer transition-all hover:bg-blue-50/30 text-sm"
                       >
                         <span className="text-xl">📁</span>
-                        <span className="text-gold-accent">
+                        <span className="text-royal-blue font-semibold">
                           {imageFile
                             ? "Change Image"
                             : editingBlog
@@ -358,11 +362,11 @@ const AdminBlogs = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gold-accent/20">
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-300">
                       <span className="text-2xl">🏷️</span>
-                      <h3 className="font-bold text-white">Category</h3>
+                      <h3 className="font-bold text-royal-blue">Category</h3>
                     </div>
 
                     <input
@@ -373,7 +377,7 @@ const AdminBlogs = () => {
                         setFormData({ ...formData, category: e.target.value })
                       }
                       required
-                      className="w-full px-3 py-2 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors text-sm"
+                      className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
                     />
                   </motion.div>
 
@@ -382,11 +386,11 @@ const AdminBlogs = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="card-premium"
+                    className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gold-accent/20">
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-300">
                       <span className="text-2xl">✍️</span>
-                      <h3 className="font-bold text-white">Author</h3>
+                      <h3 className="font-bold text-royal-blue">Author</h3>
                     </div>
 
                     <input
@@ -397,7 +401,7 @@ const AdminBlogs = () => {
                         setFormData({ ...formData, author: e.target.value })
                       }
                       required
-                      className="w-full px-3 py-2 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors text-sm"
+                      className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
                     />
                   </motion.div>
                 </div>
@@ -411,7 +415,7 @@ const AdminBlogs = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="card-premium overflow-hidden relative"
+          className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden relative"
         >
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -419,43 +423,45 @@ const AdminBlogs = () => {
           <div className="relative z-10 overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gold-accent/20">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                <tr className="border-b-2 border-gray-300 bg-blue-50/30">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Title
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Author
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-accent/10">
+              <tbody className="divide-y divide-gray-200">
                 {blogs.map((blog, index) => (
                   <motion.tr
                     key={blog.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="hover:bg-gold-accent/5 transition-colors"
+                    className="hover:bg-blue-50/30 transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-white">
+                      <div className="text-sm font-semibold text-gray-900">
                         {blog.title}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-muted-text">{blog.author}</td>
-                    <td className="px-6 py-4 text-muted-text">
+                    <td className="px-6 py-4 text-paragraph-text">
+                      {blog.author}
+                    </td>
+                    <td className="px-6 py-4 text-paragraph-text">
                       {blog.category}
                     </td>
                     <td className="px-6 py-4">
@@ -469,7 +475,7 @@ const AdminBlogs = () => {
                         {blog.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-muted-text">
+                    <td className="px-6 py-4 text-paragraph-text">
                       {new Date(blog.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -525,8 +531,10 @@ const AdminBlogs = () => {
             {blogs.length === 0 && (
               <div className="text-center py-16">
                 <div className="text-6xl mb-4 opacity-20">📝</div>
-                <p className="text-gold-accent/60 text-lg">No blogs yet</p>
-                <p className="text-muted-text text-sm mt-2">
+                <p className="text-royal-blue text-lg font-semibold">
+                  No blogs yet
+                </p>
+                <p className="text-paragraph-text text-sm mt-2">
                   Click "New Blog" to add one
                 </p>
               </div>

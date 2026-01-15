@@ -67,7 +67,8 @@ const AboutMission = () => {
 
         <div className="relative z-10">
           <h2 className="heading-lg mb-8">
-            Our <span className="text-gold-accent">Objectives</span>
+            Our{" "}
+            <span className="text-gold-accent">Objectives and Missions</span>
           </h2>
 
           {/* Pagoda Divider */}

@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -8,191 +8,191 @@
   }
   
   body {
-    @apply bg-charcoal-black text-primary-text overflow-x-hidden;
-      font-feature-settings: "kern";
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    @apply text-primary-text overflow-x-hidden;
+    background: linear-gradient(135deg, #FDFEFE 0%, #F7F9FB 50%, #EDF2F7 100%);
+    font-feature-settings: "kern";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Premium Button Styles */
+  .btn-primary {
+    @apply bg-newari-red text-pure-white px-8 py-3 rounded-lg font-semibold;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-deep-maroon hover:shadow-premium hover:scale-105;
+    @apply active:scale-95;
+    box-shadow: 0 4px 14px 0 rgba(196, 30, 58, 0.39);
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border-2 border-newari-red text-newari-red px-8 py-3 rounded-lg font-semibold;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-newari-red hover:text-pure-white hover:shadow-premium;
+  }
+
+  .btn-gold {
+    @apply bg-gold-accent text-charcoal-black px-8 py-3 rounded-lg font-semibold;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-bright-gold hover:shadow-gold hover:scale-105;
+    font-weight: 700;
+  }
+
+  .btn-blue {
+    @apply bg-royal-blue text-pure-white px-8 py-3 rounded-lg font-semibold;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:bg-blue-800 hover:shadow-blue hover:scale-105;
+    @apply active:scale-95;
+  }
+
+  /* Premium Card Styles */
+  .card-premium {
+    @apply bg-pure-white rounded-xl p-6 border border-border-line;
+    @apply shadow-lg transition-all duration-300;
+    @apply hover:shadow-xl hover:-translate-y-1 hover:border-royal-blue;
+  }
+
+  /* Glass Effect */
+  .glass-effect {
+    @apply bg-pure-white/90 backdrop-blur-md border border-border-line/50;
+  }
+
+  /* Section Container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24;
+  }
+
+  /* Heading Styles */
+  .heading-xl {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold text-royal-blue;
+  }
+
+  .heading-lg {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-royal-blue;
+  }
+
+  .heading-md {
+    @apply text-2xl md:text-3xl font-bold text-royal-blue;
+  }
+
+  /* Gold Accent Text */
+  .text-gold {
+    @apply text-gold-accent;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-newari-red via-gold-accent to-royal-blue bg-clip-text text-transparent;
+  }
+
+  .gradient-text-red-gold {
+    @apply bg-gradient-to-r from-deep-maroon via-newari-red to-gold-accent bg-clip-text text-transparent;
+  }
+
+  /* Newari Cultural Patterns */
+  .newari-border {
+    @apply border-2 border-gold-accent/40;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.15) 10px, rgba(212, 175, 55, 0.15) 20px);
+  }
+
+  .mandala-pattern {
+    background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 0%, transparent 2px), radial-gradient(circle at center, rgba(196, 30, 58, 0.15) 0%, transparent 4px);
+    background-size: 40px 40px, 80px 80px;
+    background-position: 0 0, 20px 20px;
+  }
+
+  .logo-pattern {
+    background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(10, 49, 97, 0.1) 50%, rgba(212, 175, 55, 0.1) 100%);
+  }
+
+  .pagoda-divider {
+    position: relative;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  }
+
+  .pagoda-divider::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: #D4AF37;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  /* Temple Corner Decoration */
+  .temple-corner::before,
+  .temple-corner::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-style: solid;
+    border-color: #D4AF37;
+    opacity: 0.3;
+  }
+
+  .temple-corner::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+  }
+
+  .temple-corner::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+  }
+}
+
+@layer utilities {
+  /* Shadow Utilities */
+  .shadow-premium {
+    box-shadow: 0 10px 40px rgba(196, 30, 58, 0.3);
+  }
+
+  .shadow-gold {
+    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4);
+  }
+
+  .shadow-blue {
+    box-shadow: 0 8px 32px rgba(10, 49, 97, 0.4);
+  }
+
+  /* Animation Utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
     }
-    }
-    
-    @layer components {
-    
-      /* Premium Button Styles */
-      .btn-primary {
-        @apply bg-newari-red text-primary-text px-8 py-3 rounded-lg font-semibold;
-        @apply transition-all duration-300 ease-out;
-        @apply hover:bg-deep-maroon hover:shadow-premium hover:scale-105;
-        @apply active:scale-95;
-      }
-    
-      .btn-secondary {
-        @apply bg-transparent border-2 border-newari-red text-newari-red px-8 py-3 rounded-lg font-semibold;
-        @apply transition-all duration-300 ease-out;
-        @apply hover:bg-newari-red hover:text-primary-text hover:shadow-premium;
-      }
-    
-      .btn-gold {
-        @apply bg-gold-accent text-charcoal-black px-8 py-3 rounded-lg font-semibold;
-        @apply transition-all duration-300 ease-out;
-        @apply hover:bg-yellow-500 hover:shadow-gold hover:scale-105;
-      }
-    
-      /* Premium Card Styles */
-      .card-premium {
-        @apply bg-dark-navy rounded-xl p-6 border-b-2 border-newari-red;
-        @apply shadow-card transition-all duration-300;
-        @apply hover:shadow-premium hover:-translate-y-2;
-      }
-    
-      /* Glass Effect */
-      .glass-effect {
-        @apply bg-dark-navy/80 backdrop-blur-md border border-border-line/50;
-      }
-    
-      /* Section Container */
-      .section-container {
-        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24;
-      }
-    
-      /* Heading Styles */
-      .heading-xl {
-        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-primary-text;
-      }
-    
-      .heading-lg {
-        @apply text-3xl md:text-4xl lg:text-5xl font-bold text-primary-text;
-      }
-    
-      .heading-md {
-        @apply text-2xl md:text-3xl font-bold text-primary-text;
-      }
-    
-      /* Gold Accent Text */
-      .text-gold {
-        @apply text-gold-accent;
-      }
-    
-      /* Gradient Text */
-      .gradient-text {
-        @apply bg-gradient-to-r from-newari-red via-gold-accent to-newari-red bg-clip-text text-transparent;
-      }
-    
-      /* Newari Cultural Patterns */
-      .newari-border {
-        @apply border-2 border-gold-accent/30;
-        background-image: repeating-linear-gradient(45deg,
-            transparent,
-            transparent 10px,
-            rgba(242, 201, 76, 0.1) 10px,
-            rgba(242, 201, 76, 0.1) 20px);
-      }
-    
-      .mandala-pattern {
-        background-image: radial-gradient(circle at center,
-            rgba(242, 201, 76, 0.15) 0%,
-            transparent 2px),
-          radial-gradient(circle at center,
-            rgba(196, 22, 28, 0.1) 0%,
-            transparent 4px);
-        background-size: 40px 40px, 80px 80px;
-        background-position: 0 0, 20px 20px;
-      }
-    
-      .pagoda-divider {
-        position: relative;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, #F2C94C, transparent);
-      }
-    
-      .pagoda-divider::before {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-bottom: 12px solid #F2C94C;
-      }
-    
-      .pagoda-divider::after {
-        content: '';
-        position: absolute;
-        top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #C4161C;
-      }
-    
-      .temple-corner {
-        position: relative;
-      }
-    
-      .temple-corner::before,
-      .temple-corner::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #F2C94C;
-      }
-    
-      .temple-corner::before {
-        top: 0;
-        left: 0;
-        border-right: none;
-        border-bottom: none;
-      }
-    
-      .temple-corner::after {
-        bottom: 0;
-        right: 0;
-        border-left: none;
-        border-top: none;
-      }
-    }
-    
-    @layer utilities {
-    
-      /* Custom animations */
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
-  .animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
-    }
-    
-    /* Shimmer Effect */
-    .shimmer {
-      background: linear-gradient(90deg,
-          transparent 0%,
-          rgba(242, 201, 76, 0.1) 50%,
-          transparent 100%);
-      background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+
+  .animate-spin-slow {
+    animation: spin 20s linear infinite;
   }
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
+
+  .animate-spin-slow-reverse {
+    animation: spin 20s linear infinite reverse;
+  }
+
+  /* Hide Scrollbar */
+  .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
+
+  .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -204,49 +204,49 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #1E2430;
+  background: #f8f9fa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C4161C 0%, #8E0E13 100%);
-    border-radius: 6px;
-    border: 2px solid #1E2430;
+  background: linear-gradient(180deg, #C41E3A 0%, #8B1538 100%);
+  border-radius: 6px;
+  border: 2px solid #f8f9fa;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #F2C94C 0%, #C4161C 100%);
+  background: linear-gradient(180deg, #0A3161 0%, #1E4D8B 100%);
 }
 
 /* Selection Styling */
 ::selection {
-  background-color: #F2C94C;
-    color: #0F0F14;
+  background-color: #0A3161;
+  color: #ffffff;
 }
 
 ::-moz-selection {
-  background-color: #F2C94C;
-    color: #0F0F14;
-  }
-  
-  /* Premium Focus Styles */
-  *:focus {
-    outline: 2px solid #F2C94C;
-    outline-offset: 2px;
-  }
-  
-  *:focus:not(:focus-visible) {
-    outline: none;
-  }
-  
-  /* Smooth Image Loading */
-  img {
-    @apply transition-opacity duration-300;
-  }
-  
-  img[loading="lazy"] {
-    @apply opacity-0;
-  }
-  
-  img[loading="lazy"].loaded {
-    @apply opacity-100;
+  background-color: #0A3161;
+  color: #ffffff;
+}
+
+/* Premium Focus Styles */
+*:focus {
+  outline: 2px solid #0A3161;
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth Image Loading */
+img {
+  @apply transition-opacity duration-300;
+}
+
+img[loading="lazy"] {
+  @apply opacity-0;
+}
+
+img[loading="lazy"].loaded {
+  @apply opacity-100;
 }

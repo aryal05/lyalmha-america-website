@@ -123,10 +123,12 @@ const AdminGallery = () => {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gold-accent border-t-transparent"></div>
+          <div className="text-royal-blue font-semibold text-xl animate-pulse">
+            Loading...
+          </div>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   return (
@@ -135,8 +137,12 @@ const AdminGallery = () => {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Gallery Management</h1>
-            <p className="text-gold-accent/70">Upload and manage photo gallery images</p>
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
+              Gallery Management
+            </h1>
+            <p className="text-paragraph-text">
+              Upload and manage photo gallery images
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -144,7 +150,7 @@ const AdminGallery = () => {
             onClick={() => setShowForm(!showForm)}
             className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
           >
-            {showForm ? '🖼️ View Gallery' : '➕ Upload Image'}
+            {showForm ? "🖼️ View Gallery" : "➕ Upload Image"}
           </motion.button>
         </div>
 
@@ -153,29 +159,37 @@ const AdminGallery = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-dark-navy/90 backdrop-blur-xl p-6 rounded-xl border border-gold-accent/20"
+            className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">
-              {editingImage ? '✏️ Edit Image' : '➕ Upload New Image'}
+            <h2 className="text-2xl font-bold text-royal-blue mb-6">
+              {editingImage ? "✏️ Edit Image" : "➕ Upload New Image"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gold-accent mb-2">Title *</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Title *
+                  </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gold-accent mb-2">Category</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Category
+                  </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   >
                     <option value="event">Event</option>
                     <option value="festival">Festival</option>
@@ -187,29 +201,38 @@ const AdminGallery = () => {
               </div>
 
               <div>
-                <label className="block text-gold-accent mb-2">Description</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   rows="3"
                 />
               </div>
 
               <div>
-                <label className="block text-gold-accent mb-2">
-                  Image * {editingImage && '(Upload new to replace)'}
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Image * {editingImage && "(Upload new to replace)"}
                 </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   required={!editingImage}
                 />
                 {imagePreview && (
                   <img
-                    src={imagePreview.startsWith('blob:') || imagePreview.startsWith('http') ? imagePreview : `${API_URL}${imagePreview}`}
+                    src={
+                      imagePreview.startsWith("blob:") ||
+                      imagePreview.startsWith("http")
+                        ? imagePreview
+                        : `${API_URL}${imagePreview}`
+                    }
                     alt="Preview"
                     className="mt-4 w-full h-64 object-cover rounded-lg"
                   />
@@ -218,11 +241,18 @@ const AdminGallery = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gold-accent mb-2">Order Index</label>
+                  <label className="block text-gold-accent mb-2">
+                    Order Index
+                  </label>
                   <input
                     type="number"
                     value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        order_index: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
                   />
                 </div>
@@ -230,7 +260,12 @@ const AdminGallery = () => {
                   <label className="block text-gold-accent mb-2">Status</label>
                   <select
                     value={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        active: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
                   >
                     <option value={1}>Active</option>
@@ -246,14 +281,14 @@ const AdminGallery = () => {
                   type="submit"
                   className="px-6 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold"
                 >
-                  {editingImage ? 'Update Image' : 'Upload Image'}
+                  {editingImage ? "Update Image" : "Upload Image"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-2 bg-charcoal-black/50 border border-gold-accent/30 text-gold-accent rounded-lg font-semibold"
+                  className="px-6 py-2 bg-white text-royal-blue border-2 border-gray-300 rounded-lg font-semibold hover:border-royal-blue"
                 >
                   Cancel
                 </motion.button>
@@ -275,8 +310,8 @@ const AdminGallery = () => {
                   onClick={() => setFilterCategory(cat)}
                   className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     filterCategory === cat
-                      ? 'bg-gradient-to-r from-gold-accent to-newari-red text-white'
-                      : 'bg-dark-navy/50 text-gold-accent/70 hover:text-gold-accent'
+                      ? "bg-gradient-to-r from-gold-accent to-newari-red text-white"
+                      : "bg-white border-2 border-gray-300 text-paragraph-text hover:border-royal-blue"
                   }`}
                 >
                   {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -291,17 +326,27 @@ const AdminGallery = () => {
                   key={image.id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-dark-navy/90 backdrop-blur-xl rounded-xl border border-gold-accent/20 overflow-hidden group hover:border-gold-accent/50 transition-all"
+                  className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden group hover:border-royal-blue transition-all"
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={image.image.startsWith('http') ? image.image : `${API_URL}${image.image}`}
+                      src={
+                        image.image.startsWith("http")
+                          ? image.image
+                          : `${API_URL}${image.image}`
+                      }
                       alt={image.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute top-2 right-2 flex gap-2">
-                      <span className={`text-xs px-2 py-1 rounded ${image.active ? 'bg-green-500/80 text-white' : 'bg-red-500/80 text-white'}`}>
-                        {image.active ? 'Active' : 'Inactive'}
+                      <span
+                        className={`text-xs px-2 py-1 rounded ${
+                          image.active
+                            ? "bg-green-500/80 text-white"
+                            : "bg-red-500/80 text-white"
+                        }`}
+                      >
+                        {image.active ? "Active" : "Inactive"}
                       </span>
                     </div>
                   </div>
@@ -314,11 +359,13 @@ const AdminGallery = () => {
                         #{image.order_index}
                       </span>
                     </div>
-                    <h3 className="text-white font-bold text-lg mb-2 line-clamp-1">
+                    <h3 className="text-gray-900 font-bold text-lg mb-2 line-clamp-1">
                       {image.title}
                     </h3>
                     {image.description && (
-                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">{image.description}</p>
+                      <p className="text-paragraph-text text-sm mb-4 line-clamp-2">
+                        {image.description}
+                      </p>
                     )}
                     <div className="flex gap-2">
                       <motion.button
@@ -346,17 +393,17 @@ const AdminGallery = () => {
         )}
 
         {!showForm && filteredGallery.length === 0 && (
-          <div className="text-center py-12 text-gold-accent/50">
+          <div className="text-center py-12 text-royal-blue font-semibold">
             <p className="text-xl">
-              {filterCategory === 'all' 
-                ? 'No images found. Upload your first one!' 
+              {filterCategory === "all"
+                ? "No images found. Upload your first one!"
                 : `No images found in "${filterCategory}" category.`}
             </p>
           </div>
         )}
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminGallery

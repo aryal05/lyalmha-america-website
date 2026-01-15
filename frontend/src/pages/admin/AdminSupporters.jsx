@@ -119,10 +119,10 @@ const AdminSupporters = () => {
           className="flex justify-between items-center mb-8 relative z-10"
         >
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
               Supporters Management
             </h1>
-            <p className="text-gold-accent/60">
+            <p className="text-paragraph-text">
               Manage financial supporters and corporate sponsors
             </p>
             <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
@@ -149,7 +149,7 @@ const AdminSupporters = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="card-premium mb-8 relative overflow-hidden"
+            className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors mb-8 relative overflow-hidden"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -157,7 +157,7 @@ const AdminSupporters = () => {
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
-                <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                <h2 className="text-xl font-bold text-royal-blue">
                   {editingSupporter ? "Edit Supporter" : "Add New Supporter"}
                 </h2>
               </div>
@@ -165,7 +165,7 @@ const AdminSupporters = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Name/Organization{" "}
                       <span className="text-newari-red">*</span>
                     </label>
@@ -176,13 +176,13 @@ const AdminSupporters = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                       placeholder="Enter name or organization"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Type <span className="text-newari-red">*</span>
                     </label>
                     <select
@@ -190,7 +190,7 @@ const AdminSupporters = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, type: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     >
                       <option value="financial">Financial Supporter</option>
                       <option value="corporate">Corporate Partner</option>
@@ -201,12 +201,12 @@ const AdminSupporters = () => {
                 {/* Logo Upload - Only for Corporate */}
                 {formData.type === "corporate" && (
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Corporate Logo
                     </label>
                     <div className="flex items-center gap-4">
                       {logoPreview && (
-                        <div className="w-24 h-24 rounded-lg border-2 border-gold-accent/30 overflow-hidden bg-white/5 flex items-center justify-center p-2">
+                        <div className="w-24 h-24 rounded-lg border-2 border-gray-300 overflow-hidden bg-white flex items-center justify-center p-2">
                           <img
                             src={logoPreview}
                             alt="Logo preview"
@@ -224,12 +224,12 @@ const AdminSupporters = () => {
                         />
                         <label
                           htmlFor="logo-upload"
-                          className="inline-flex items-center gap-2 px-4 py-3 bg-gold-accent/10 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-gold-accent/20 cursor-pointer transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-3 bg-blue-50 text-royal-blue rounded-lg border-2 border-gray-300 hover:bg-blue-100 cursor-pointer transition-colors"
                         >
                           <span className="text-lg">🖼️</span>
                           <span>Choose Logo</span>
                         </label>
-                        <p className="text-muted-text text-sm mt-2">
+                        <p className="text-paragraph-text text-sm mt-2">
                           Recommended: Square image, max 5MB
                         </p>
                       </div>
@@ -239,7 +239,7 @@ const AdminSupporters = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Contact Person
                     </label>
                     <input
@@ -251,13 +251,13 @@ const AdminSupporters = () => {
                           contact_person: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                       placeholder="Contact person name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Description
                     </label>
                     <input
@@ -269,7 +269,7 @@ const AdminSupporters = () => {
                           description: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                       placeholder="Brief description"
                     />
                   </div>
@@ -291,7 +291,7 @@ const AdminSupporters = () => {
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={resetForm}
-                    className="px-8 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-dark-navy transition-all duration-300 font-semibold"
+                    className="px-8 py-3 bg-white text-royal-blue rounded-lg border-2 border-gray-300 hover:border-royal-blue transition-all duration-300 font-semibold"
                   >
                     Cancel
                   </motion.button>
@@ -306,7 +306,7 @@ const AdminSupporters = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="card-premium overflow-hidden relative"
+          className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden relative"
         >
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -314,34 +314,34 @@ const AdminSupporters = () => {
           <div className="relative z-10 overflow-x-auto">
             <table className="min-w-full">
               <thead>
-                <tr className="border-b border-gold-accent/20">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                <tr className="border-b border-gray-300 bg-blue-50/30">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Supporter
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Contact
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-gold-accent uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-accent/10">
+              <tbody className="divide-y divide-gray-200">
                 {supporters.map((supporter, index) => (
                   <motion.tr
                     key={supporter.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="hover:bg-gold-accent/5 transition-colors"
+                    className="hover:bg-blue-50/30 transition-colors"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {supporter.logo && supporter.type === "corporate" && (
-                          <div className="w-12 h-12 rounded-lg border border-gold-accent/30 overflow-hidden bg-white/5 flex items-center justify-center p-1 flex-shrink-0">
+                          <div className="w-12 h-12 rounded-lg border-2 border-gray-300 overflow-hidden bg-white flex items-center justify-center p-1 flex-shrink-0">
                             <img
                               src={supporter.logo}
                               alt={supporter.name}
@@ -350,11 +350,11 @@ const AdminSupporters = () => {
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <div className="text-sm font-semibold text-white truncate">
+                          <div className="text-sm font-semibold text-gray-900 truncate">
                             {supporter.name}
                           </div>
                           {supporter.description && (
-                            <div className="text-sm text-muted-text truncate">
+                            <div className="text-sm text-paragraph-text truncate">
                               {supporter.description}
                             </div>
                           )}
@@ -375,7 +375,7 @@ const AdminSupporters = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-muted-text">
+                      <div className="text-sm text-paragraph-text">
                         {supporter.contact_person || "-"}
                       </div>
                     </td>
@@ -432,8 +432,10 @@ const AdminSupporters = () => {
             {supporters.length === 0 && (
               <div className="text-center py-16">
                 <div className="text-6xl mb-4 opacity-20">🤝</div>
-                <p className="text-gold-accent/60 text-lg">No supporters yet</p>
-                <p className="text-muted-text text-sm mt-2">
+                <p className="text-royal-blue font-semibold text-lg">
+                  No supporters yet
+                </p>
+                <p className="text-paragraph-text text-sm mt-2">
                   Click "New Supporter" to add one
                 </p>
               </div>

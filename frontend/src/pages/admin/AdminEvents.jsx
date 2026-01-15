@@ -108,10 +108,10 @@ const AdminEvents = () => {
           className="flex justify-between items-center mb-8 relative z-10"
         >
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
               Events Management
             </h1>
-            <p className="text-gold-accent/60">
+            <p className="text-paragraph-text">
               Manage upcoming and past events
             </p>
             <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
@@ -138,7 +138,7 @@ const AdminEvents = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="card-premium mb-8 relative overflow-hidden"
+            className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors mb-8 relative overflow-hidden"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -146,14 +146,14 @@ const AdminEvents = () => {
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
-                <h2 className="text-xl font-bold bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+                <h2 className="text-xl font-bold text-royal-blue">
                   {editingEvent ? "Edit Event" : "Add New Event"}
                 </h2>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-gold-accent/80 font-medium mb-2">
+                  <label className="block text-royal-blue font-semibold mb-2">
                     Title <span className="text-newari-red">*</span>
                   </label>
                   <input
@@ -163,13 +163,13 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     placeholder="Event title"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gold-accent/80 font-medium mb-2">
+                  <label className="block text-royal-blue font-semibold mb-2">
                     Description <span className="text-newari-red">*</span>
                   </label>
                   <textarea
@@ -179,14 +179,14 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, description: e.target.value })
                     }
-                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     placeholder="Event description"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Event Date <span className="text-newari-red">*</span>
                     </label>
                     <input
@@ -196,12 +196,12 @@ const AdminEvents = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, event_date: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gold-accent/80 font-medium mb-2">
+                    <label className="block text-royal-blue font-semibold mb-2">
                       Type <span className="text-newari-red">*</span>
                     </label>
                     <select
@@ -209,7 +209,7 @@ const AdminEvents = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, event_type: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     >
                       <option value="upcoming">Upcoming</option>
                       <option value="past">Past</option>
@@ -218,7 +218,7 @@ const AdminEvents = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gold-accent/80 font-medium mb-2">
+                  <label className="block text-royal-blue font-semibold mb-2">
                     Location <span className="text-newari-red">*</span>
                   </label>
                   <input
@@ -228,13 +228,13 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, location: e.target.value })
                     }
-                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     placeholder="Event location"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gold-accent/80 font-medium mb-2">
+                  <label className="block text-royal-blue font-semibold mb-2">
                     Event Image
                   </label>
                   <input
@@ -243,24 +243,24 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, image: e.target.files[0] })
                     }
-                    className="w-full px-4 py-3 bg-dark-navy/50 text-white rounded-lg border border-gold-accent/30 focus:border-gold-accent focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
+                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
                   />
 
                   {/* Show current image preview when editing */}
                   {editingEvent?.image && !formData.image && (
                     <div className="mt-4">
-                      <p className="text-gold-accent/60 text-sm mb-2">
+                      <p className="text-paragraph-text text-sm mb-2">
                         Current image:
                       </p>
                       <img
                         src={getImageUrl(editingEvent.image)}
                         alt="Current event"
-                        className="w-48 h-32 object-cover rounded-lg border border-gold-accent/30"
+                        className="w-48 h-32 object-cover rounded-lg border-2 border-gray-300"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
                       />
-                      <p className="text-muted-text text-xs mt-1">
+                      <p className="text-paragraph-text text-xs mt-1">
                         Upload a new image to replace this one
                       </p>
                     </div>
@@ -269,13 +269,13 @@ const AdminEvents = () => {
                   {/* Show new image preview */}
                   {formData.image && (
                     <div className="mt-4">
-                      <p className="text-gold-accent/60 text-sm mb-2">
+                      <p className="text-paragraph-text text-sm mb-2">
                         New image preview:
                       </p>
                       <img
                         src={URL.createObjectURL(formData.image)}
                         alt="New event preview"
-                        className="w-48 h-32 object-cover rounded-lg border border-gold-accent/30"
+                        className="w-48 h-32 object-cover rounded-lg border-2 border-gray-300"
                       />
                     </div>
                   )}
@@ -297,7 +297,7 @@ const AdminEvents = () => {
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={resetForm}
-                    className="px-8 py-3 bg-dark-navy/50 text-gold-accent rounded-lg border border-gold-accent/30 hover:bg-dark-navy transition-all duration-300 font-semibold"
+                    className="px-8 py-3 bg-white text-royal-blue rounded-lg border-2 border-gray-300 hover:border-royal-blue transition-all duration-300 font-semibold"
                   >
                     Cancel
                   </motion.button>
@@ -320,7 +320,7 @@ const AdminEvents = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="card-premium overflow-hidden relative group"
+              className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden relative group hover:border-royal-blue transition-colors"
             >
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -340,7 +340,7 @@ const AdminEvents = () => {
               )}
               <div className="p-6 relative z-10">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-lg font-bold text-white group-hover:text-gold-accent transition-colors">
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-royal-blue transition-colors">
                     {event.title}
                   </h3>
                   <span
@@ -353,15 +353,15 @@ const AdminEvents = () => {
                     {event.event_type}
                   </span>
                 </div>
-                <p className="text-sm text-muted-text mb-3 line-clamp-2">
+                <p className="text-sm text-paragraph-text mb-3 line-clamp-2">
                   {event.description}
                 </p>
                 <div className="space-y-1 mb-4">
-                  <p className="text-sm text-gold-accent/80 flex items-center gap-2">
+                  <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📅</span>
                     {new Date(event.event_date).toLocaleDateString()}
                   </p>
-                  <p className="text-sm text-gold-accent/80 flex items-center gap-2">
+                  <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📍</span>
                     {event.location}
                   </p>
@@ -394,11 +394,13 @@ const AdminEvents = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="card-premium text-center py-16"
+            className="bg-white border-2 border-gray-300 rounded-lg text-center py-16"
           >
             <div className="text-6xl mb-4 opacity-20">📅</div>
-            <p className="text-gold-accent/60 text-lg">No events yet</p>
-            <p className="text-muted-text text-sm mt-2">
+            <p className="text-royal-blue font-semibold text-lg">
+              No events yet
+            </p>
+            <p className="text-paragraph-text text-sm mt-2">
               Click "New Event" to add one
             </p>
           </motion.div>

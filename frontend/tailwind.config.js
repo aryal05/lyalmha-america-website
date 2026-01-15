@@ -7,34 +7,46 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand Colors
-        'newari-red': '#C4161C',
-        'deep-maroon': '#8E0E13',
-        'gold-accent': '#D4A574',
-        'charcoal-black': '#0F0F14',
-        'dark-navy': '#1E2430',
+        // Exact Logo Colors
+        'newari-red': '#C41E3A',        // Deep Red from Nepali text
+        'deep-maroon': '#8B1538',       // Darker red shade
+        'royal-blue': '#0A3161',        // Deep Royal Blue from English text
+        'bright-blue': '#1E4D8B',       // Lighter blue accent
+        'gold-accent': '#D4AF37',       // Classic gold border
+        'bright-gold': '#FFD700',       // Bright golden yellow
         
-        // Text Colors
-        'primary-text': '#FFFFFF',
-        'paragraph-text': '#D1D5DB',
-        'muted-text': '#9CA3AF',
+        // Background Colors - Optimized for readability
+        'cream-white': '#FDFEFE',       // Very soft white with hint of warmth
+        'pure-white': '#FFFFFF',        // Pure white
+        'charcoal-black': '#1a1a1a',    // Soft black
+        'dark-navy': '#0a1628',         // Very dark blue
+        'light-gray': '#F7F9FB',        // Optimized soft blue-gray background
+        'slate-bg': '#FAFBFC',          // Elegant slate background - lighter
+        
+        // Text Colors - Optimized contrast
+        'primary-text': '#1A202C',      // Darker for better readability
+        'secondary-text': '#4A5568',    // Medium gray with good contrast
+        'paragraph-text': '#2D3748',    // Body text - darker for readability
+        'muted-text': '#718096',        // Lighter for secondary content
         
         // UI Elements
-        'border-line': '#2A2F3A',
-        'footer-bg': '#0B0B10',
+        'border-line': '#e2e8f0',       // Subtle borders
+        'border-accent': '#C41E3A',     // Red accent borders
+        'footer-bg': '#0a1628',
         
         // Legacy support
-        'deep-black': '#0F0F14',
-        'nepal-red': '#C4161C',
-        'usa-blue': '#1F3C88',
-        'accent-gray': '#2E2E2E',
+        'deep-black': '#1a1a1a',
+        'nepal-red': '#C41E3A',
+        'usa-blue': '#0A3161',
+        'accent-gray': '#e2e8f0',
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
       },
       boxShadow: {
-        'premium': '0 10px 40px rgba(196, 22, 28, 0.1)',
-        'gold': '0 8px 32px rgba(242, 201, 76, 0.15)',
+        'premium': '0 10px 40px rgba(220, 20, 60, 0.3)',
+        'gold': '0 8px 32px rgba(255, 215, 0, 0.25)',
+        'blue': '0 8px 32px rgba(30, 58, 138, 0.25)',
         'card': '0 4px 24px rgba(0, 0, 0, 0.25)',
       },
       backdropBlur: {

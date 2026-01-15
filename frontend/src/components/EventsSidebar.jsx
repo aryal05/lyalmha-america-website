@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { apiClient, API_ENDPOINTS } from "../config/api";
@@ -34,6 +35,18 @@ const EventsSidebar = () => {
 
     return () => clearInterval(timer);
   }, [upcomingEvents]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showRSVPModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showRSVPModal]);
 
   const fetchEvents = async () => {
     try {
@@ -114,26 +127,36 @@ const EventsSidebar = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="card-premium temple-corner p-8 relative overflow-hidden"
+        className="relative overflow-hidden rounded-2xl border-2 border-gold-accent/30 shadow-2xl"
+        style={{
+          background:
+            "linear-gradient(135deg, #FFFFFF 0%, #FFF8E7 50%, #FFFBF0 100%)",
+        }}
       >
         <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
-        <div className="relative z-10">
+        {/* Decorative top border */}
+        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-newari-red via-gold-accent to-royal-blue"></div>
+
+        <div className="relative z-10 p-6">
           <h3 className="text-2xl font-bold mb-6 flex items-center">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center mr-3 shadow-lg">
+            <div
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-accent via-newari-red to-royal-blue flex items-center justify-center mr-3 shadow-lg animate-pulse"
+              style={{ animationDuration: "3s" }}
+            >
               <svg
-                className="w-5 h-5 text-charcoal-black"
+                className="w-6 h-6 text-white"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
                 <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
             </div>
-            <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gold-accent via-newari-red to-royal-blue bg-clip-text text-transparent font-extrabold">
               Upcoming Events
             </span>
           </h3>
@@ -160,17 +183,20 @@ const EventsSidebar = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gradient-to-br from-charcoal-black/50 to-dark-navy/50 border-l-4 border-gold-accent pl-6 pr-4 py-4 rounded-r-lg hover:border-newari-red transition-all duration-300 cursor-pointer relative group"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="bg-gradient-to-br from-slate-50 via-blue-50/30 to-white border-l-4 border-gold-accent pl-6 pr-4 py-5 rounded-xl hover:border-newari-red transition-all duration-300 cursor-pointer relative group shadow-lg hover:shadow-2xl"
+                    style={{
+                      boxShadow: "0 4px 15px rgba(212, 175, 55, 0.15)",
+                    }}
                   >
-                    <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-10 transition-opacity rounded-r-lg"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-gold-accent/5 to-royal-blue/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
 
                     <div className="relative z-10">
-                      <span className="inline-block px-3 py-1 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-xs font-bold rounded-full mb-3 capitalize shadow-lg">
+                      <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-gold-accent via-newari-red to-gold-accent text-white text-xs font-bold rounded-full mb-3 capitalize shadow-md">
                         {event.event_type}
                       </span>
 
-                      <h4 className="font-bold text-primary-text mb-2 text-lg group-hover:text-gold-accent transition-colors">
+                      <h4 className="font-bold text-royal-blue mb-2 text-lg group-hover:text-gold-accent transition-colors">
                         {event.title}
                       </h4>
 
@@ -216,12 +242,12 @@ const EventsSidebar = () => {
                           ].map((item, idx) => (
                             <div
                               key={idx}
-                              className="bg-gradient-to-br from-gold-accent/10 to-newari-red/10 rounded-lg p-2 text-center border border-gold-accent/20"
+                              className="bg-gradient-to-br from-gold-accent/20 via-newari-red/10 to-royal-blue/20 rounded-lg p-2 text-center border-2 border-gold-accent/40 shadow-md hover:shadow-lg transition-all hover:scale-105"
                             >
-                              <div className="text-gold-accent font-bold text-lg">
+                              <div className="text-newari-red font-extrabold text-xl">
                                 {item.value}
                               </div>
-                              <div className="text-paragraph-text text-xs">
+                              <div className="text-royal-blue text-xs font-semibold">
                                 {item.label}
                               </div>
                             </div>
@@ -235,14 +261,17 @@ const EventsSidebar = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleRSVP(event)}
-                          className="flex-1 px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 text-sm shadow-lg"
+                          className="flex-1 px-6 py-3 bg-gradient-to-r from-newari-red via-gold-accent to-newari-red text-white font-bold rounded-lg hover:shadow-2xl transition-all duration-300 text-sm shadow-lg"
+                          style={{
+                            boxShadow: "0 4px 15px rgba(196, 30, 58, 0.4)",
+                          }}
                         >
                           RSVP
                         </motion.button>
 
                         {/* Social Share Dropdown */}
                         <div className="relative group/share">
-                          <button className="px-4 py-2 bg-gradient-to-br from-charcoal-black to-dark-navy border border-gold-accent/30 rounded-lg hover:border-gold-accent transition-all text-gold-accent">
+                          <button className="px-4 py-3 bg-gradient-to-br from-royal-blue to-royal-blue/80 border-2 border-royal-blue rounded-lg hover:border-gold-accent hover:bg-gradient-to-br hover:from-gold-accent hover:to-newari-red transition-all text-white shadow-md">
                             <svg
                               className="w-5 h-5"
                               fill="none"
@@ -256,24 +285,24 @@ const EventsSidebar = () => {
                             </svg>
                           </button>
 
-                          <div className="absolute right-0 mt-2 w-40 bg-charcoal-black border border-gold-accent/30 rounded-lg shadow-xl opacity-0 invisible group-hover/share:opacity-100 group-hover/share:visible transition-all z-50">
+                          <div className="absolute right-0 mt-2 w-44 bg-white border-2 border-gold-accent/50 rounded-xl shadow-2xl opacity-0 invisible group-hover/share:opacity-100 group-hover/share:visible transition-all z-50 overflow-hidden">
                             <button
                               onClick={() => shareEvent(event, "facebook")}
-                              className="w-full px-4 py-2 text-left text-paragraph-text hover:text-gold-accent hover:bg-dark-navy transition-colors flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium"
                             >
-                              <span>📘</span> Facebook
+                              <span className="text-lg">📘</span> Facebook
                             </button>
                             <button
                               onClick={() => shareEvent(event, "twitter")}
-                              className="w-full px-4 py-2 text-left text-paragraph-text hover:text-gold-accent hover:bg-dark-navy transition-colors flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
                             >
-                              <span>🐦</span> Twitter
+                              <span className="text-lg">🐦</span> Twitter
                             </button>
                             <button
                               onClick={() => shareEvent(event, "whatsapp")}
-                              className="w-full px-4 py-2 text-left text-paragraph-text hover:text-gold-accent hover:bg-dark-navy transition-colors flex items-center gap-2"
+                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
                             >
-                              <span>💬</span> WhatsApp
+                              <span className="text-lg">💬</span> WhatsApp
                             </button>
                           </div>
                         </div>
@@ -390,13 +419,15 @@ const EventsSidebar = () => {
             </div>
           )}
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="mt-6 w-full px-6 py-3 border-2 border-gold-accent text-gold-accent font-bold rounded-lg hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300"
-          >
-            📸 View Full Gallery
-          </motion.button>
+          <Link to="/gallery">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="mt-6 w-full px-6 py-3 border-2 border-gold-accent text-gold-accent font-bold rounded-lg hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300"
+            >
+              📸 View Full Gallery
+            </motion.button>
+          </Link>
         </div>
       </motion.div>
 
@@ -465,90 +496,100 @@ const EventsSidebar = () => {
         </div>
       </motion.div>
 
-      {/* RSVP Modal */}
-      <AnimatePresence>
-        {showRSVPModal && selectedEvent && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setShowRSVPModal(false)}
-          >
+      {/* RSVP Modal - Rendered via Portal */}
+      {showRSVPModal &&
+        selectedEvent &&
+        ReactDOM.createPortal(
+          <AnimatePresence>
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="card-premium temple-corner max-w-md w-full p-8 relative"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center p-4"
+              style={{
+                zIndex: 999999,
+                background:
+                  "linear-gradient(135deg, rgba(10, 49, 97, 0.92) 0%, rgba(30, 58, 138, 0.85) 50%, rgba(248, 250, 252, 0.88) 100%)",
+                backdropFilter: "blur(12px)",
+              }}
+              onClick={() => setShowRSVPModal(false)}
             >
-              <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="bg-white max-w-md w-full p-8 relative rounded-xl shadow-2xl border-2 border-gold-accent/30"
+                onClick={(e) => e.stopPropagation()}
+                style={{ zIndex: 1000000 }}
+              >
+                <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
-                    RSVP to Event
-                  </h3>
-                  <button
-                    onClick={() => setShowRSVPModal(false)}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-newari-red to-gold-accent flex items-center justify-center text-charcoal-black font-bold hover:scale-110 transition-transform"
-                  >
-                    ✕
-                  </button>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold text-royal-blue">
+                      RSVP to Event
+                    </h3>
+                    <button
+                      onClick={() => setShowRSVPModal(false)}
+                      className="w-10 h-10 rounded-full bg-newari-red flex items-center justify-center text-white font-bold hover:scale-110 hover:bg-royal-blue transition-all shadow-lg"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div className="pagoda-divider w-32 mb-6"></div>
+
+                  <div className="mb-6 p-4 bg-gradient-to-br from-royal-blue/10 via-gold-accent/5 to-royal-blue/10 rounded-lg border-2 border-gold-accent/30">
+                    <h4 className="font-bold text-royal-blue mb-2">
+                      {selectedEvent.title}
+                    </h4>
+                    <p className="text-sm text-gray-700">
+                      {formatDate(selectedEvent.event_date)}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      {selectedEvent.location}
+                    </p>
+                  </div>
+
+                  <form className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Phone Number"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
+                    />
+                    <select className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all">
+                      <option value="">Number of Attendees</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4+">4+</option>
+                    </select>
+
+                    <motion.button
+                      type="submit"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white font-bold rounded-lg hover:shadow-xl transition-all duration-300 shadow-lg"
+                    >
+                      Confirm RSVP
+                    </motion.button>
+                  </form>
                 </div>
-
-                <div className="pagoda-divider w-32 mb-6"></div>
-
-                <div className="mb-6 p-4 bg-gradient-to-br from-charcoal-black/50 to-dark-navy/50 rounded-lg border border-gold-accent/20">
-                  <h4 className="font-bold text-primary-text mb-2">
-                    {selectedEvent.title}
-                  </h4>
-                  <p className="text-sm text-paragraph-text">
-                    {formatDate(selectedEvent.event_date)}
-                  </p>
-                  <p className="text-xs text-paragraph-text">
-                    {selectedEvent.location}
-                  </p>
-                </div>
-
-                <form className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    className="w-full px-4 py-3 bg-charcoal-black border border-gold-accent/30 rounded-lg text-primary-text focus:border-gold-accent focus:outline-none transition-colors"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    className="w-full px-4 py-3 bg-charcoal-black border border-gold-accent/30 rounded-lg text-primary-text focus:border-gold-accent focus:outline-none transition-colors"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone Number"
-                    className="w-full px-4 py-3 bg-charcoal-black border border-gold-accent/30 rounded-lg text-primary-text focus:border-gold-accent focus:outline-none transition-colors"
-                  />
-                  <select className="w-full px-4 py-3 bg-charcoal-black border border-gold-accent/30 rounded-lg text-primary-text focus:border-gold-accent focus:outline-none transition-colors">
-                    <option>Number of Attendees</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4+</option>
-                  </select>
-
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
-                  >
-                    Confirm RSVP
-                  </motion.button>
-                </form>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </div>
   );
 };

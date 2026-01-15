@@ -116,13 +116,13 @@ const Projects = () => {
               </motion.div>
 
               <h3 className="text-3xl lg:text-4xl font-bold text-primary-text mb-6 hover:text-gold-accent transition-colors">
-                Biskaa Jatra Celebration Project
+                Biska Jatra Celebration Project
               </h3>
 
               <div className="pagoda-divider w-32 mb-6"></div>
 
               <p className="text-paragraph-text mb-6 leading-relaxed text-lg">
-                Lyaymha America Guthi continues the auspicious Biskaa Jatra
+                Lyaymha America Guthi continues the auspicious Biska Jatra
                 Celebration in the DMV region, started in 2022. This weeklong
                 celebration during Khai-Salhu welcomes Spring Bloom, Good
                 Health, Peace, and Prosperity.

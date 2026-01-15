@@ -73,7 +73,7 @@ const AdminDashboard = () => {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-white text-xl animate-pulse">
+          <div className="text-royal-blue text-xl animate-pulse font-semibold">
             Loading dashboard...
           </div>
         </div>
@@ -100,10 +100,10 @@ const AdminDashboard = () => {
               <span className="text-2xl">👋</span>
             </div>
             <div>
-              <h1 className="heading-xl !text-3xl bg-gradient-to-r from-white via-gold-accent to-white bg-clip-text text-transparent">
+              <h1 className="heading-xl !text-3xl text-royal-blue">
                 Welcome back!
               </h1>
-              <p className="text-gold-accent/60 font-medium">
+              <p className="text-paragraph-text font-medium">
                 Here's what's happening with your website today
               </p>
             </div>
@@ -168,7 +168,7 @@ const AdminDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="card-premium relative overflow-hidden"
+          className="bg-white border-2 border-gray-300 rounded-xl p-6 hover:border-royal-blue transition-all duration-300 shadow-lg relative overflow-hidden"
         >
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
-              <h2 className="heading-lg bg-gradient-to-r from-white to-gold-accent bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-bold text-royal-blue">
                 Quick Actions
               </h2>
             </div>
@@ -185,20 +185,20 @@ const AdminDashboard = () => {
               <motion.a
                 whileHover={{ y: -4 }}
                 href="/admin/blogs"
-                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-newari-red/30 rounded-lg hover:border-newari-red hover:bg-newari-red/10 transition-all duration-300 group relative overflow-hidden"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-white to-blue-50/30 border-2 border-gray-300 rounded-lg hover:border-newari-red hover:shadow-md transition-all duration-300 group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-newari-red/0 via-newari-red/5 to-newari-red/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div className="p-3 bg-gradient-to-br from-newari-red/20 to-newari-red/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
                   <span className="text-3xl">📝</span>
                 </div>
                 <div className="relative z-10">
-                  <h3 className="text-white font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
+                  <h3 className="text-royal-blue font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
                     New Blog Post
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                       →
                     </span>
                   </h3>
-                  <p className="text-muted-text text-sm">
+                  <p className="text-paragraph-text text-sm">
                     Create a new article
                   </p>
                 </div>
@@ -207,40 +207,44 @@ const AdminDashboard = () => {
               <motion.a
                 whileHover={{ y: -4 }}
                 href="/admin/events"
-                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-gold-accent/30 rounded-lg hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group relative overflow-hidden"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-white to-blue-50/30 border-2 border-gray-300 rounded-lg hover:border-gold-accent hover:shadow-md transition-all duration-300 group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-gold-accent/0 via-gold-accent/5 to-gold-accent/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div className="p-3 bg-gradient-to-br from-gold-accent/20 to-gold-accent/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
                   <span className="text-3xl">📅</span>
                 </div>
                 <div className="relative z-10">
-                  <h3 className="text-white font-semibold group-hover:text-gold-accent transition-colors flex items-center gap-2">
+                  <h3 className="text-royal-blue font-semibold group-hover:text-gold-accent transition-colors flex items-center gap-2">
                     Add Event
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                       →
                     </span>
                   </h3>
-                  <p className="text-muted-text text-sm">Schedule new event</p>
+                  <p className="text-paragraph-text text-sm">
+                    Schedule new event
+                  </p>
                 </div>
               </motion.a>
 
               <motion.a
                 whileHover={{ y: -4 }}
                 href="/admin/team"
-                className="flex items-center gap-4 p-5 bg-gradient-to-br from-dark-navy/50 via-charcoal-black/30 to-dark-navy/50 border border-newari-red/30 rounded-lg hover:border-newari-red hover:bg-newari-red/10 transition-all duration-300 group relative overflow-hidden"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-white to-blue-50/30 border-2 border-gray-300 rounded-lg hover:border-newari-red hover:shadow-md transition-all duration-300 group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-newari-red/0 via-newari-red/5 to-newari-red/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div className="p-3 bg-gradient-to-br from-newari-red/20 to-newari-red/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
                   <span className="text-3xl">👥</span>
                 </div>
                 <div className="relative z-10">
-                  <h3 className="text-white font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
+                  <h3 className="text-royal-blue font-semibold group-hover:text-newari-red transition-colors flex items-center gap-2">
                     Add Team Member
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                       →
                     </span>
                   </h3>
-                  <p className="text-muted-text text-sm">Manage your team</p>
+                  <p className="text-paragraph-text text-sm">
+                    Manage your team
+                  </p>
                 </div>
               </motion.a>
             </div>

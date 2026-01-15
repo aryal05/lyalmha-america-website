@@ -26,7 +26,7 @@ const AdminLayout = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-charcoal-black via-dark-navy to-charcoal-black flex relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50 flex relative overflow-hidden">
       {/* Animated Background Pattern */}
       <div className="fixed inset-0 opacity-5 pointer-events-none">
         <div className="mandala-pattern animate-spin-slow absolute top-10 right-10 w-96 h-96"></div>
@@ -34,7 +34,7 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-dark-navy/90 via-charcoal-black/90 to-dark-navy/90 backdrop-blur-xl border-r border-gold-accent/20 flex flex-col relative shadow-2xl">
+      <div className="w-64 bg-gradient-to-b from-royal-blue/95 via-royal-blue to-royal-blue/95 backdrop-blur-xl border-r border-gold-accent/30 flex flex-col relative shadow-2xl">
         {/* Decorative Top Corner */}
         <div className="absolute top-0 left-0 w-full h-20 temple-corner opacity-20 pointer-events-none"></div>
 

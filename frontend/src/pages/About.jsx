@@ -13,14 +13,14 @@ import ScrollToTop from "../components/ScrollToTop";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-charcoal-black">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
       <Navbar />
       <AboutHero />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
         {/* Decorative Background Elements with Mandala */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gold-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-newari-red/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-royal-blue/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold-accent/5 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full mandala-pattern opacity-5 pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">

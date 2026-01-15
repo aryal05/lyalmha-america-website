@@ -52,7 +52,7 @@ const AboutHero = () => {
           className="w-full h-full object-cover"
         />
         {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-deep-black/90 via-deep-black/80 to-deep-black/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-royal-blue/95 via-royal-blue/90 to-cream-white/95"></div>
       </div>
 
       {/* Background Pattern */}
@@ -90,12 +90,14 @@ const AboutHero = () => {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-white">About </span>
-              <span className="text-nepal-red">Lyaymha</span>
-              <span className="text-usa-blue"> America</span>
+              <span className="text-pure-white">About </span>
+              <span className="text-newari-red">Lyaymha</span>
+              <span className="text-gold-accent"> America</span>
             </h1>
-            <p className="text-xl text-gray-300 mb-4">ल्याय्म्ह अमेरिका गुथि</p>
-            <p className="text-lg text-gray-400">
+            <p className="text-xl text-cream-white mb-4">
+              ल्याय्म्ह अमेरिका गुथि
+            </p>
+            <p className="text-lg text-pure-white/90">
               Nurturing the next generation through Newari art, culture, and
               language
             </p>

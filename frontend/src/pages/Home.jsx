@@ -56,7 +56,7 @@ const StatsSection = () => {
   ];
 
   return (
-    <section className="relative py-20 px-4 bg-charcoal-black overflow-hidden">
+    <section className="relative py-20 px-4 overflow-hidden">
       {/* Mandala Background */}
       <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
@@ -147,7 +147,7 @@ const TestimonialsSection = () => {
   }, [testimonials.length]);
 
   return (
-    <section className="relative py-20 px-4 bg-dark-navy overflow-hidden">
+    <section className="relative py-20 px-4 overflow-hidden">
       {/* Mandala Background */}
       <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
@@ -235,7 +235,7 @@ const TestimonialsSection = () => {
 // Premium CTA Banner Component
 const CTABanner = () => {
   return (
-    <section className="relative py-20 px-4 bg-charcoal-black overflow-hidden">
+    <section className="relative py-20 px-4 overflow-hidden">
       {/* Animated Mandala Background */}
       <motion.div
         className="absolute inset-0 mandala-pattern opacity-10"
@@ -298,7 +298,7 @@ const CTABanner = () => {
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-charcoal-black">
+    <div className="min-h-screen">
       <Navbar />
       <Hero />
       <StatsSection />

@@ -98,8 +98,8 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className={`fixed w-full z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-charcoal-black/95 backdrop-blur-lg shadow-premium border-b border-border-line/30"
-          : "bg-transparent"
+          ? "bg-white/80 backdrop-blur-xl shadow-lg border-b border-slate-200/50"
+          : "bg-white/70 backdrop-blur-lg"
       }`}
     >
       {/* Subtle Mandala Pattern Overlay */}
@@ -116,11 +116,11 @@ const Navbar = () => {
               <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-tl"></div>
               <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-br"></div>
 
-              <div className="absolute inset-0 bg-white/10 rounded-lg blur-xl group-hover:bg-gold-accent/20 transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gold-accent/10 rounded-xl blur-xl group-hover:bg-gold-accent/30 transition-all duration-500"></div>
               <img
                 src={logo}
                 alt="Lyaymha America Guthi"
-                className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[340px] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[600px] relative z-10 transition-all duration-300 group-hover:scale-[1.02] object-contain bg-white/95 backdrop-blur-sm rounded-md px-2 sm:px-3 py-1 shadow-lg"
+                className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[680px] relative z-10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl object-contain bg-white rounded-xl px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 shadow-2xl border-2 border-gold-accent/20 group-hover:border-gold-accent/50"
               />
             </div>
           </Link>
@@ -131,10 +131,10 @@ const Navbar = () => {
               <div key={link.path} className="relative group/dropdown">
                 <Link to={link.path} className="relative px-4 py-2 group block">
                   <span
-                    className={`relative z-10 font-medium transition-colors duration-300 ${
+                    className={`relative z-10 font-semibold transition-colors duration-300 ${
                       isActive(link.path)
-                        ? "text-gold-accent"
-                        : "text-paragraph-text group-hover:text-gold-accent"
+                        ? "text-royal-blue"
+                        : "text-primary-text hover:text-royal-blue"
                     }`}
                   >
                     {link.label}
@@ -183,16 +183,16 @@ const Navbar = () => {
 
                 {/* Dropdown Menu */}
                 {link.hasDropdown && (
-                  <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-300 bg-charcoal-black/95 backdrop-blur-lg border border-gold-accent/30 rounded-lg shadow-premium overflow-hidden">
+                  <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-300 bg-white border-2 border-royal-blue/30 rounded-xl shadow-2xl overflow-hidden">
                     {link.submenu.map((sublink, index) => (
                       <a
                         key={sublink.path}
                         href={sublink.path}
                         onClick={(e) => handleSubmenuClick(e, sublink.path)}
-                        className="block px-4 py-3 text-paragraph-text hover:text-gold-accent hover:bg-gold-accent/10 transition-all duration-300 border-b border-border-line/20 last:border-b-0 cursor-pointer"
+                        className="block px-4 py-3 text-gray-900 hover:text-royal-blue hover:bg-royal-blue/10 transition-all duration-300 border-b border-gray-200 last:border-b-0 cursor-pointer font-semibold"
                       >
                         <span className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-gold-accent"></span>
+                          <span className="w-2 h-2 rounded-full bg-newari-red"></span>
                           {sublink.label}
                         </span>
                       </a>

@@ -75,7 +75,7 @@ const BlogGrid = () => {
   }
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-charcoal-black relative overflow-hidden">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-gray-900 to-charcoal-black relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-20 right-0 w-96 h-96 bg-gold-accent/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-0 w-96 h-96 bg-newari-red/5 rounded-full blur-3xl" />
@@ -95,7 +95,7 @@ const BlogGrid = () => {
               Stories
             </span>
           </h2>
-          <p className="text-paragraph-text text-lg max-w-2xl mx-auto">
+          <p className="text-cream-white/90 text-lg max-w-2xl mx-auto leading-relaxed">
             Dive into the rich tapestry of Newari culture through our curated
             collection of articles, stories, and insights from our vibrant
             community.

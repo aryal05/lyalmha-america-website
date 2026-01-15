@@ -132,10 +132,12 @@ const AdminNews = () => {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gold-accent border-t-transparent"></div>
+          <div className="text-royal-blue font-semibold text-xl animate-pulse">
+            Loading...
+          </div>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   return (
@@ -144,8 +146,12 @@ const AdminNews = () => {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">News Management</h1>
-            <p className="text-gold-accent/70">Manage press releases, announcements, and media coverage</p>
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
+              News Management
+            </h1>
+            <p className="text-paragraph-text">
+              Manage press releases, announcements, and media coverage
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -153,7 +159,7 @@ const AdminNews = () => {
             onClick={() => setShowForm(!showForm)}
             className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
           >
-            {showForm ? '📋 View All News' : '➕ Add News'}
+            {showForm ? "📋 View All News" : "➕ Add News"}
           </motion.button>
         </div>
 
@@ -162,29 +168,37 @@ const AdminNews = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-dark-navy/90 backdrop-blur-xl p-6 rounded-xl border border-gold-accent/20"
+            className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">
-              {editingNews ? '✏️ Edit News' : '➕ Add New News'}
+            <h2 className="text-2xl font-bold text-royal-blue mb-6">
+              {editingNews ? "✏️ Edit News" : "➕ Add New News"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gold-accent mb-2">Title *</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Title *
+                  </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gold-accent mb-2">Category</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Category
+                  </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   >
                     <option value="announcement">Announcement</option>
                     <option value="press-release">Press Release</option>
@@ -196,38 +210,55 @@ const AdminNews = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gold-accent mb-2">Author</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Author
+                  </label>
                   <input
                     type="text"
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({ ...formData, author: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   />
                 </div>
                 <div>
-                  <label className="block text-gold-accent mb-2">Published Date</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Published Date
+                  </label>
                   <input
                     type="date"
                     value={formData.published_date}
-                    onChange={(e) => setFormData({ ...formData, published_date: e.target.value })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        published_date: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-gold-accent mb-2">Excerpt *</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Excerpt *
+                </label>
                 <textarea
                   value={formData.excerpt}
-                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  onChange={(e) =>
+                    setFormData({ ...formData, excerpt: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   rows="3"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-gold-accent mb-2">Content *</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Content *
+                </label>
                 <ReactQuill
                   theme="snow"
                   value={formData.content}
@@ -238,16 +269,23 @@ const AdminNews = () => {
               </div>
 
               <div>
-                <label className="block text-gold-accent mb-2">Featured Image</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Featured Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                 />
                 {imagePreview && (
                   <img
-                    src={imagePreview.startsWith('blob:') || imagePreview.startsWith('http') ? imagePreview : `${API_URL}${imagePreview}`}
+                    src={
+                      imagePreview.startsWith("blob:") ||
+                      imagePreview.startsWith("http")
+                        ? imagePreview
+                        : `${API_URL}${imagePreview}`
+                    }
                     alt="Preview"
                     className="mt-4 w-full h-48 object-cover rounded-lg"
                   />
@@ -256,20 +294,34 @@ const AdminNews = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gold-accent mb-2">Order Index</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Order Index
+                  </label>
                   <input
                     type="number"
                     value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        order_index: parseInt(e.target.value),
+                      })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   />
                 </div>
                 <div>
-                  <label className="block text-gold-accent mb-2">Status</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Status
+                  </label>
                   <select
                     value={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 bg-charcoal-black/50 border border-gold-accent/30 rounded-lg text-white focus:outline-none focus:border-gold-accent"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        active: parseInt(e.target.value),
+                      })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
                   >
                     <option value={1}>Active</option>
                     <option value={0}>Inactive</option>
@@ -284,14 +336,14 @@ const AdminNews = () => {
                   type="submit"
                   className="px-6 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold"
                 >
-                  {editingNews ? 'Update News' : 'Create News'}
+                  {editingNews ? "Update News" : "Create News"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-2 bg-charcoal-black/50 border border-gold-accent/30 text-gold-accent rounded-lg font-semibold"
+                  className="px-6 py-2 bg-white text-royal-blue border-2 border-gray-300 rounded-lg font-semibold hover:border-royal-blue"
                 >
                   Cancel
                 </motion.button>
@@ -308,12 +360,16 @@ const AdminNews = () => {
                 key={news.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-dark-navy/90 backdrop-blur-xl rounded-xl border border-gold-accent/20 overflow-hidden group hover:border-gold-accent/50 transition-all"
+                className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden group hover:border-royal-blue transition-all"
               >
                 {news.image && (
                   <div className="h-48 overflow-hidden">
                     <img
-                      src={news.image.startsWith('http') ? news.image : `${API_URL}${news.image}`}
+                      src={
+                        news.image.startsWith("http")
+                          ? news.image
+                          : `${API_URL}${news.image}`
+                      }
                       alt={news.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
@@ -324,15 +380,23 @@ const AdminNews = () => {
                     <span className="text-xs px-2 py-1 bg-gold-accent/20 text-gold-accent rounded">
                       {news.category}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded ${news.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                      {news.active ? 'Active' : 'Inactive'}
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        news.active
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-red-500/20 text-red-400"
+                      }`}
+                    >
+                      {news.active ? "Active" : "Inactive"}
                     </span>
                   </div>
-                  <h3 className="text-white font-bold text-lg mb-2 line-clamp-2">
+                  <h3 className="text-gray-900 font-bold text-lg mb-2 line-clamp-2">
                     {news.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">{news.excerpt}</p>
-                  <div className="text-xs text-gold-accent/60 mb-4">
+                  <p className="text-paragraph-text text-sm mb-2 line-clamp-2">
+                    {news.excerpt}
+                  </p>
+                  <div className="text-xs text-paragraph-text mb-4">
                     {news.published_date} • {news.author}
                   </div>
                   <div className="flex gap-2">
@@ -360,13 +424,15 @@ const AdminNews = () => {
         )}
 
         {!showForm && newsItems.length === 0 && (
-          <div className="text-center py-12 text-gold-accent/50">
-            <p className="text-xl">No news items found. Create your first one!</p>
+          <div className="text-center py-12 text-royal-blue font-semibold">
+            <p className="text-xl">
+              No news items found. Create your first one!
+            </p>
           </div>
         )}
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 export default AdminNews

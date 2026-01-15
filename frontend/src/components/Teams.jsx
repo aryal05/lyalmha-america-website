@@ -248,10 +248,20 @@ const Teams = () => {
                         className="bg-dark-navy/50 rounded-xl p-6 border border-border-line hover:border-gold-accent/50 transition-all duration-300 group temple-corner"
                       >
                         {/* Member Avatar */}
-                        <div className="w-20 h-20 bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <span className="text-charcoal-black text-2xl font-bold">
-                            {member.name.charAt(0)}
-                          </span>
+                        <div className="w-24 h-24 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full rounded-full object-cover border-4 border-gold-accent shadow-lg"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center shadow-lg">
+                              <span className="text-charcoal-black text-2xl font-bold">
+                                {member.name.charAt(0)}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Member Info */}

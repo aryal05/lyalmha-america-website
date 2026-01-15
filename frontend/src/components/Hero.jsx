@@ -153,9 +153,9 @@ const Hero = () => {
   const currentWords = textContent[currentLanguage];
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-x-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-x-hidden py-16 sm:py-20 bg-black">
       {/* Premium Background with Overlay */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden bg-black">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentBg}
@@ -175,21 +175,25 @@ const Hero = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/80 via-charcoal-black/70 to-charcoal-black"></div>
+        {/* Gradient Overlay - Enhanced for better text visibility */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/50"></div>
 
         {/* Decorative Elements */}
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
           <div className="absolute top-20 left-10 w-72 h-72 bg-newari-red rounded-full blur-3xl animate-pulse"></div>
           <div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-gold-accent rounded-full blur-3xl animate-pulse"
+            className="absolute bottom-20 right-10 w-96 h-96 bg-royal-blue rounded-full blur-3xl animate-pulse"
             style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gold-accent rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "2s" }}
           ></div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20">
         <div className="text-center">
           {/* Premium Animated Title with Smooth Word Reveal */}
           <motion.div
@@ -198,7 +202,7 @@ const Hero = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="mb-4"
           >
-            <div className="min-h-[100px] md:min-h-[120px] flex items-center justify-center px-4">
+            <div className="min-h-[80px] sm:min-h-[100px] md:min-h-[120px] flex items-center justify-center px-2 sm:px-4">
               <AnimatePresence mode="wait">
                 <motion.h1
                   key={currentLanguage}
@@ -206,7 +210,7 @@ const Hero = () => {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
+                  className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center"
                 >
                   <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
                     {currentWords.map((word, index) => (
@@ -233,8 +237,9 @@ const Hero = () => {
                           transformOrigin: "center bottom",
                           textShadow:
                             index >= 2
-                              ? "0 0 30px rgba(242, 201, 76, 0.6), 0 0 60px rgba(242, 201, 76, 0.3)"
-                              : "0 2px 10px rgba(0,0,0,0.5)",
+                              ? "0 4px 20px rgba(212, 175, 55, 0.6), 0 0 40px rgba(212, 175, 55, 0.4)"
+                              : "0 4px 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4)",
+                          fontWeight: index >= 2 ? "800" : "700",
                         }}
                       >
                         {word}
@@ -251,11 +256,17 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-base md:text-lg text-gold-accent font-semibold mb-8 flex items-center justify-center gap-2"
+            className="text-sm sm:text-base md:text-lg text-white font-semibold mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-2 px-4"
+            style={{
+              textShadow:
+                "0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3)",
+            }}
           >
-            <span>🏛️</span>
-            Celebrating Newari Culture in America
-            <span>🎭</span>
+            <span className="text-gold-accent text-xl sm:text-2xl">🏛️</span>
+            <span className="text-center">
+              Celebrating Newari Culture in America
+            </span>
+            <span className="text-gold-accent text-xl sm:text-2xl">🎭</span>
           </motion.p>
 
           {/* Featured Project Slider */}
@@ -263,17 +274,17 @@ const Hero = () => {
             initial={{ scale: 0, rotate: -10 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-            className="flex justify-center mb-8"
+            className="flex justify-center mb-6 sm:mb-8 px-2 sm:px-4"
           >
             <div className="relative max-w-3xl w-full">
               {/* Decorative Corner Elements */}
-              <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-gold-accent opacity-60"></div>
-              <div className="absolute -top-3 -right-3 w-10 h-10 border-t-2 border-r-2 border-gold-accent opacity-60"></div>
-              <div className="absolute -bottom-3 -left-3 w-10 h-10 border-b-2 border-l-2 border-newari-red opacity-60"></div>
-              <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-2 border-r-2 border-newari-red opacity-60"></div>
+              <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-gold-accent opacity-80"></div>
+              <div className="absolute -top-3 -right-3 w-10 h-10 border-t-2 border-r-2 border-gold-accent opacity-80"></div>
+              <div className="absolute -bottom-3 -left-3 w-10 h-10 border-b-2 border-l-2 border-gold-accent opacity-80"></div>
+              <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-2 border-r-2 border-gold-accent opacity-80"></div>
 
               {/* Slider Container */}
-              <div className="glass-effect rounded-2xl p-6 border-2 border-gold-accent/30 hover:border-gold-accent/60 transition-all duration-300 backdrop-blur-xl overflow-hidden">
+              <div className="bg-pure-white/95 backdrop-blur-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-gold-accent/50 hover:border-gold-accent transition-all duration-300 shadow-lg overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentProject}
@@ -283,17 +294,17 @@ const Hero = () => {
                     transition={{ duration: 0.5 }}
                   >
                     {/* Project Icon and Title */}
-                    <div className="flex items-center justify-center gap-3 mb-3">
-                      <span className="text-4xl">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-3">
+                      <span className="text-3xl sm:text-4xl">
                         {featuredProjects[currentProject].icon}
                       </span>
-                      <h3 className="text-2xl md:text-3xl font-bold text-gold-accent">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-royal-blue text-center">
                         {featuredProjects[currentProject].title}
                       </h3>
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm md:text-base text-white mb-4 leading-relaxed">
+                    <p className="text-sm md:text-base text-gray-700 mb-4 leading-relaxed">
                       {featuredProjects[currentProject].description}
                     </p>
 
@@ -303,7 +314,7 @@ const Hero = () => {
                         (stat, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center gap-2 text-gold-accent text-sm"
+                            className="flex items-center gap-2 text-newari-red text-sm font-medium"
                           >
                             <span className="text-lg">{stat.icon}</span>
                             <span className="font-semibold">{stat.label}</span>
@@ -355,9 +366,9 @@ const Hero = () => {
                     e.preventDefault();
                   }
                 }}
-                className="relative group overflow-hidden px-10 py-5 bg-gradient-to-r from-newari-red to-deep-maroon text-white font-bold rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 border-2 border-newari-red hover:border-gold-accent inline-flex items-center"
+                className="relative group overflow-hidden px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-newari-red to-deep-maroon text-white font-bold rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 border-2 border-newari-red hover:border-gold-accent inline-flex items-center w-full sm:w-auto justify-center"
               >
-                <span className="relative z-10 flex items-center gap-3 text-xl">
+                <span className="relative z-10 flex items-center gap-2 sm:gap-3 text-base sm:text-xl">
                   <svg
                     className="w-7 h-7 animate-pulse"
                     fill="currentColor"
@@ -397,7 +408,7 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-80 bg-charcoal-black/98 backdrop-blur-2xl rounded-xl p-4 border-2 border-gold-accent shadow-2xl shadow-gold-accent/30 z-[9999]"
+                    className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-[90vw] sm:w-80 max-w-md bg-charcoal-black/98 backdrop-blur-2xl rounded-xl p-4 border-2 border-gold-accent shadow-2xl shadow-gold-accent/30 z-[9999]"
                   >
                     {/* Header */}
                     <div className="text-center mb-3 pb-3 border-b border-gold-accent/40">
@@ -555,9 +566,9 @@ const Hero = () => {
             {/* Register Button */}
             <Link
               to="/contact"
-              className="px-8 py-4 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto text-center"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"
@@ -572,9 +583,9 @@ const Hero = () => {
             {/* Explore Stories */}
             <Link
               to="/blogs"
-              className="px-8 py-4 border-2 border-gold-accent text-gold-accent font-semibold rounded-xl hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300"
+              className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-gold-accent text-gold-accent font-semibold rounded-xl hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300 w-full sm:w-auto text-center"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 Explore Stories
                 <svg
                   className="w-5 h-5"

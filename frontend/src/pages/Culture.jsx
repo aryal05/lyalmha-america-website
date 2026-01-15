@@ -52,11 +52,11 @@ const Culture = () => {
   };
 
   return (
-    <div className="min-h-screen bg-charcoal-black">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
       <Navbar />
 
       {/* Premium Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-40 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -68,7 +68,7 @@ const Culture = () => {
             alt="Culture Background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/90 via-charcoal-black/85 to-charcoal-black"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
