@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/images/logo/Letter pad copy.jpg";
+import logo from "../assets/images/logo/Letter pad copy.png";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -111,18 +111,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-2 sm:py-3">
           {/* Premium Logo with Letterpad Image */}
           <Link to="/" className="flex items-center group relative py-1">
-            <div className="relative">
-              {/* Traditional Corner Accents */}
-              <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-tl"></div>
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-gold-accent/0 group-hover:border-gold-accent/60 transition-all duration-300 rounded-br"></div>
-
-              <div className="absolute inset-0 bg-gold-accent/10 rounded-xl blur-xl group-hover:bg-gold-accent/30 transition-all duration-500"></div>
-              <img
-                src={logo}
-                alt="Lyaymha America Guthi"
-                className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[680px] relative z-10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl object-contain bg-white rounded-xl px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 shadow-2xl border-2 border-gold-accent/20 group-hover:border-gold-accent/50"
-              />
-            </div>
+            <img
+              src={logo}
+              alt="Lyaymha America Guthi"
+              className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[680px] transition-all duration-300 group-hover:scale-105 object-contain"
+            />
           </Link>
 
           {/* Premium Desktop Menu */}
