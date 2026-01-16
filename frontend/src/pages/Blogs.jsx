@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
@@ -8,6 +9,7 @@ import { getImageUrl } from "../utils/imageHelper";
 import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 
 const Blogs = () => {
+  const navigate = useNavigate();
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [banners, setBanners] = useState([]);
@@ -122,6 +124,7 @@ const Blogs = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
+                  onClick={() => navigate(`/blogs/${post.id}`)}
                   className="card-premium group cursor-pointer hover:border-gold-accent/50 hover:shadow-gold transition-all duration-500 temple-corner"
                 >
                   {/* Premium Blog Image with Cultural Overlays */}

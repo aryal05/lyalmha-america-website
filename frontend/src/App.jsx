@@ -4,6 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Blogs from "./pages/Blogs";
+import BlogDetail from "./pages/BlogDetail";
 import News from "./pages/News";
 import Gallery from "./pages/Gallery";
 import Culture from "./pages/Culture";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs/:id" element={<BlogDetail />} />
             <Route path="/news" element={<News />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/culture" element={<Culture />} />
