@@ -111,9 +111,10 @@ const Culture = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal-black text-center mb-12"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
             >
-              Major <span className="text-gold-accent">Festivals</span>
+              <span className="text-white">Major</span>{" "}
+              <span className="text-gold-accent">Festivals</span>
             </motion.h2>
             {loading ? (
               <p className="text-muted-text text-center animate-pulse">
@@ -201,9 +202,10 @@ const Culture = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal-black text-center mb-12"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
             >
-              Our <span className="text-gold-accent">Traditions</span>
+              <span className="text-white">Our</span>{" "}
+              <span className="text-gold-accent">Traditions</span>
             </motion.h2>
             {loading ? (
               <p className="text-muted-text text-center animate-pulse">
