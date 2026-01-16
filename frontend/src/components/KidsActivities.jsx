@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import workshop1 from "../assets/images/posts/430057563_377416895039960_1581867728642530497_n.jpg";
 import workshop2 from "../assets/images/posts/433421627_946258180277784_6165530352102042076_n.jpg";
 import madalBanner from "../assets/images/posts/Madal and Dhimay Picture Banner_1.png";
 import danceImg from "../assets/images/posts/438077842_407204048727911_1401114441457624925_n.jpg";
 
 const KidsActivities = () => {
+  const navigate = useNavigate();
   const [flippedCard, setFlippedCard] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
 
@@ -293,6 +295,10 @@ const KidsActivities = () => {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/contact");
+                        }}
                         className="w-full py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
                       >
                         Register Interest
