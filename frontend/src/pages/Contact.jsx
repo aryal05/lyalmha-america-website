@@ -342,11 +342,11 @@ const Contact = () => {
                     href="https://www.facebook.com/LyaymhaAmerica/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 h-14 bg-gradient-to-br from-dark-navy to-dark-navy/50 border border-border-line rounded-lg flex items-center justify-center hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group"
+                    className="flex-1 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center hover:from-blue-700 hover:to-blue-800 hover:scale-105 transition-all duration-300 group shadow-lg"
                     aria-label="Visit our Facebook page"
                   >
                     <svg
-                      className="w-6 h-6 text-paragraph-text group-hover:text-gold-accent transition-colors"
+                      className="w-6 h-6 text-white transition-transform duration-300 group-hover:scale-110"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -357,11 +357,11 @@ const Contact = () => {
                     href="https://www.youtube.com/@LyaymhaAmerica"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 h-14 bg-gradient-to-br from-dark-navy to-dark-navy/50 border border-border-line rounded-lg flex items-center justify-center hover:border-gold-accent hover:bg-gold-accent/10 transition-all duration-300 group"
+                    className="flex-1 h-14 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center hover:from-red-700 hover:to-red-800 hover:scale-105 transition-all duration-300 group shadow-lg"
                     aria-label="Visit our YouTube channel"
                   >
                     <svg
-                      className="w-6 h-6 text-paragraph-text group-hover:text-gold-accent transition-colors"
+                      className="w-6 h-6 text-white transition-transform duration-300 group-hover:scale-110"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
