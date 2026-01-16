@@ -1,6 +1,6 @@
 import express from 'express'
 import { getDatabase } from '../database.js'
-import { verifyToken } from '../middleware/auth.js'
+import { authenticateToken } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -39,7 +39,7 @@ router.post('/submit', async (req, res) => {
 
 // Admin routes - Protected
 // Get all contact messages
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const db = getDatabase()
     const messages = await db.all(
@@ -60,7 +60,7 @@ router.get('/', verifyToken, async (req, res) => {
 })
 
 // Get unread message count
-router.get('/unread-count', verifyToken, async (req, res) => {
+router.get('/unread-count', authenticateToken, async (req, res) => {
   try {
     const db = getDatabase()
     const result = await db.get(
@@ -81,7 +81,7 @@ router.get('/unread-count', verifyToken, async (req, res) => {
 })
 
 // Mark message as read
-router.patch('/:id/read', verifyToken, async (req, res) => {
+router.patch('/:id/read', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
     const db = getDatabase()
@@ -105,7 +105,7 @@ router.patch('/:id/read', verifyToken, async (req, res) => {
 })
 
 // Delete a message
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
     const db = getDatabase()
