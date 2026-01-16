@@ -106,4 +106,11 @@ export const API_ENDPOINTS = {
     UPDATE: (id) => `/api/admin/gallery/${id}`,
     DELETE: (id) => `/api/admin/gallery/${id}`,
   },
+  CONTACT: {
+    SUBMIT: '/api/contact/submit',
+    GET_ALL: '/api/admin/contact',
+    GET_UNREAD_COUNT: '/api/admin/contact/unread-count',
+    MARK_READ: (id) => `/api/admin/contact/${id}/read`,
+    DELETE: (id) => `/api/admin/contact/${id}`,
+  },
 }

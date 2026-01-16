@@ -16,6 +16,7 @@ import adminActivitiesRoutes from './routes/adminActivitiesRoutes.js'
 import adminTestimonialsRoutes from './routes/adminTestimonialsRoutes.js'
 import adminNewsRoutes from './routes/adminNewsRoutes.js'
 import adminGalleryRoutes from './routes/adminGalleryRoutes.js'
+import adminContactRoutes from './routes/adminContactRoutes.js'
 
 dotenv.config()
 
@@ -64,8 +65,10 @@ app.get('/', (req, res) => {
         activities: '/api/admin/activities',
         testimonials: '/api/admin/testimonials',
         news: '/api/admin/news',
-        gallery: '/api/admin/gallery'
-      }
+        gallery: '/api/admin/gallery',
+        contact: '/api/admin/contact'
+      },
+      contact: '/api/contact/submit'
     }
   })
 })
@@ -82,6 +85,8 @@ app.use('/api/admin/activities', adminActivitiesRoutes)
 app.use('/api/admin/testimonials', adminTestimonialsRoutes)
 app.use('/api/admin/news', adminNewsRoutes)
 app.use('/api/admin/gallery', adminGalleryRoutes)
+app.use('/api/contact', adminContactRoutes)
+app.use('/api/admin/contact', adminContactRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

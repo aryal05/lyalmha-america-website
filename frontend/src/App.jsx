@@ -18,6 +18,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminSupporters from "./pages/admin/AdminSupporters";
 import AdminBanners from "./pages/admin/AdminBanners";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminContacts from "./pages/admin/AdminContacts";
 import LoadingScreen from "./components/LoadingScreen";
 import ScrollToTopOnMount from "./components/ScrollToTopOnMount";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -103,6 +104,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminGallery />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/contacts"
+              element={
+                <ProtectedRoute>
+                  <AdminContacts />
                 </ProtectedRoute>
               }
             />

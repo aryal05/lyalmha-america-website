@@ -1,0 +1,282 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { apiClient, API_ENDPOINTS } from '../../config/api';
+
+const AdminContacts = () => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all'); // all, unread, read
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const fetchMessages = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get(API_ENDPOINTS.CONTACT.GET_ALL);
+      setMessages(response.data.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      alert('Failed to fetch messages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (id) => {
+    try {
+      await apiClient.patch(API_ENDPOINTS.CONTACT.MARK_READ(id));
+      fetchMessages();
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+      alert('Failed to mark message as read');
+    }
+  };
+
+  const deleteMessage = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this message?')) {
+      return;
+    }
+
+    try {
+      await apiClient.delete(API_ENDPOINTS.CONTACT.DELETE(id));
+      setSelectedMessage(null);
+      fetchMessages();
+      alert('Message deleted successfully');
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      alert('Failed to delete message');
+    }
+  };
+
+  const filteredMessages = messages.filter((msg) => {
+    if (filter === 'all') return true;
+    return msg.status === filter;
+  });
+
+  const unreadCount = messages.filter((msg) => msg.status === 'unread').length;
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  return (
+    <div className="p-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-charcoal-black mb-2">Contact Messages</h1>
+        <p className="text-paragraph-text">
+          {unreadCount > 0 ? (
+            <span className="text-newari-red font-semibold">
+              {unreadCount} unread message{unreadCount !== 1 ? 's' : ''}
+            </span>
+          ) : (
+            'All messages have been read'
+          )}
+        </p>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setFilter('all')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            filter === 'all'
+              ? 'bg-royal-blue text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          All ({messages.length})
+        </button>
+        <button
+          onClick={() => setFilter('unread')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            filter === 'unread'
+              ? 'bg-royal-blue text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Unread ({unreadCount})
+        </button>
+        <button
+          onClick={() => setFilter('read')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            filter === 'read'
+              ? 'bg-royal-blue text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Read ({messages.length - unreadCount})
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal-blue mx-auto"></div>
+          <p className="mt-4 text-paragraph-text">Loading messages...</p>
+        </div>
+      ) : filteredMessages.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <svg
+            className="w-16 h-16 mx-auto text-gray-400 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            />
+          </svg>
+          <p className="text-gray-600 text-lg">No messages to display</p>
+        </div>
+      ) : (
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Messages List */}
+          <div className="space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto">
+            {filteredMessages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  selectedMessage?.id === message.id
+                    ? 'border-royal-blue bg-royal-blue/5'
+                    : message.status === 'unread'
+                    ? 'border-newari-red/30 bg-newari-red/5'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+                onClick={() => {
+                  setSelectedMessage(message);
+                  if (message.status === 'unread') {
+                    markAsRead(message.id);
+                  }
+                }}
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="font-bold text-charcoal-black flex items-center gap-2">
+                      {message.name}
+                      {message.status === 'unread' && (
+                        <span className="w-2 h-2 bg-newari-red rounded-full"></span>
+                      )}
+                    </h3>
+                    <p className="text-sm text-paragraph-text">{message.email}</p>
+                  </div>
+                  <span className="text-xs text-gray-500">
+                    {new Date(message.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="font-semibold text-royal-blue text-sm mb-1">{message.subject}</p>
+                <p className="text-sm text-paragraph-text line-clamp-2">{message.message}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Message Detail */}
+          <div className="lg:sticky lg:top-6 h-fit">
+            {selectedMessage ? (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white rounded-lg border-2 border-gray-200 p-6"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-charcoal-black mb-1">
+                      {selectedMessage.name}
+                    </h2>
+                    <a
+                      href={`mailto:${selectedMessage.email}`}
+                      className="text-royal-blue hover:underline"
+                    >
+                      {selectedMessage.email}
+                    </a>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => deleteMessage(selectedMessage.id)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete message"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Subject</p>
+                    <p className="font-semibold text-royal-blue">{selectedMessage.subject}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Message</p>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-paragraph-text whitespace-pre-wrap">{selectedMessage.message}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Received</p>
+                    <p className="text-charcoal-black">{formatDate(selectedMessage.created_at)}</p>
+                  </div>
+
+                  <a
+                    href={`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`}
+                    className="btn-gold w-full justify-center mt-4"
+                  >
+                    Reply via Email
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+                <svg
+                  className="w-16 h-16 mx-auto text-gray-400 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-gray-600">Select a message to view details</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminContacts;

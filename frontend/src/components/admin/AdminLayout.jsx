@@ -23,6 +23,7 @@ const AdminLayout = ({ children }) => {
     { path: "/admin/supporters", icon: "🤝", label: "Supporters" },
     { path: "/admin/banners", icon: "🖼️", label: "Banners" },
     { path: "/admin/gallery", icon: "🎨", label: "Gallery" },
+    { path: "/admin/contacts", icon: "✉️", label: "Messages" },
   ];
 
   return (
