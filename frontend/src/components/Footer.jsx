@@ -39,7 +39,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-pure-white">
-                    Lyalmha America
+                    Lyaymha America
                   </h3>
                   <p className="text-gold-accent font-semibold text-sm">
                     Newari Culture & Heritage
@@ -104,21 +104,25 @@ const Footer = () => {
             >
               <h4 className="text-white font-bold mb-6 text-lg">Quick Links</h4>
               <ul className="space-y-3">
-                {["Home", "Blogs", "Culture", "About Us", "Contact"].map(
-                  (item, index) => (
-                    <li key={index}>
-                      <Link
-                        to={`/${item.toLowerCase().replace(" ", "")}`}
-                        className="text-cream-white/90 hover:text-gold-accent transition-colors duration-300 flex items-center group"
-                      >
-                        <span className="text-gold-accent mr-2 group-hover:translate-x-1 transition-transform">
-                          →
-                        </span>
-                        {item}
-                      </Link>
-                    </li>
-                  )
-                )}
+                {[
+                  { name: "Home", path: "/" },
+                  { name: "Blogs", path: "/blogs" },
+                  { name: "Culture & Tradition", path: "/culture-and-tradition" },
+                  { name: "About Us", path: "/about" },
+                  { name: "Contact", path: "/contact" },
+                ].map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      to={item.path}
+                      className="text-cream-white/90 hover:text-gold-accent transition-colors duration-300 flex items-center group"
+                    >
+                      <span className="text-gold-accent mr-2 group-hover:translate-x-1 transition-transform">
+                        →
+                      </span>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           </div>
@@ -134,21 +138,21 @@ const Footer = () => {
               <h4 className="text-white font-bold mb-6 text-lg">Resources</h4>
               <ul className="space-y-3">
                 {[
-                  "Events",
-                  "Festivals",
-                  "Community",
-                  "Support Us",
-                  "Newsletter",
+                  { name: "Kids Activities", path: "/kids-activities" },
+                  { name: "News", path: "/news" },
+                  { name: "Gallery", path: "/gallery" },
+                  { name: "Culture & Tradition", path: "/culture-and-tradition" },
+                  { name: "Contact", path: "/contact" },
                 ].map((item, index) => (
                   <li key={index}>
                     <Link
-                      to="#"
+                      to={item.path}
                       className="text-cream-white/90 hover:text-gold-accent transition-colors duration-300 flex items-center group"
                     >
                       <span className="text-gold-accent mr-2 group-hover:translate-x-1 transition-transform">
                         →
                       </span>
-                      {item}
+                      {item.name}
                     </Link>
                   </li>
                 ))}
@@ -189,38 +193,10 @@ const Footer = () => {
                       Email
                     </p>
                     <a
-                      href="mailto:info@lyalmha-america.org"
+                      href="mailto:lyaymhaAmerica@gmail.com"
                       className="text-cream-white/90 hover:text-gold-accent transition-colors"
                     >
-                      info@lyalmha-america.org
-                    </a>
-                  </div>
-                </li>
-                <li className="flex items-start group">
-                  <div className="w-10 h-10 bg-dark-navy rounded-lg flex items-center justify-center text-gold-accent mr-3 group-hover:bg-gold-accent group-hover:text-charcoal-black transition-all duration-300 flex-shrink-0">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-cream-white/60 text-xs uppercase tracking-wider mb-1">
-                      Phone
-                    </p>
-                    <a
-                      href="tel:+15551234567"
-                      className="text-cream-white/90 hover:text-gold-accent transition-colors"
-                    >
-                      +1 (555) 123-4567
+                      lyaymhaAmerica@gmail.com
                     </a>
                   </div>
                 </li>
@@ -251,7 +227,7 @@ const Footer = () => {
                       Location
                     </p>
                     <p className="text-cream-white/90">
-                      United States of America
+                      Virginia City, VA, United States
                     </p>
                   </div>
                 </li>

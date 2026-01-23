@@ -5,14 +5,26 @@ import { upload, uploadToCloudinary } from '../utils/uploadHelper.js'
 
 const router = express.Router()
 
-// Get all gallery images
+// Get all events with their thumbnail images for gallery
 router.get('/', async (req, res) => {
   try {
     const db = getDatabase()
-    const images = await db.all(
-      'SELECT * FROM gallery WHERE active = 1 ORDER BY order_index ASC, created_at DESC'
-    )
-    res.json({ success: true, data: images })
+    // Get all events with their thumbnail image
+    const events = await db.all(`
+      SELECT 
+        e.id as event_id,
+        e.title,
+        e.description,
+        e.event_date,
+        e.location,
+        e.event_type as category,
+        COALESCE(ei.image_url, e.image) as image_url,
+        COALESCE(ei.image_url, e.image) as image
+      FROM events e
+      LEFT JOIN event_images ei ON e.id = ei.event_id AND ei.is_thumbnail = 1
+      ORDER BY e.event_date DESC
+    `)
+    res.json({ success: true, data: events })
   } catch (error) {
     console.error('Error fetching gallery:', error)
     res.status(500).json({ success: false, error: error.message })

@@ -76,6 +76,16 @@ export async function initializeDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    -- Event Images table
+    CREATE TABLE IF NOT EXISTS event_images (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_id INTEGER NOT NULL,
+      image_url TEXT NOT NULL,
+      is_thumbnail INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE CASCADE
+    );
+
     -- Supporters table
     CREATE TABLE IF NOT EXISTS supporters (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

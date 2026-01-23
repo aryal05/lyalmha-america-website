@@ -301,7 +301,8 @@ const Home = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
-      <StatsSection />
+      {/* StatsSection temporarily removed per request */}
+      {/* <StatsSection /> */}
       <BlogGrid />
       <TestimonialsSection />
       <CTABanner />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
+import supportersImg from "../assets/images/finance/supporters.jpeg";
 
 const Supporters = () => {
   const [supporters, setSupporters] = useState([]);
@@ -23,7 +24,7 @@ const Supporters = () => {
     }
   };
 
-  const financialSupporters = supporters.filter((s) => s.type === "financial");
+  // const financialSupporters = supporters.filter((s) => s.type === "financial");
   const corporateSponsors = supporters.filter((s) => s.type === "corporate");
 
   if (loading) {
@@ -69,46 +70,28 @@ const Supporters = () => {
         </motion.div>
 
         {/* Financial Supporters */}
+        {/*
         {financialSupporters.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16"
-          >
-            <h3 className="text-2xl font-bold text-center text-royal-blue mb-8">
-              Financial Supporters
-            </h3>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {financialSupporters.map((supporter, index) => (
-                <motion.div
-                  key={supporter.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.02, duration: 0.3 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="card-premium temple-corner p-4 text-center group"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                    <div className="relative z-10">
-                      <p className="text-primary-text font-medium text-sm group-hover:text-gold-accent transition-colors">
-                        {supporter.name}
-                      </p>
-                      {supporter.description && (
-                        <p className="text-paragraph-text text-xs mt-1 line-clamp-2">
-                          {supporter.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          ...existing code...
         )}
+        */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <h3 className="text-2xl font-bold text-center text-royal-blue mb-8">
+            Financial Supporters
+          </h3>
+          <div className="flex justify-center items-center">
+            <img
+              src={supportersImg}
+              alt="Financial Supporters"
+              className="max-w-full h-auto rounded-xl shadow-lg"
+            />
+          </div>
+        </motion.div>
 
         {/* Corporate Sponsors */}
         {corporateSponsors.length > 0 && (
@@ -227,6 +210,6 @@ const Supporters = () => {
       </div>
     </section>
   );
-};
+};;
 
 export default Supporters;

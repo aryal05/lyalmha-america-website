@@ -17,6 +17,7 @@ const AdminLayout = ({ children }) => {
   const menuItems = [
     { path: "/admin/dashboard", icon: "📊", label: "Dashboard" },
     { path: "/admin/blogs", icon: "📝", label: "Blogs" },
+    { path: "/admin/stories", icon: "📖", label: "Latest Stories" },
     { path: "/admin/news", icon: "📰", label: "News" },
     { path: "/admin/team", icon: "👥", label: "Team" },
     { path: "/admin/events", icon: "📅", label: "Events" },

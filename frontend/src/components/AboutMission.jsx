@@ -61,7 +61,7 @@ const AboutMission = () => {
       </div>
 
       {/* Premium Objectives Card */}
-      <div className="card-premium temple-corner relative">
+      <div id="objectives" className="card-premium temple-corner relative">
         {/* Mandala Pattern Background */}
         <div className="absolute inset-0 mandala-pattern opacity-5 rounded-xl pointer-events-none"></div>
 

@@ -13,6 +13,41 @@ const Culture = () => {
   const [loading, setLoading] = useState(true);
   const [banners, setBanners] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [expandedFestivals, setExpandedFestivals] = useState({});
+
+  // Static traditions data
+  const staticTraditions = [
+    {
+      id: 1,
+      icon: '📚',
+      title: 'Nepal Bhasa Class',
+      description: 'Preserving our mother tongue through structured language classes for all ages, teaching reading, writing, and speaking Nepal Bhasa.'
+    },
+    {
+      id: 2,
+      icon: '🎵',
+      title: 'Music and Cultural Dance',
+      description: 'Traditional Newari music and dance performances celebrating our rich artistic heritage through classical and folk expressions.'
+    },
+    {
+      id: 3,
+      icon: '👶',
+      title: 'Kids Cultural Workshop',
+      description: 'Engaging workshops for children to learn about Newari traditions, festivals, and customs in a fun and interactive environment.'
+    },
+    {
+      id: 4,
+      icon: '🤝',
+      title: 'Community Reach',
+      description: 'Building bridges within and beyond our community through cultural exchange programs and collaborative initiatives.'
+    },
+    {
+      id: 5,
+      icon: '🥁',
+      title: 'Madal and Dhimay Workshop',
+      description: 'Hands-on training in traditional Newari percussion instruments, keeping alive the rhythmic heartbeat of our culture.'
+    }
+  ];
 
   useEffect(() => {
     fetchCultureData();
@@ -31,16 +66,15 @@ const Culture = () => {
 
   const fetchCultureData = async () => {
     try {
-      const [festivalsRes, traditionsRes, bannerRes] = await Promise.all([
+      const [festivalsRes, bannerRes] = await Promise.all([
         apiClient.get(API_ENDPOINTS.CULTURE.GET_FESTIVALS),
-        apiClient.get(API_ENDPOINTS.CULTURE.GET_TRADITIONS),
         apiClient.get(API_ENDPOINTS.BANNERS.GET_BY_LOCATION("culture")),
       ]);
 
       console.log("Culture banner response:", bannerRes.data.data);
       console.log("Festivals response:", festivalsRes.data.data);
       setFestivals(festivalsRes.data.data || []);
-      setTraditions(traditionsRes.data.data || []);
+      setTraditions(staticTraditions);
 
       const banners = bannerRes.data.data || [];
       setBanners(banners.length > 0 ? banners : []);
@@ -162,9 +196,41 @@ const Culture = () => {
                         <h3 className="heading-md mb-3 group-hover:text-gold-accent transition-colors">
                           {festival.title}
                         </h3>
-                        <p className="text-paragraph-text mb-4 leading-relaxed">
-                          {festival.description}
-                        </p>
+                        <div className="mb-4">
+                          <p className="text-paragraph-text leading-relaxed">
+                            {expandedFestivals[festival.id]
+                              ? festival.description
+                              : `${festival.description.slice(0, 150)}${festival.description.length > 150 ? '...' : ''}`}
+                          </p>
+                          {festival.description.length > 150 && (
+                            <button
+                              onClick={() =>
+                                setExpandedFestivals((prev) => ({
+                                  ...prev,
+                                  [festival.id]: !prev[festival.id],
+                                }))
+                              }
+                              className="mt-2 text-sm font-semibold text-gold-accent hover:text-newari-red transition-colors duration-300 flex items-center gap-1"
+                            >
+                              {expandedFestivals[festival.id] ? 'Read Less' : 'Read More'}
+                              <svg
+                                className={`w-4 h-4 transform transition-transform duration-300 ${
+                                  expandedFestivals[festival.id] ? 'rotate-180' : ''
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
                         {highlights.length > 0 && (
                           <div className="space-y-2 pt-4 border-t border-border-line">
                             {highlights.map((highlight, idx) => (
@@ -212,8 +278,8 @@ const Culture = () => {
                 Loading traditions...
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {traditions.map((tradition, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {staticTraditions.map((tradition, index) => (
                   <motion.div
                     key={tradition.id}
                     initial={{ opacity: 0, scale: 0.95 }}

@@ -181,7 +181,7 @@ const AdminDashboard = () => {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <motion.a
                 whileHover={{ y: -4 }}
                 href="/admin/blogs"
@@ -200,6 +200,28 @@ const AdminDashboard = () => {
                   </h3>
                   <p className="text-paragraph-text text-sm">
                     Create a new article
+                  </p>
+                </div>
+              </motion.a>
+
+              <motion.a
+                whileHover={{ y: -4 }}
+                href="/admin/stories"
+                className="flex items-center gap-4 p-5 bg-gradient-to-br from-white to-yellow-50/30 border-2 border-gray-300 rounded-lg hover:border-gold-accent hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gold-accent/0 via-gold-accent/5 to-gold-accent/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="p-3 bg-gradient-to-br from-gold-accent/20 to-gold-accent/5 rounded-lg group-hover:scale-110 transition-transform shadow-lg relative z-10">
+                  <span className="text-3xl">📖</span>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-royal-blue font-semibold group-hover:text-gold-accent transition-colors flex items-center gap-2">
+                    Latest Stories
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </h3>
+                  <p className="text-paragraph-text text-sm">
+                    Manage homepage stories
                   </p>
                 </div>
               </motion.a>

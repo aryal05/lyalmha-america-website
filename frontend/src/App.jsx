@@ -7,6 +7,8 @@ import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import News from "./pages/News";
 import Gallery from "./pages/Gallery";
+import GalleryEventDetail from "./pages/GalleryEventDetail";
+import UpcomingEvents from "./pages/UpcomingEvents";
 import Culture from "./pages/Culture";
 import Contact from "./pages/Contact";
 import KidsActivitiesPage from "./pages/KidsActivitiesPage";
@@ -19,6 +21,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminSupporters from "./pages/admin/AdminSupporters";
 import AdminBanners from "./pages/admin/AdminBanners";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminStories from "./pages/admin/AdminStories";
 import AdminContacts from "./pages/admin/AdminContacts";
 import LoadingScreen from "./components/LoadingScreen";
 import ScrollToTopOnMount from "./components/ScrollToTopOnMount";
@@ -38,8 +41,10 @@ function App() {
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blogs/:id" element={<BlogDetail />} />
             <Route path="/news" element={<News />} />
+            <Route path="/events" element={<UpcomingEvents />} />
             <Route path="/gallery" element={<Gallery />} />
-            <Route path="/culture" element={<Culture />} />
+            <Route path="/gallery/event/:id" element={<GalleryEventDetail />} />
+            <Route path="/culture-and-tradition" element={<Culture />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/kids-activities" element={<KidsActivitiesPage />} />
 
@@ -106,6 +111,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminGallery />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/stories"
+              element={
+                <ProtectedRoute>
+                  <AdminStories />
                 </ProtectedRoute>
               }
             />

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
-import logo from "../assets/images/logo/lyama (1) (1).png";
 import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const AboutHero = () => {
@@ -68,41 +67,26 @@ const AboutHero = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Logo */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, type: "spring" }}
-            className="flex justify-center"
-          >
-            <img
-              src={logo}
-              alt="Lyaymha America Logo"
-              className="h-64 w-64 object-contain"
-            />
-          </motion.div>
-
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-pure-white">About </span>
-              <span className="text-newari-red">Lyaymha</span>
-              <span className="text-gold-accent"> America</span>
-            </h1>
-            <p className="text-xl text-cream-white mb-4">
-              ल्याय्म्ह अमेरिका गुथि
-            </p>
-            <p className="text-lg text-pure-white/90">
-              Nurturing the next generation through Newari art, culture, and
-              language
-            </p>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+            <span className="text-pure-white">About </span>
+            <span className="text-newari-red">Lyaymha</span>
+            <span className="text-gold-accent"> America</span>
+          </h1>
+          <p className="text-2xl md:text-3xl text-cream-white mb-6">
+            ल्याय्म्ह अमेरिका गुथि
+          </p>
+          <div className="pagoda-divider w-64 mx-auto mb-6"></div>
+          <p className="text-xl text-pure-white/90 max-w-3xl mx-auto">
+            Nurturing the next generation through Newari art, culture, and
+            language
+          </p>
+        </motion.div>
       </div>
     </section>
   );

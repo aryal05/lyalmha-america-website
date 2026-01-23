@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import event1 from "../assets/images/posts/471944315_555366943987150_1453996420800501859_n.jpg";
@@ -9,6 +9,7 @@ import event2 from "../assets/images/posts/467736461_487936857446592_67776991769
 import event3 from "../assets/images/posts/462650425_598936739649734_2260957587124948845_n.jpg";
 
 const EventsSidebar = () => {
+  const navigate = useNavigate();
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -184,6 +185,7 @@ const EventsSidebar = () => {
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02, y: -2 }}
+                    onClick={() => navigate(`/gallery/event/${event.id}`)}
                     className="bg-gradient-to-br from-slate-50 via-blue-50/30 to-white border-l-4 border-gold-accent pl-6 pr-4 py-5 rounded-xl hover:border-newari-red transition-all duration-300 cursor-pointer relative group shadow-lg hover:shadow-2xl"
                     style={{
                       boxShadow: "0 4px 15px rgba(212, 175, 55, 0.15)",
@@ -318,13 +320,15 @@ const EventsSidebar = () => {
             </div>
           )}
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="mt-6 w-full px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-charcoal-black font-bold rounded-lg hover:from-gold-accent hover:to-newari-red transition-all duration-300 shadow-lg"
-          >
-            View All Events
-          </motion.button>
+          <Link to="/events">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="mt-6 w-full px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-charcoal-black font-bold rounded-lg hover:from-gold-accent hover:to-newari-red transition-all duration-300 shadow-lg"
+            >
+              View All Events
+            </motion.button>
+          </Link>
         </div>
       </motion.div>
 

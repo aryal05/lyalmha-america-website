@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 
 // API Configuration
@@ -28,6 +29,14 @@ apiClient.interceptors.request.use(
 
 // API Endpoints
 export const API_ENDPOINTS = {
+  STORIES: {
+    GET_ALL: '/api/blogs',
+    GET_ADMIN_ALL: '/api/admin/blogs/admin/all',
+    GET_BY_ID: (id) => `/api/blogs/${id}`,
+    CREATE: '/api/admin/blogs',
+    UPDATE: (id) => `/api/admin/blogs/${id}`,
+    DELETE: (id) => `/api/admin/blogs/${id}`,
+  },
   AUTH: {
     LOGIN: '/api/auth/login',
   },

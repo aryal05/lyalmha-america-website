@@ -16,6 +16,7 @@ import adminActivitiesRoutes from './routes/adminActivitiesRoutes.js'
 import adminTestimonialsRoutes from './routes/adminTestimonialsRoutes.js'
 import adminNewsRoutes from './routes/adminNewsRoutes.js'
 import adminGalleryRoutes from './routes/adminGalleryRoutes.js'
+import adminEventImagesRoutes from './routes/adminEventImagesRoutes.js'
 import adminContactRoutes from './routes/adminContactRoutes.js'
 
 dotenv.config()
@@ -85,6 +86,7 @@ app.use('/api/admin/activities', adminActivitiesRoutes)
 app.use('/api/admin/testimonials', adminTestimonialsRoutes)
 app.use('/api/admin/news', adminNewsRoutes)
 app.use('/api/admin/gallery', adminGalleryRoutes)
+app.use('/api/admin/event-images', adminEventImagesRoutes)
 app.use('/api/contact', adminContactRoutes)
 app.use('/api/admin/contact', adminContactRoutes)
 

@@ -56,8 +56,11 @@ const Navbar = () => {
           behavior: "smooth",
         });
       }
+    } else if (hash) {
+      // If navigating to a hash on a different page, force reload so About page loads and scrolls
+      window.location.href = path;
     } else {
-      // Navigate to the page with hash
+      // Navigate to the page without hash
       navigate(path);
     }
   };
@@ -71,6 +74,7 @@ const Navbar = () => {
       label: "About Us",
       hasDropdown: true,
       submenu: [
+        { path: "/about#objectives", label: "Our Objectives and Missions" },
         { path: "/about#executive", label: "Executive Members" },
         { path: "/about#projects", label: "Project Biska" },
         { path: "/about#advisors", label: "Advisors" },
@@ -86,7 +90,7 @@ const Navbar = () => {
         { path: "/gallery", label: "Gallery" },
       ],
     },
-    { path: "/culture", label: "Culture" },
+    { path: "/culture-and-tradition", label: "Culture & Tradition" },
     { path: "/kids-activities", label: "Kids Activities" },
     { path: "/contact", label: "Contact" },
   ];
@@ -96,11 +100,7 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-white/80 backdrop-blur-xl shadow-lg border-b border-slate-200/50"
-          : "bg-white/70 backdrop-blur-lg"
-      }`}
+      className={`fixed w-full z-50 transition-all duration-500 bg-white shadow-lg border-b border-slate-200/50`}
     >
       {/* Subtle Mandala Pattern Overlay */}
       {scrolled && (
@@ -119,12 +119,12 @@ const Navbar = () => {
           </Link>
 
           {/* Premium Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-0.5 xl:space-x-1">
             {navLinks.map((link) => (
               <div key={link.path} className="relative group/dropdown">
-                <Link to={link.path} className="relative px-4 py-2 group block">
+                <Link to={link.path} className="relative px-2 xl:px-3 py-2 group block">
                   <span
-                    className={`relative z-10 font-semibold transition-colors duration-300 ${
+                    className={`relative z-10 font-semibold text-sm xl:text-base whitespace-nowrap transition-colors duration-300 ${
                       isActive(link.path)
                         ? "text-royal-blue"
                         : "text-primary-text hover:text-royal-blue"
@@ -133,7 +133,7 @@ const Navbar = () => {
                     {link.label}
                     {link.hasDropdown && (
                       <svg
-                        className="inline-block w-4 h-4 ml-1"
+                        className="inline-block w-3 h-3 xl:w-4 xl:h-4 ml-1"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -198,7 +198,7 @@ const Navbar = () => {
             {/* CTA Button */}
             <Link
               to="/contact"
-              className="ml-4 btn-secondary !py-2 !px-6 text-sm"
+              className="ml-2 xl:ml-4 btn-secondary !py-2 !px-4 xl:!px-6 text-xs xl:text-sm whitespace-nowrap"
             >
               Get Involved
             </Link>
@@ -207,7 +207,7 @@ const Navbar = () => {
           {/* Premium Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden relative w-10 h-10 rounded-lg bg-dark-navy border border-border-line text-gold-accent focus:outline-none focus:ring-2 focus:ring-gold-accent transition-all duration-300 hover:bg-gold-accent/10"
+            className="lg:hidden relative w-10 h-10 rounded-lg bg-dark-navy border border-border-line text-gold-accent focus:outline-none focus:ring-2 focus:ring-gold-accent transition-all duration-300 hover:bg-gold-accent/10"
             aria-label="Toggle menu"
           >
             <div className="flex flex-col items-center justify-center w-full h-full space-y-1.5">

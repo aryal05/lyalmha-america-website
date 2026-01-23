@@ -4,33 +4,37 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import ScrollToTop from '../components/ScrollToTop'
 import { apiClient, API_ENDPOINTS } from '../config/api'
-import { getImageUrl } from '../utils/imageHelper'
+import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../utils/imageHelper";
 
 const Gallery = () => {
-  const [images, setImages] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [filter, setFilter] = useState('all')
+  const navigate = useNavigate();
+  const [pastEvents, setPastEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [filter, setFilter] = useState("past");
 
   useEffect(() => {
-    fetchGalleryImages()
-  }, [])
+    fetchEvents();
+  }, []);
 
-  const fetchGalleryImages = async () => {
+  const fetchEvents = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.GALLERY.GET_ALL)
-      setImages(response.data.data || [])
+      const [pastRes, upcomingRes] = await Promise.all([
+        apiClient.get(API_ENDPOINTS.EVENTS.GET_PAST),
+        apiClient.get(API_ENDPOINTS.EVENTS.GET_UPCOMING)
+      ]);
+      setPastEvents(pastRes.data.data || []);
+      setUpcomingEvents(upcomingRes.data.data || []);
     } catch (error) {
-      console.error('Error fetching gallery:', error)
+      console.error("Error fetching events:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const categories = ['all', ...new Set(images.map(img => img.category))]
-  const filteredImages = filter === 'all' 
-    ? images 
-    : images.filter(img => img.category === filter)
+  const displayEvents = filter === "past" ? pastEvents : upcomingEvents;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
@@ -92,19 +96,26 @@ const Gallery = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                filter === category
-                  ? "bg-gold-accent text-white shadow-gold"
-                  : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
-              }`}
-            >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-          ))}
+          <button
+            onClick={() => setFilter("past")}
+            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+              filter === "past"
+                ? "bg-gold-accent text-white shadow-gold"
+                : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
+            }`}
+          >
+            Past Events
+          </button>
+          <button
+            onClick={() => setFilter("upcoming")}
+            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+              filter === "upcoming"
+                ? "bg-gold-accent text-white shadow-gold"
+                : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
+            }`}
+          >
+            Upcoming Events
+          </button>
         </div>
 
         {/* Gallery Grid */}
@@ -118,32 +129,49 @@ const Gallery = () => {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             <AnimatePresence>
-              {filteredImages.map((image) => (
+              {displayEvents.map((event) => (
                 <motion.div
-                  key={image.id}
+                  key={event.id}
                   layout
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className="group relative aspect-square overflow-hidden rounded-xl cursor-pointer"
-                  onClick={() => setSelectedImage(image)}
+                  className="group relative overflow-hidden rounded-xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
+                  onClick={() => navigate(`/gallery/event/${event.id}`)}
                 >
-                  <img
-                    src={getImageUrl(image.image)}
-                    alt={image.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black/90 via-charcoal-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-white font-bold text-lg mb-1">
-                        {image.title}
-                      </h3>
-                      {image.description && (
-                        <p className="text-gray-300 text-sm">
-                          {image.description}
-                        </p>
-                      )}
-                    </div>
+                  {/* Image Section */}
+                  <div className="aspect-square overflow-hidden">
+                    {event.image ? (
+                      <img
+                        src={getImageUrl(event.image)}
+                        alt={event.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-royal-blue to-newari-red flex items-center justify-center">
+                        <svg className="w-20 h-20 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Info Section - Always Visible */}
+                  <div className="bg-white p-4 border-t-2 border-gold-accent group-hover:border-newari-red transition-colors">
+                    <h3 className="text-primary-text font-bold text-lg mb-2 group-hover:text-gold-accent transition-colors">
+                      {event.title}
+                    </h3>
+                    {event.description && (
+                      <p className="text-paragraph-text text-sm line-clamp-2 mb-2">
+                        {event.description}
+                      </p>
+                    )}
+                    <p className="text-gold-accent text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                      View Details
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -151,10 +179,10 @@ const Gallery = () => {
           </motion.div>
         )}
 
-        {!loading && filteredImages.length === 0 && (
+        {!loading && displayEvents.length === 0 && (
           <div className="text-center py-12">
             <p className="text-paragraph-text text-lg">
-              No images found in this category.
+              No {filter} events found.
             </p>
           </div>
         )}
@@ -217,6 +245,6 @@ const Gallery = () => {
       <ScrollToTop />
     </div>
   );
-}
+};
 
 export default Gallery
