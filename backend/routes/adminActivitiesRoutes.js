@@ -72,25 +72,23 @@ router.get('/:id', async (req, res) => {
 // Create new activity (Admin only)
 router.post('/', authenticateAdmin, upload.single('image'), async (req, res) => {
   try {
-    const { title, description, category, detailedInfo, benefits, ageGroup, icon } = req.body
+    const { title, description, category, icon, orderIndex, active } = req.body
     let imageUrl = null
 
     if (req.file) {
-      // Upload to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path, {
         folder: 'lyalmha-activities',
         transformation: [{ width: 800, height: 600, crop: 'limit' }],
       })
       imageUrl = result.secure_url
-      // Delete local file
       fs.unlinkSync(req.file.path)
     }
 
     const db = getDatabase()
     const result = await db.run(
-      `INSERT INTO activities (title, description, category, image, detailed_info, benefits, age_group, icon) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, category, imageUrl, detailedInfo, benefits, ageGroup, icon]
+      `INSERT INTO activities (title, description, category, image, icon, order_index, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, category || 'kids', imageUrl, icon || '', orderIndex || 0, active || 1]
     )
 
     const newActivity = await db.get('SELECT * FROM activities WHERE id = ?', [result.lastID])
@@ -108,7 +106,7 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
     console.log('📦 Request body:', req.body)
     console.log('📸 Has file:', !!req.file)
     
-    const { title, description, category, detailedInfo, benefits, ageGroup, icon, orderIndex } = req.body
+    const { title, description, category, icon, orderIndex, active } = req.body
     const db = getDatabase()
 
     const existingActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
@@ -121,7 +119,6 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
     if (req.file) {
       try {
         console.log('☁️  Uploading to Cloudinary...')
-        // Upload new image to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
           folder: 'lyalmha-activities',
           transformation: [{ width: 800, height: 600, crop: 'limit' }],
@@ -140,10 +137,9 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
 
     await db.run(
       `UPDATE activities 
-       SET title = ?, description = ?, category = ?, image = ?, detailed_info = ?, 
-           benefits = ?, age_group = ?, icon = ?, order_index = ?, updated_at = CURRENT_TIMESTAMP
+       SET title = ?, description = ?, category = ?, image = ?, icon = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [title, description, category, imageUrl, detailedInfo, benefits, ageGroup, icon, orderIndex || 0, req.params.id]
+      [title, description, category || 'kids', imageUrl, icon || '', orderIndex || 0, active || 1, req.params.id]
     )
 
     const updatedActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])

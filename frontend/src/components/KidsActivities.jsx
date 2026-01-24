@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { apiClient, API_ENDPOINTS } from "../config/api";
 import workshop1 from "../assets/images/posts/430057563_377416895039960_1581867728642530497_n.jpg";
 import workshop2 from "../assets/images/posts/433421627_946258180277784_6165530352102042076_n.jpg";
 import madalBanner from "../assets/images/posts/Madal and Dhimay Picture Banner_1.png";
@@ -10,69 +11,46 @@ const KidsActivities = () => {
   const navigate = useNavigate();
   const [flippedCard, setFlippedCard] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
-  const activities = [
-    {
-      title: "Culture Workshop Session 1",
-      description:
-        "Interactive sessions teaching children about Newari traditions, customs, and cultural practices.",
-      detailedInfo:
-        "Our foundational workshop introduces children to the rich tapestry of Newari culture through storytelling, traditional games, and hands-on activities. Perfect for ages 5-12.",
-      benefits: [
-        "Cultural Identity",
-        "Community Building",
-        "Heritage Learning",
-      ],
-      image: workshop1,
-      category: "Workshop",
-      icon: "📚",
-      ageGroup: "5-12 years",
-    },
-    {
-      title: "Culture Workshop Session 2",
-      description:
-        "Advanced cultural education programs focusing on historical significance and contemporary relevance.",
-      detailedInfo:
-        "Deep dive into Newari history, art forms, and philosophical traditions. Students explore ancient manuscripts, architectural heritage, and cultural evolution.",
-      benefits: [
-        "Historical Knowledge",
-        "Critical Thinking",
-        "Cultural Appreciation",
-      ],
-      image: workshop2,
-      category: "Workshop",
-      icon: "🏛️",
-      ageGroup: "10-16 years",
-    },
-    {
-      title: "Madal and Dhimay Workshop",
-      description:
-        "Hands-on musical instrument training, teaching children the art of traditional Newari percussion.",
-      detailedInfo:
-        "Learn authentic rhythms and techniques from experienced musicians. Children get hands-on practice with traditional instruments and perform in cultural events.",
-      benefits: [
-        "Musical Skills",
-        "Rhythm & Coordination",
-        "Performance Confidence",
-      ],
-      image: madalBanner,
-      category: "Music",
-      icon: "🥁",
-      ageGroup: "8-16 years",
-    },
-    {
-      title: "Dance, Music & Literature",
-      description:
-        "Comprehensive programs covering traditional dance forms, musical expressions, and language learning.",
-      detailedInfo:
-        "Holistic cultural education combining Newari dance, music theory, and language lessons. Students learn to read, write, and speak while expressing through movement.",
-      benefits: ["Language Skills", "Artistic Expression", "Cultural Fluency"],
-      image: danceImg,
-      category: "Arts",
-      icon: "💃",
-      ageGroup: "All ages",
-    },
+  const fallbackImages = [
+    workshop1,
+    workshop2,
+    madalBanner,
+    danceImg,
+    workshop1,
   ];
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  const fetchActivities = async () => {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.ACTIVITIES.GET_ALL);
+      const kidsActivities = response.data.data
+        .filter((a) => a.category === "kids" && a.active === 1)
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((activity) => ({
+          ...activity,
+          image: activity.image || fallbackImages[0],
+          category: "Workshop",
+          ageGroup: "All ages",
+          benefits: [
+            "Cultural Identity",
+            "Heritage Learning",
+            "Community Building",
+          ],
+        }));
+      setActivities(kidsActivities);
+    } catch (error) {
+      console.error("Error fetching activities:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const testimonials = [
     {
@@ -123,11 +101,11 @@ const KidsActivities = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 items-start">
         {activities.map((activity, index) => (
           <div
             key={index}
-            className="relative h-[450px]"
+            className="relative mb-8"
             style={{ perspective: "1000px" }}
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
@@ -142,7 +120,7 @@ const KidsActivities = () => {
             >
               {/* Front of Card */}
               <div
-                className="absolute w-full h-full backface-hidden"
+                className="backface-hidden"
                 style={{ backfaceVisibility: "hidden" }}
               >
                 <motion.div
@@ -151,10 +129,10 @@ const KidsActivities = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
-                  className="card-premium temple-corner h-full overflow-hidden group cursor-pointer"
+                  className="card-premium temple-corner overflow-hidden group cursor-pointer"
                   onClick={() => handleFlip(index)}
                 >
-                  <div className="relative h-full flex flex-col">
+                  <div className="relative flex flex-col">
                     {/* Image with Overlay */}
                     <div className="relative h-56 overflow-hidden">
                       <img
@@ -197,16 +175,56 @@ const KidsActivities = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 p-6 relative">
+                    <div className="flex-1 p-6 relative flex flex-col">
                       <div className="absolute inset-0 mandala-pattern opacity-5"></div>
 
-                      <div className="relative z-10">
+                      <div className="relative z-10 flex-1 flex flex-col">
                         <h3 className="text-2xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
                           {activity.title}
                         </h3>
-                        <p className="text-paragraph-text mb-4 leading-relaxed">
-                          {activity.description}
-                        </p>
+                        <div className="mb-4 flex-1">
+                          <p className="text-paragraph-text leading-relaxed whitespace-pre-line">
+                            {expandedDescriptions[activity.id]
+                              ? activity.description
+                              : activity.description
+                                  .split(" ")
+                                  .slice(0, 25)
+                                  .join(" ") + "..."}
+                          </p>
+                          {activity.description.split(" ").length > 25 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedDescriptions((prev) => ({
+                                  ...prev,
+                                  [activity.id]: !prev[activity.id],
+                                }));
+                              }}
+                              className="mt-2 text-sm font-semibold text-gold-accent hover:text-newari-red transition-colors duration-300 flex items-center gap-1"
+                            >
+                              {expandedDescriptions[activity.id]
+                                ? "Read Less"
+                                : "Read More"}
+                              <svg
+                                className={`w-4 h-4 transform transition-transform duration-300 ${
+                                  expandedDescriptions[activity.id]
+                                    ? "rotate-180"
+                                    : ""
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
 
                         <div className="flex items-center justify-between mt-auto pt-4 border-t border-gold-accent/20">
                           <span className="text-gold-accent font-semibold text-sm">
@@ -230,18 +248,18 @@ const KidsActivities = () => {
 
               {/* Back of Card */}
               <div
-                className="absolute w-full h-full backface-hidden"
+                className="absolute top-0 left-0 w-full backface-hidden"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
                 }}
               >
                 <motion.div
-                  className="card-premium temple-corner h-full p-8 cursor-pointer"
+                  className="card-premium temple-corner p-8 cursor-pointer"
                   onClick={() => handleFlip(index)}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="relative h-full flex flex-col">
+                  <div className="relative flex flex-col">
                     <div className="absolute inset-0 mandala-pattern opacity-10"></div>
 
                     <div className="relative z-10 flex-1 flex flex-col">
@@ -263,7 +281,7 @@ const KidsActivities = () => {
                       <div className="pagoda-divider w-24 mb-6"></div>
 
                       <p className="text-paragraph-text mb-6 leading-relaxed flex-1">
-                        {activity.detailedInfo}
+                        {activity.description}
                       </p>
 
                       {/* Benefits */}

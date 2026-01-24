@@ -23,6 +23,7 @@ import AdminBanners from "./pages/admin/AdminBanners";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminStories from "./pages/admin/AdminStories";
 import AdminContacts from "./pages/admin/AdminContacts";
+import AdminActivities from "./pages/admin/AdminActivities";
 import LoadingScreen from "./components/LoadingScreen";
 import ScrollToTopOnMount from "./components/ScrollToTopOnMount";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -127,6 +128,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminContacts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/activities"
+              element={
+                <ProtectedRoute>
+                  <AdminActivities />
                 </ProtectedRoute>
               }
             />

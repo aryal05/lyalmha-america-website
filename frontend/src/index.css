@@ -9,7 +9,7 @@
   
   body {
     @apply text-primary-text overflow-x-hidden;
-    background: linear-gradient(135deg, #FDFEFE 0%, #F7F9FB 50%, #EDF2F7 100%);
+    background: #FFFFFF;
     font-feature-settings: "kern";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -250,3 +250,4 @@ img[loading="lazy"] {
 img[loading="lazy"].loaded {
   @apply opacity-100;
 }
+ 
