@@ -130,6 +130,10 @@ export async function initializeDatabase() {
       status TEXT DEFAULT 'active',
       start_date TEXT,
       end_date TEXT,
+      location TEXT,
+      featured INTEGER DEFAULT 0,
+      order_index INTEGER DEFAULT 0,
+      active INTEGER DEFAULT 1,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -239,6 +243,18 @@ export async function initializeDatabase() {
       status TEXT DEFAULT 'unread',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Event RSVPs table
+    CREATE TABLE IF NOT EXISTS event_rsvps (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_id INTEGER NOT NULL,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      attendees TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE CASCADE
     );
   `)
 

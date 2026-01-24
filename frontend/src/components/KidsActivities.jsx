@@ -9,11 +9,10 @@ import danceImg from "../assets/images/posts/438077842_407204048727911_140111444
 
 const KidsActivities = () => {
   const navigate = useNavigate();
-  const [flippedCard, setFlippedCard] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [selectedActivity, setSelectedActivity] = useState(null);
 
   const fallbackImages = [
     workshop1,
@@ -74,7 +73,7 @@ const KidsActivities = () => {
   ];
 
   const handleFlip = (index) => {
-    setFlippedCard(flippedCard === index ? null : index);
+    setSelectedActivity(activities[index]);
   };
 
   return (
@@ -103,232 +102,152 @@ const KidsActivities = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 items-start">
         {activities.map((activity, index) => (
-          <div
+          <motion.div
             key={index}
-            className="relative mb-8"
-            style={{ perspective: "1000px" }}
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            className="card-premium temple-corner overflow-hidden group cursor-pointer mb-8"
+            onClick={() => handleFlip(index)}
           >
-            <motion.div
-              className="relative w-full h-full"
-              style={{ transformStyle: "preserve-3d" }}
-              animate={{
-                rotateY: flippedCard === index ? 180 : 0,
-              }}
-              transition={{ duration: 0.6 }}
-            >
-              {/* Front of Card */}
-              <div
-                className="backface-hidden"
-                style={{ backfaceVisibility: "hidden" }}
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="card-premium temple-corner overflow-hidden group cursor-pointer"
-                  onClick={() => handleFlip(index)}
-                >
-                  <div className="relative flex flex-col">
-                    {/* Image with Overlay */}
-                    <div className="relative h-56 overflow-hidden">
-                      <img
-                        src={activity.image}
-                        alt={activity.title}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
+            <div className="relative flex flex-col">
+              {/* Image with Overlay */}
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src={activity.image}
+                  alt={activity.title}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
+                <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
 
-                      {/* Mandala Overlay */}
-                      <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+                {/* Category Badge */}
+                <div className="absolute top-4 left-4">
+                  <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg">
+                    {activity.icon} {activity.category}
+                  </span>
+                </div>
 
-                      {/* Category Badge */}
-                      <div className="absolute top-4 left-4">
-                        <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg">
-                          {activity.icon} {activity.category}
-                        </span>
-                      </div>
-
-                      {/* Age Group Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span className="px-3 py-1 bg-charcoal-black/80 border border-gold-accent text-gold-accent text-xs font-semibold rounded-full">
-                          {activity.ageGroup}
-                        </span>
-                      </div>
-
-                      {/* Flip Indicator */}
-                      <motion.div
-                        className="absolute bottom-4 right-4"
-                        animate={{
-                          rotate: hoveredCard === index ? 180 : 0,
-                          scale: hoveredCard === index ? 1.2 : 1,
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center text-charcoal-black font-bold shadow-lg">
-                          ↻
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 p-6 relative flex flex-col">
-                      <div className="absolute inset-0 mandala-pattern opacity-5"></div>
-
-                      <div className="relative z-10 flex-1 flex flex-col">
-                        <h3 className="text-2xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
-                          {activity.title}
-                        </h3>
-                        <div className="mb-4 flex-1">
-                          <p className="text-paragraph-text leading-relaxed whitespace-pre-line">
-                            {expandedDescriptions[activity.id]
-                              ? activity.description
-                              : activity.description
-                                  .split(" ")
-                                  .slice(0, 25)
-                                  .join(" ") + "..."}
-                          </p>
-                          {activity.description.split(" ").length > 25 && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedDescriptions((prev) => ({
-                                  ...prev,
-                                  [activity.id]: !prev[activity.id],
-                                }));
-                              }}
-                              className="mt-2 text-sm font-semibold text-gold-accent hover:text-newari-red transition-colors duration-300 flex items-center gap-1"
-                            >
-                              {expandedDescriptions[activity.id]
-                                ? "Read Less"
-                                : "Read More"}
-                              <svg
-                                className={`w-4 h-4 transform transition-transform duration-300 ${
-                                  expandedDescriptions[activity.id]
-                                    ? "rotate-180"
-                                    : ""
-                                }`}
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gold-accent/20">
-                          <span className="text-gold-accent font-semibold text-sm">
-                            Click to flip →
-                          </span>
-                          <motion.div
-                            className="w-8 h-8 rounded-full bg-gradient-to-br from-gold-accent to-newari-red"
-                            animate={{
-                              boxShadow:
-                                hoveredCard === index
-                                  ? "0 0 20px rgba(242, 201, 76, 0.6)"
-                                  : "0 0 10px rgba(242, 201, 76, 0.3)",
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+                {/* Age Group Badge */}
+                <div className="absolute top-4 right-4">
+                  <span className="px-3 py-1 bg-charcoal-black/80 border border-gold-accent text-gold-accent text-xs font-semibold rounded-full">
+                    {activity.ageGroup}
+                  </span>
+                </div>
               </div>
 
-              {/* Back of Card */}
-              <div
-                className="absolute top-0 left-0 w-full backface-hidden"
-                style={{
-                  backfaceVisibility: "hidden",
-                  transform: "rotateY(180deg)",
-                }}
-              >
-                <motion.div
-                  className="card-premium temple-corner p-8 cursor-pointer"
-                  onClick={() => handleFlip(index)}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="relative flex flex-col">
-                    <div className="absolute inset-0 mandala-pattern opacity-10"></div>
-
-                    <div className="relative z-10 flex-1 flex flex-col">
-                      {/* Back Header */}
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="text-4xl">{activity.icon}</div>
-                        <motion.div
-                          animate={{ rotate: 180 }}
-                          className="w-10 h-10 rounded-full bg-gradient-to-br from-newari-red to-gold-accent flex items-center justify-center text-charcoal-black font-bold"
-                        >
-                          ↻
-                        </motion.div>
-                      </div>
-
-                      <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
-                        Program Details
-                      </h3>
-
-                      <div className="pagoda-divider w-24 mb-6"></div>
-
-                      <p className="text-paragraph-text mb-6 leading-relaxed flex-1">
-                        {activity.description}
-                      </p>
-
-                      {/* Benefits */}
-                      <div className="space-y-3 mb-6">
-                        <h4 className="text-gold-accent font-semibold text-sm uppercase tracking-wider">
-                          Key Benefits:
-                        </h4>
-                        <div className="grid grid-cols-1 gap-2">
-                          {activity.benefits.map((benefit, idx) => (
-                            <motion.div
-                              key={idx}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="flex items-center text-paragraph-text"
-                            >
-                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-charcoal-black font-bold text-xs">
-                                  ✓
-                                </span>
-                              </div>
-                              <span>{benefit}</span>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* CTA Button */}
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/contact");
-                        }}
-                        className="w-full py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
-                      >
-                        Register Interest
-                      </motion.button>
-                    </div>
+              {/* Content */}
+              <div className="flex-1 p-6 relative flex flex-col">
+                <div className="absolute inset-0 mandala-pattern opacity-5"></div>
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <h3 className="text-2xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
+                    {activity.title}
+                  </h3>
+                  <p className="text-paragraph-text leading-relaxed line-clamp-3">
+                    {activity.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-gold-accent/20">
+                    <span className="text-gold-accent font-semibold text-sm">
+                      Click for details →
+                    </span>
                   </div>
-                </motion.div>
+                </div>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         ))}
       </div>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {selectedActivity && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-charcoal-black/95 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedActivity(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 50 }}
+              className="card-premium temple-corner max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedActivity(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-gradient-to-br from-newari-red to-gold-accent flex items-center justify-center text-charcoal-black font-bold hover:scale-110 transition-transform"
+              >
+                ✕
+              </button>
+
+              {/* Image */}
+              <div className="relative h-96 overflow-hidden">
+                <img
+                  src={selectedActivity.image}
+                  alt={selectedActivity.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
+              </div>
+
+              {/* Content */}
+              <div className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-5xl">{selectedActivity.icon}</span>
+                  <h2 className="text-4xl font-bold bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
+                    {selectedActivity.title}
+                  </h2>
+                </div>
+
+                <div className="pagoda-divider w-32 mb-6"></div>
+
+                <p className="text-paragraph-text text-lg leading-relaxed mb-8 whitespace-pre-line">
+                  {selectedActivity.description}
+                </p>
+
+                {/* Benefits */}
+                <div className="space-y-3 mb-8">
+                  <h4 className="text-gold-accent font-semibold text-sm uppercase tracking-wider">
+                    Key Benefits:
+                  </h4>
+                  <div className="grid grid-cols-1 gap-3">
+                    {selectedActivity.benefits.map((benefit, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center text-paragraph-text"
+                      >
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gold-accent to-newari-red flex items-center justify-center mr-3 flex-shrink-0">
+                          <span className="text-charcoal-black font-bold text-xs">
+                            ✓
+                          </span>
+                        </div>
+                        <span>{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/contact")}
+                  className="w-full py-4 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg text-lg"
+                >
+                  Register Interest
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Parent Testimonials */}
       <motion.div

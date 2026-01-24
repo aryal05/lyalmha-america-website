@@ -1,10 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import biskaImage from '../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg'
+import { apiClient, API_ENDPOINTS } from '../config/api'
+import { getImageUrl } from '../utils/imageHelper'
 
 const Projects = () => {
-  const [showDetails, setShowDetails] = useState(false)
-  const [hoveredMember, setHoveredMember] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedProject, setExpandedProject] = useState(null);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.PROJECTS.GET_ACTIVE);
+      setProjects(response.data.data || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-12 h-12 border-4 border-gold-accent border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (projects.length === 0) {
+    return null;
+  }
 
   const projectTeam = {
     advisors: [

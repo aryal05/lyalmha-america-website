@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 
 const AdminContacts = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, unread, read
@@ -70,49 +72,71 @@ const AdminContacts = () => {
 
   return (
     <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-charcoal-black mb-2">
-          Contact Messages
-        </h1>
-        <p className="text-paragraph-text">
-          {unreadCount > 0 ? (
-            <span className="text-newari-red font-semibold">
-              {unreadCount} unread message{unreadCount !== 1 ? "s" : ""}
-            </span>
-          ) : (
-            "All messages have been read"
-          )}
-        </p>
+      {/* Header with Back Button */}
+      <div className="mb-8">
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={() => navigate('/admin/dashboard')}
+          className="flex items-center gap-2 text-royal-blue hover:text-gold-accent mb-6 transition-colors font-semibold group"
+        >
+          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Dashboard
+        </motion.button>
+
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-royal-blue to-gold-accent bg-clip-text text-transparent">
+              Contact Messages
+            </h1>
+            <p className="text-gray-600 mt-1">
+              {unreadCount > 0 ? (
+                <span className="text-newari-red font-semibold">
+                  {unreadCount} unread message{unreadCount !== 1 ? "s" : ""}
+                </span>
+              ) : (
+                "All messages have been read"
+              )}
+            </p>
+          </div>
+          <div className="px-6 py-3 bg-gradient-to-r from-royal-blue to-gold-accent rounded-lg shadow-lg">
+            <p className="text-white text-sm font-medium">Total Messages</p>
+            <p className="text-white text-3xl font-bold">{messages.length}</p>
+          </div>
+        </div>
+        <div className="h-1 w-32 bg-gradient-to-r from-gold-accent to-newari-red rounded-full mt-4"></div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-3 mb-6">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          className={`px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md ${
             filter === "all"
-              ? "bg-royal-blue text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-gradient-to-r from-royal-blue to-gold-accent text-white shadow-lg"
+              : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
           }`}
         >
           All ({messages.length})
         </button>
         <button
           onClick={() => setFilter("unread")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          className={`px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md ${
             filter === "unread"
-              ? "bg-royal-blue text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-gradient-to-r from-royal-blue to-gold-accent text-white shadow-lg"
+              : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
           }`}
         >
           Unread ({unreadCount})
         </button>
         <button
           onClick={() => setFilter("read")}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          className={`px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md ${
             filter === "read"
-              ? "bg-royal-blue text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-gradient-to-r from-royal-blue to-gold-accent text-white shadow-lg"
+              : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
           }`}
         >
           Read ({messages.length - unreadCount})
@@ -125,22 +149,29 @@ const AdminContacts = () => {
           <p className="mt-4 text-paragraph-text">Loading messages...</p>
         </div>
       ) : filteredMessages.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <svg
-            className="w-16 h-16 mx-auto text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-            />
-          </svg>
-          <p className="text-gray-600 text-lg">No messages to display</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center py-16 bg-gradient-to-br from-blue-50 to-gold-accent/5 rounded-xl border-2 border-dashed border-gray-300"
+        >
+          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-royal-blue/10 to-gold-accent/10 rounded-full flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-600 text-lg font-medium">No messages to display</p>
+          <p className="text-gray-400 text-sm mt-2">Contact messages will appear here</p>
+        </motion.div>
       ) : (
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Messages List */}
@@ -150,11 +181,11 @@ const AdminContacts = () => {
                 key={message.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`p-5 rounded-xl border-2 cursor-pointer transition-all shadow-md hover:shadow-xl ${
                   selectedMessage?.id === message.id
-                    ? "border-royal-blue bg-royal-blue/5"
+                    ? "border-royal-blue bg-gradient-to-r from-blue-50 to-gold-accent/5"
                     : message.status === "unread"
-                    ? "border-newari-red/30 bg-newari-red/5"
+                    ? "border-newari-red/40 bg-gradient-to-r from-red-50 to-newari-red/5"
                     : "border-gray-200 bg-white hover:border-gray-300"
                 }`}
                 onClick={() => {
@@ -164,19 +195,24 @@ const AdminContacts = () => {
                   }
                 }}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 className="font-bold text-charcoal-black flex items-center gap-2">
-                      {message.name}
-                      {message.status === "unread" && (
-                        <span className="w-2 h-2 bg-newari-red rounded-full"></span>
-                      )}
-                    </h3>
-                    <p className="text-sm text-paragraph-text">
-                      {message.email}
-                    </p>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-royal-blue to-gold-accent flex items-center justify-center text-white font-bold shadow-lg">
+                      {message.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-charcoal-black flex items-center gap-2">
+                        {message.name}
+                        {message.status === "unread" && (
+                          <span className="w-2.5 h-2.5 bg-newari-red rounded-full animate-pulse"></span>
+                        )}
+                      </h3>
+                      <p className="text-sm text-paragraph-text">
+                        {message.email}
+                      </p>
+                    </div>
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 font-medium">
                     {new Date(message.created_at).toLocaleDateString()}
                   </span>
                 </div>
@@ -196,7 +232,7 @@ const AdminContacts = () => {
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-white rounded-lg border-2 border-gray-200 p-6"
+                className="bg-white rounded-xl border-2 border-gray-200 p-6 shadow-lg"
               >
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex-1">

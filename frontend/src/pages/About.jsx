@@ -6,7 +6,7 @@ import Footer from '../components/Footer'
 import AboutHero from '../components/AboutHero'
 import AboutMission from '../components/AboutMission'
 import Teams from '../components/Teams'
-import Projects from "../components/Projects";
+import Projects from "../components/ProjectsNew";
 import EventsSidebar from "../components/EventsSidebar";
 import Supporters from "../components/Supporters";
 import ScrollToTop from "../components/ScrollToTop";

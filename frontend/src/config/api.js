@@ -2,8 +2,8 @@
 import axios from 'axios'
 
 // API Configuration
-export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-production.up.railway.app'
-// export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+// export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-production.up.railway.app'
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -121,5 +121,18 @@ export const API_ENDPOINTS = {
     GET_UNREAD_COUNT: '/api/admin/contact/unread-count',
     MARK_READ: (id) => `/api/admin/contact/${id}/read`,
     DELETE: (id) => `/api/admin/contact/${id}`,
+  },
+  RSVP: {
+    SUBMIT: '/api/rsvp',
+    GET_ALL: '/api/admin/rsvps',
+    DELETE: (id) => `/api/admin/rsvps/${id}`,
+  },
+  PROJECTS: {
+    GET_ALL: '/api/admin/projects',
+    GET_ACTIVE: '/api/admin/projects/active',
+    GET_BY_ID: (id) => `/api/admin/projects/${id}`,
+    CREATE: '/api/admin/projects',
+    UPDATE: (id) => `/api/admin/projects/${id}`,
+    DELETE: (id) => `/api/admin/projects/${id}`,
   },
 }

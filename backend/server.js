@@ -18,6 +18,9 @@ import adminNewsRoutes from './routes/adminNewsRoutes.js'
 import adminGalleryRoutes from './routes/adminGalleryRoutes.js'
 import adminEventImagesRoutes from './routes/adminEventImagesRoutes.js'
 import adminContactRoutes from './routes/adminContactRoutes.js'
+import adminRsvpRoutes from './routes/adminRsvpRoutes.js'
+import rsvpRoutes from './routes/rsvpRoutes.js'
+import adminProjectsRoutes from './routes/adminProjectsRoutes.js'
 
 dotenv.config()
 
@@ -67,9 +70,12 @@ app.get('/', (req, res) => {
         testimonials: '/api/admin/testimonials',
         news: '/api/admin/news',
         gallery: '/api/admin/gallery',
-        contact: '/api/admin/contact'
+        contact: '/api/admin/contact',
+        rsvps: '/api/admin/rsvps',
+        projects: '/api/admin/projects'
       },
-      contact: '/api/contact/submit'
+      contact: '/api/contact/submit',
+      rsvp: '/api/rsvp'
     }
   })
 })
@@ -89,6 +95,9 @@ app.use('/api/admin/gallery', adminGalleryRoutes)
 app.use('/api/admin/event-images', adminEventImagesRoutes)
 app.use('/api/contact', adminContactRoutes)
 app.use('/api/admin/contact', adminContactRoutes)
+app.use('/api/admin/rsvps', adminRsvpRoutes)
+app.use('/api/rsvp', rsvpRoutes)
+app.use('/api/admin/projects', adminProjectsRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

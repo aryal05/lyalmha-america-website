@@ -169,13 +169,13 @@ const News = () => {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {filteredNews.map((item, index) => (
-                <motion.article
-                  key={item.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="card-premium group hover:border-gold-accent/50 transition-all duration-300"
-                >
+                <Link to={`/news/${item.id}`} key={item.id}>
+                  <motion.article
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="card-premium group hover:border-gold-accent/50 transition-all duration-300 cursor-pointer h-full"
+                  >
                   {item.image && (
                     <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
                       <img
@@ -218,13 +218,14 @@ const News = () => {
 
                   <div className="flex items-center justify-between pt-4 border-t border-border-line">
                     <span className="text-sm text-paragraph-text">
-                      {item.author || "Lyaymha America"}
+                      {formatDate(item.published_date)}
                     </span>
-                    <button className="text-gold-accent hover:text-gold-accent/80 transition-colors font-medium text-sm">
+                    <span className="text-gold-accent hover:text-gold-accent/80 transition-colors font-medium text-sm">
                       Read More →
-                    </button>
+                    </span>
                   </div>
                 </motion.article>
+              </Link>
               ))}
             </motion.div>
           </AnimatePresence>

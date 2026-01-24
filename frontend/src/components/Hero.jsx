@@ -91,7 +91,7 @@ const Hero = () => {
       </div>
       Content
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20 flex flex-col items-center justify-center mt-24 md:mt-36">
-          <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
@@ -99,7 +99,7 @@ const Hero = () => {
         >
           {/* Donate Button - Primary CTA */}
           <motion.a
-            href="https://www.paypal.com/donate"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSd3U_l7fiWnJ9RbIoNbPrnNiA-CmTUMfs4JN-b4-PLggysgMQ/viewform"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05, y: -2 }}

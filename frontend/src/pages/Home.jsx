@@ -281,7 +281,7 @@ const CTABanner = () => {
               </motion.a>
 
               <motion.a
-                href="/culture"
+                href="/culture-and-tradition"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="btn-secondary text-lg px-8 py-4 border-2 border-gold-accent text-gold-accent hover:bg-gold-accent hover:text-charcoal-black transition-all duration-300"

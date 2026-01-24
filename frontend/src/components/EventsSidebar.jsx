@@ -16,6 +16,13 @@ const EventsSidebar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showRSVPModal, setShowRSVPModal] = useState(false);
   const [countdowns, setCountdowns] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    attendees: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   // Fallback images for past events
   const fallbackImages = [event1, event2, event3];
@@ -118,7 +125,29 @@ const EventsSidebar = () => {
 
   const handleRSVP = (event) => {
     setSelectedEvent(event);
+    setFormData({ name: '', email: '', phone: '', attendees: '' });
     setShowRSVPModal(true);
+  };
+
+  const handleSubmitRSVP = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    
+    try {
+      await apiClient.post(API_ENDPOINTS.RSVP.SUBMIT, {
+        event_id: selectedEvent.id,
+        ...formData
+      });
+      
+      alert('RSVP submitted successfully! We look forward to seeing you.');
+      setShowRSVPModal(false);
+      setFormData({ name: '', email: '', phone: '', attendees: '' });
+    } catch (error) {
+      console.error('Error submitting RSVP:', error);
+      alert('Failed to submit RSVP. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -262,7 +291,10 @@ const EventsSidebar = () => {
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleRSVP(event)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRSVP(event);
+                          }}
                           className="flex-1 px-6 py-3 bg-gradient-to-r from-newari-red via-gold-accent to-newari-red text-white font-bold rounded-lg hover:shadow-2xl transition-all duration-300 text-sm shadow-lg"
                           style={{
                             boxShadow: "0 4px 15px rgba(196, 30, 58, 0.4)",
@@ -273,7 +305,10 @@ const EventsSidebar = () => {
 
                         {/* Social Share Dropdown */}
                         <div className="relative group/share">
-                          <button className="px-4 py-3 bg-gradient-to-br from-royal-blue to-royal-blue/80 border-2 border-royal-blue rounded-lg hover:border-gold-accent hover:bg-gradient-to-br hover:from-gold-accent hover:to-newari-red transition-all text-white shadow-md">
+                          <button
+                            onClick={(e) => e.stopPropagation()}
+                            className="px-4 py-3 bg-gradient-to-br from-royal-blue to-royal-blue/80 border-2 border-royal-blue rounded-lg hover:border-gold-accent hover:bg-gradient-to-br hover:from-gold-accent hover:to-newari-red transition-all text-white shadow-md"
+                          >
                             <svg
                               className="w-5 h-5"
                               fill="none"
@@ -289,19 +324,28 @@ const EventsSidebar = () => {
 
                           <div className="absolute right-0 mt-2 w-44 bg-white border-2 border-gold-accent/50 rounded-xl shadow-2xl opacity-0 invisible group-hover/share:opacity-100 group-hover/share:visible transition-all z-50 overflow-hidden">
                             <button
-                              onClick={() => shareEvent(event, "facebook")}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                shareEvent(event, "facebook");
+                              }}
                               className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium"
                             >
                               <span className="text-lg">📘</span> Facebook
                             </button>
                             <button
-                              onClick={() => shareEvent(event, "twitter")}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                shareEvent(event, "twitter");
+                              }}
                               className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
                             >
                               <span className="text-lg">🐦</span> Twitter
                             </button>
                             <button
-                              onClick={() => shareEvent(event, "whatsapp")}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                shareEvent(event, "whatsapp");
+                              }}
                               className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
                             >
                               <span className="text-lg">💬</span> WhatsApp
@@ -555,23 +599,37 @@ const EventsSidebar = () => {
                     </p>
                   </div>
 
-                  <form className="space-y-4">
+                  <form onSubmit={handleSubmitRSVP} className="space-y-4">
                     <input
                       type="text"
                       placeholder="Your Name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
                     <input
                       type="email"
                       placeholder="Email Address"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
                     <input
                       type="tel"
                       placeholder="Phone Number"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
-                    <select className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all">
+                    <select
+                      value={formData.attendees}
+                      onChange={(e) => setFormData({...formData, attendees: e.target.value})}
+                      required
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
+                    >
                       <option value="">Number of Attendees</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -581,11 +639,12 @@ const EventsSidebar = () => {
 
                     <motion.button
                       type="submit"
+                      disabled={submitting}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white font-bold rounded-lg hover:shadow-xl transition-all duration-300 shadow-lg"
+                      className="w-full py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white font-bold rounded-lg hover:shadow-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Confirm RSVP
+                      {submitting ? 'Submitting...' : 'Confirm RSVP'}
                     </motion.button>
                   </form>
                 </div>

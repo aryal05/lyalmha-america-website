@@ -90,7 +90,7 @@ const Culture = () => {
       <Navbar />
 
       {/* Premium Hero Section */}
-      <section className="relative pt-40 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-40 pb-16 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -105,12 +105,12 @@ const Culture = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-20"
+            className="text-center"
           >
             <div className="relative inline-block mb-6">
               {/* Decorative Cultural Patterns */}
@@ -133,11 +133,16 @@ const Culture = () => {
               <div className="pagoda-divider w-64"></div>
             </div>
 
-            <p className="text-xl text-paragraph-text max-w-3xl mx-auto">
+            <p className="text-xl text-cream-white/90 max-w-3xl mx-auto leading-relaxed">
               Discover the rich heritage, traditions, and festivals that define
               the Newari civilization
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Content Section - White Background */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
 
           {/* Premium Major Festivals */}
           <div className="mb-20">
@@ -147,7 +152,7 @@ const Culture = () => {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
             >
-              <span className="text-white">Major</span>{" "}
+              <span className="text-royal-blue">Major</span>{" "}
               <span className="text-gold-accent">Festivals</span>
             </motion.h2>
             {loading ? (
@@ -270,7 +275,7 @@ const Culture = () => {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
             >
-              <span className="text-white">Our</span>{" "}
+              <span className="text-royal-blue">Our</span>{" "}
               <span className="text-gold-accent">Traditions</span>
             </motion.h2>
             {loading ? (
@@ -345,7 +350,6 @@ const Culture = () => {
               </p>
             </div>
           </motion.div>
-        </div>
       </section>
 
       <Footer />
