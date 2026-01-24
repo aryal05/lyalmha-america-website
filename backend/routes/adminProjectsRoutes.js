@@ -1,10 +1,25 @@
 import express from 'express';
 import multer from 'multer';
 import { getDatabase } from '../database.js';
-import { uploadToCloudinary } from '../config/cloudinary.js';
+import cloudinary from '../config/cloudinary.js';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/projects/' });
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
+
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'lyalmha-america/projects' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result.secure_url);
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};
 
 // Get active projects (public) - MUST be before /:id route
 router.get('/active', async (req, res) => {
@@ -52,7 +67,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     
     let imageUrl = null;
     if (req.file) {
-      imageUrl = await uploadToCloudinary(req.file.path, 'projects');
+      imageUrl = await uploadToCloudinary(req.file.buffer);
     }
 
     const db = getDatabase();
@@ -83,7 +98,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
     let imageUrl = existingProject.image;
     if (req.file) {
-      imageUrl = await uploadToCloudinary(req.file.path, 'projects');
+      imageUrl = await uploadToCloudinary(req.file.buffer);
     }
 
     await db.run(
