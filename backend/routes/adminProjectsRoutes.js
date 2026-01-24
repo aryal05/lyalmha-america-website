@@ -4,6 +4,7 @@ import { getDatabase } from '../database.js';
 import cloudinary from '../config/cloudinary.js';
 
 const router = express.Router();
+// Force Vercel rebuild - using memory storage for serverless compatibility
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
