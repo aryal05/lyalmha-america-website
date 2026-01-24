@@ -2,8 +2,7 @@
 import axios from 'axios'
 
 // API Configuration
-// export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-production.up.railway.app'
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-233f.vercel.app/'
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
