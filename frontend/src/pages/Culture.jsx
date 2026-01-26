@@ -145,7 +145,7 @@ const Culture = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
 
           {/* Premium Major Festivals */}
-          <div className="mb-20" id="biskaa-jatraa">
+          <div className="mb-20">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -168,6 +168,7 @@ const Culture = () => {
                   return (
                     <motion.div
                       key={festival.id}
+                      id={festival.title.toLowerCase().includes('biskaa') ? 'biskaa-jatraa' : festival.title.toLowerCase().includes('mha') ? 'mha-puja' : festival.title.toLowerCase().includes('yomari') ? 'yomari-punhi' : ''}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -268,7 +269,7 @@ const Culture = () => {
           </div>
 
           {/* Premium Cultural Traditions */}
-          <div className="mb-20" id="mha-puja">
+          <div className="mb-20">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -310,7 +311,6 @@ const Culture = () => {
 
           {/* Premium About Newari Civilization */}
           <motion.div
-            id="yomari-punhi"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
