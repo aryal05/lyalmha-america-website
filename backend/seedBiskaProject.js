@@ -55,8 +55,8 @@ async function seedBiskaJatraProject() {
   `;
 
   const project = {
-    title: 'Biska Jatra Celebration Project',
-    description: 'Lyaymha America Guthi continues the auspicious Biska Jatra Celebration in the DMV region, started in 2022. This weeklong celebration during Khai-Salhu welcomes Spring Bloom, Good Health, Peace, and Prosperity.',
+    title: 'Biskaa Dyau-Kha (Khat) Project',
+    description: 'Lyaymha America Guthi continues the auspicious Biskaa Jatra Celebration in the DMV region, started in 2022. This weeklong celebration during Khai-Salhu welcomes Spring Bloom, Good Health, Peace, and Prosperity.',
     full_description: fullDescription,
     image: 'banners/4th Biskaa Jatraa Celebrations flyer (2).jpg',
     status: 'active',

@@ -90,7 +90,11 @@ const Navbar = () => {
         { path: "/gallery", label: "Gallery" },
       ],
     },
-    { path: "/culture-and-tradition", label: "Culture & Tradition" },
+    { path: "/culture-and-tradition", label: "Culture & Tradition", hasDropdown: true, submenu: [
+        { path: "/culture-and-tradition#biskaa-jatraa", label: "Biskaa Jatraa" },
+        { path: "/culture-and-tradition#mha-puja", label: "Mha Puja Celebrations" },
+        { path: "/culture-and-tradition#yomari-punhi", label: "Yomari Punhi Celebrations" },
+      ] },
     { path: "/kids-activities", label: "Kids Activities" },
     { path: "/contact", label: "Contact" },
   ];
