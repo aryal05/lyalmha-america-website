@@ -4,14 +4,24 @@ import logo from '../assets/images/logo/lyama (1) (1).png'
 
 const LoadingScreen = () => {
   const [loading, setLoading] = useState(true)
+  const [hasShownBefore, setHasShownBefore] = useState(false)
 
   useEffect(() => {
-    // Simulate loading time
-    const timer = setTimeout(() => {
+    // Check if loading screen has been shown in this session
+    const shown = sessionStorage.getItem('loadingShown')
+    
+    if (shown) {
+      // Already shown, don't show again
       setLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timer)
+      setHasShownBefore(true)
+    } else {
+      // First time, show loading screen
+      const timer = setTimeout(() => {
+        setLoading(false)
+        sessionStorage.setItem('loadingShown', 'true')
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
   }, [])
 
   return (
