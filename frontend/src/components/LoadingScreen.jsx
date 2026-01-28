@@ -31,21 +31,48 @@ const LoadingScreen = () => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-[100] bg-deep-black flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-gradient-to-br from-royal-blue via-dark-navy to-charcoal-black flex items-center justify-center"
         >
           <div className="text-center">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="mb-8"
+              className="mb-8 bg-white rounded-full p-6 shadow-2xl overflow-hidden"
             >
               <img 
                 src={logo} 
                 alt="Lyalmha America" 
-                className="w-32 h-32 mx-auto object-contain"
+                className="w-32 h-32 mx-auto object-cover rounded-full scale-150"
               />
             </motion.div>
+            
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-gold-accent text-2xl mb-2 font-semibold"
+            >
+              Welcome to
+            </motion.p>
+            
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="text-3xl font-bold text-white mb-2"
+            >
+              Lyaymha America
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="text-gold-accent text-sm mb-6"
+            >
+              Newari Culture & Heritage
+            </motion.p>
             
             <motion.div
               initial={{ opacity: 0 }}
@@ -63,7 +90,7 @@ const LoadingScreen = () => {
                   repeat: Infinity,
                   delay: 0
                 }}
-                className="w-3 h-3 bg-nepal-red rounded-full"
+                className="w-3 h-3 bg-newari-red rounded-full"
               />
               <motion.div
                 animate={{
@@ -75,7 +102,7 @@ const LoadingScreen = () => {
                   repeat: Infinity,
                   delay: 0.2
                 }}
-                className="w-3 h-3 bg-usa-blue rounded-full"
+                className="w-3 h-3 bg-gold-accent rounded-full"
               />
               <motion.div
                 animate={{
@@ -87,7 +114,7 @@ const LoadingScreen = () => {
                   repeat: Infinity,
                   delay: 0.4
                 }}
-                className="w-3 h-3 bg-nepal-red rounded-full"
+                className="w-3 h-3 bg-royal-blue rounded-full"
               />
             </motion.div>
           </div>

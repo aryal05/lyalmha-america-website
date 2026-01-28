@@ -30,12 +30,14 @@ const Footer = () => {
             >
               <div className="flex items-center space-x-4 mb-6">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gold-accent/20 rounded-full blur-xl"></div>
-                  <img
-                    src={logo}
-                    alt="Lyalmha America"
-                    className="relative h-16 w-16 drop-shadow-2xl"
-                  />
+                  <div className="absolute inset-0 bg-white rounded-full blur-md"></div>
+                  <div className="relative bg-white rounded-full p-3 overflow-hidden">
+                    <img
+                      src={logo}
+                      alt="Lyalmha America"
+                      className="h-20 w-20 object-cover rounded-full scale-150"
+                    />
+                  </div>
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-pure-white">
@@ -247,7 +249,7 @@ const Footer = () => {
             >
               © {currentYear}{" "}
               <span className="text-gold-accent font-semibold">
-                Lyalmha America
+                Lyaymha America
               </span>
               . All rights reserved.
               <span className="hidden md:inline">

@@ -23,6 +23,7 @@ const AdminLayout = ({ children }) => {
     { path: "/admin/events", icon: "📅", label: "Events" },
     { path: "/admin/rsvps", icon: "✅", label: "Event RSVPs" },
     { path: "/admin/projects", icon: "🎯", label: "Projects" },
+    { path: "/admin/festivals", icon: "🎊", label: "Festivals" },
     // { path: "/admin/supporters", icon: "🤝", label: "Supporters" },
     // { path: "/admin/banners", icon: "🖼️", label: "Banners" },
     { path: "/admin/gallery", icon: "🎨", label: "Gallery" },

@@ -11,6 +11,7 @@ const Hero = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   // Removed textContent and featuredProjects related state
+  const [showDonateModal, setShowDonateModal] = useState(false);
 
   // Filter banners with images and get their URLs
   const validBanners = banners.filter((banner) => banner.image);
@@ -49,9 +50,83 @@ const Hero = () => {
     }
   }, [backgroundImages.length]);
 
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-x-hidden py-16 sm:py-20 bg-black">
+      {/* Donate Modal */}
+      <AnimatePresence>
+        {showDonateModal && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ y: -40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -40, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#181A20] rounded-2xl shadow-2xl p-8 max-w-md w-full text-center relative border border-gold-accent"
+            >
+              <button
+                onClick={() => setShowDonateModal(false)}
+                className="absolute top-4 right-4 text-lg text-gold-accent hover:text-newari-red transition-colors"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <div className="flex flex-col items-center gap-4">
+                <span className="text-3xl font-bold text-blue-400 flex items-center gap-2">
+                  <span className="inline-block">
+                    <svg
+                      className="w-7 h-7 text-pink-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18a8 8 0 110-16 8 8 0 010 16z" />
+                      <path d="M12 7a5 5 0 100 10 5 5 0 000-10z" />
+                    </svg>
+                  </span>
+                  Payment Methods
+                </span>
+                <div className="flex flex-col gap-2 mt-4">
+                  <span className="flex items-center gap-2 text-lg font-semibold text-gray-200">
+                    <span className="inline-block">
+                      <svg
+                        className="w-6 h-6 text-green-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18a8 8 0 110-16 8 8 0 010 16z" />
+                        <path d="M17 9l-5 5-3-3" />
+                      </svg>
+                    </span>
+                    Zelle (No Service Fee)
+                  </span>
+                  <span className="flex items-center gap-2 text-lg">
+                    <span className="inline-block">
+                      <svg
+                        className="w-6 h-6 text-blue-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M4 4h16v16H4V4zm8 2a6 6 0 100 12 6 6 0 000-12z" />
+                      </svg>
+                    </span>
+                    <a
+                      href="mailto:LyaymhaAmerica@gmail.com"
+                      className="text-green-300 underline hover:text-green-400 transition-colors"
+                    >
+                      LyaymhaAmerica@gmail.com
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Premium Background with Overlay */}
       <div className="absolute inset-0 overflow-hidden bg-black">
         <AnimatePresence mode="wait">
@@ -90,7 +165,7 @@ const Hero = () => {
         </div>
       </div>
       Content
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20 flex flex-col items-center justify-center mt-64 md:mt-80">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20 flex flex-col items-center justify-center mt-32 md:mt-40">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -98,10 +173,9 @@ const Hero = () => {
           className="w-full flex flex-col sm:flex-row gap-4 justify-center items-center max-w-3xl mx-auto"
         >
           {/* Donate Button - Primary CTA */}
-          <motion.a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSd3U_l7fiWnJ9RbIoNbPrnNiA-CmTUMfs4JN-b4-PLggysgMQ/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.button
+            type="button"
+            onClick={() => setShowDonateModal(true)}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-newari-red via-deep-maroon to-newari-red text-white font-bold rounded-xl shadow-2xl hover:shadow-newari-red/50 transition-all duration-300 border-2 border-newari-red hover:border-gold-accent flex items-center justify-center gap-3 text-base w-full sm:w-auto min-w-[200px]"
@@ -119,7 +193,7 @@ const Hero = () => {
               ></path>
             </svg>
             <span className="relative z-10">Donate Now</span>
-          </motion.a>
+          </motion.button>
 
           {/* Register Button - Secondary CTA */}
           <motion.div

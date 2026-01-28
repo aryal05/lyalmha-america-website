@@ -1,8 +1,23 @@
 import express from 'express'
+import multer from 'multer'
 import { getDatabase } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
+import cloudinary from '../config/cloudinary.js'
 
 const router = express.Router()
+
+// Configure multer for memory storage
+const storage = multer.memoryStorage()
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif|webp/
+    const mimetype = filetypes.test(file.mimetype)
+    if (mimetype) return cb(null, true)
+    cb(new Error('Only image files are allowed!'))
+  },
+})
 
 // GET all festivals (public - no auth)
 router.get('/festivals', async (req, res) => {
@@ -30,10 +45,11 @@ router.get('/traditions', async (req, res) => {
 router.use(authenticateToken)
 
 // POST create festival
-router.post('/festivals', async (req, res) => {
+router.post('/festivals', authenticateToken, upload.single('image'), async (req, res) => {
   try {
     const db = await getDatabase()
     const { title, description, highlights, order_index } = req.body
+    let imageUrl = null
     
     if (!title || !description) {
       return res.status(400).json({ 
@@ -41,11 +57,24 @@ router.post('/festivals', async (req, res) => {
         error: 'Title and description are required' 
       })
     }
+
+    if (req.file) {
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-festivals', transformation: [{ width: 1200, height: 800, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { imageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.file.buffer)
+      })
+    }
     
     const result = await db.run(`
-      INSERT INTO culture_festivals (title, description, highlights, order_index)
-      VALUES (?, ?, ?, ?)
-    `, [title, description, highlights, order_index || 0])
+      INSERT INTO culture_festivals (title, description, image, highlights, order_index)
+      VALUES (?, ?, ?, ?, ?)
+    `, [title, description, imageUrl, highlights, order_index || 0])
     
     const newFestival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [result.lastID])
     
@@ -56,7 +85,7 @@ router.post('/festivals', async (req, res) => {
 })
 
 // PUT update festival
-router.put('/festivals/:id', async (req, res) => {
+router.put('/festivals/:id', authenticateToken, upload.single('image'), async (req, res) => {
   try {
     const db = await getDatabase()
     const { title, description, highlights, order_index, active } = req.body
@@ -65,14 +94,30 @@ router.put('/festivals/:id', async (req, res) => {
     if (!festival) {
       return res.status(404).json({ success: false, error: 'Festival not found' })
     }
+
+    let imageUrl = festival.image
+
+    if (req.file) {
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-festivals', transformation: [{ width: 1200, height: 800, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { imageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.file.buffer)
+      })
+    }
     
     await db.run(`
       UPDATE culture_festivals 
-      SET title = ?, description = ?, highlights = ?, order_index = ?, active = ?
+      SET title = ?, description = ?, image = ?, highlights = ?, order_index = ?, active = ?
       WHERE id = ?
     `, [
       title || festival.title,
       description || festival.description,
+      imageUrl,
       highlights || festival.highlights,
       order_index !== undefined ? order_index : festival.order_index,
       active !== undefined ? active : festival.active,

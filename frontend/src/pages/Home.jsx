@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Navbar from "../components/Navbar";
+import AfterNavBanner from "../components/AfterNavBanner";
 import Hero from "../components/Hero";
 import BlogGrid from "../components/BlogGrid";
 import Footer from "../components/Footer";
@@ -300,6 +301,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <AfterNavBanner />
       <Hero />
       {/* StatsSection temporarily removed per request */}
       {/* <StatsSection /> */}

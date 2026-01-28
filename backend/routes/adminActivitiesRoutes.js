@@ -12,25 +12,13 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../uploads/activities')
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true })
-    }
-    cb(null, uploadPath)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    cb(null, 'activity-' + uniqueSuffix + path.extname(file.originalname))
-  },
-})
+const storage = multer.memoryStorage()
 
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|gif|webp/
+    const filetypes = /jpeg|jpg|png|gif|webp|svg/
     const mimetype = filetypes.test(file.mimetype)
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
     if (mimetype && extname) {
@@ -70,25 +58,47 @@ router.get('/:id', async (req, res) => {
 })
 
 // Create new activity (Admin only)
-router.post('/', authenticateAdmin, upload.single('image'), async (req, res) => {
+router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'iconImage' }]), async (req, res) => {
   try {
     const { title, description, category, icon, orderIndex, active } = req.body
     let imageUrl = null
+    let iconImageUrl = null
 
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'lyalmha-activities',
-        transformation: [{ width: 800, height: 600, crop: 'limit' }],
+    if (req.files?.image) {
+      const result = await cloudinary.uploader.upload_stream(
+        { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
+        (error, result) => result
+      )
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { imageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.files.image[0].buffer)
       })
-      imageUrl = result.secure_url
-      fs.unlinkSync(req.file.path)
+    }
+
+    if (req.files?.iconImage) {
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { iconImageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.files.iconImage[0].buffer)
+      })
     }
 
     const db = getDatabase()
     const result = await db.run(
-      `INSERT INTO activities (title, description, category, image, icon, order_index, active) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, category || 'kids', imageUrl, icon || '', orderIndex || 0, active || 1]
+      `INSERT INTO activities (title, description, category, image, icon, icon_image, order_index, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1]
     )
 
     const newActivity = await db.get('SELECT * FROM activities WHERE id = ?', [result.lastID])
@@ -100,12 +110,8 @@ router.post('/', authenticateAdmin, upload.single('image'), async (req, res) => 
 })
 
 // Update activity (Admin only)
-router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) => {
+router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'iconImage' }]), async (req, res) => {
   try {
-    console.log('🎨 Updating activity:', req.params.id)
-    console.log('📦 Request body:', req.body)
-    console.log('📸 Has file:', !!req.file)
-    
     const { title, description, category, icon, orderIndex, active } = req.body
     const db = getDatabase()
 
@@ -115,38 +121,45 @@ router.put('/:id', authenticateAdmin, upload.single('image'), async (req, res) =
     }
 
     let imageUrl = existingActivity.image
+    let iconImageUrl = existingActivity.icon_image
 
-    if (req.file) {
-      try {
-        console.log('☁️  Uploading to Cloudinary...')
-        const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: 'lyalmha-activities',
-          transformation: [{ width: 800, height: 600, crop: 'limit' }],
-        })
-        imageUrl = result.secure_url
-        console.log('✅ Image uploaded:', imageUrl)
-        fs.unlinkSync(req.file.path)
-      } catch (uploadError) {
-        console.error('❌ Cloudinary upload error:', uploadError)
-        return res.status(500).json({ 
-          success: false, 
-          error: 'Image upload failed: ' + uploadError.message 
-        })
-      }
+    if (req.files?.image) {
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { imageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.files.image[0].buffer)
+      })
+    }
+
+    if (req.files?.iconImage) {
+      await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
+          (error, result) => {
+            if (error) reject(error)
+            else { iconImageUrl = result.secure_url; resolve() }
+          }
+        )
+        stream.end(req.files.iconImage[0].buffer)
+      })
     }
 
     await db.run(
       `UPDATE activities 
-       SET title = ?, description = ?, category = ?, image = ?, icon = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
+       SET title = ?, description = ?, category = ?, image = ?, icon = ?, icon_image = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [title, description, category || 'kids', imageUrl, icon || '', orderIndex || 0, active || 1, req.params.id]
+      [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1, req.params.id]
     )
 
     const updatedActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
-    console.log('✅ Activity updated successfully')
     res.json({ success: true, data: updatedActivity })
   } catch (error) {
-    console.error('❌ Error updating activity:', error)
+    console.error('Error updating activity:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })

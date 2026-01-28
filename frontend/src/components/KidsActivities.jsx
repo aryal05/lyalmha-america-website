@@ -127,8 +127,13 @@ const KidsActivities = () => {
 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg">
-                    {activity.icon} {activity.category}
+                  <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg flex items-center gap-2">
+                    {activity.icon_image ? (
+                      <img src={activity.icon_image} alt="icon" className="w-6 h-6 object-contain" />
+                    ) : (
+                      <span>{activity.icon}</span>
+                    )}
+                    {activity.category}
                   </span>
                 </div>
 
@@ -200,7 +205,11 @@ const KidsActivities = () => {
               {/* Content */}
               <div className="p-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-5xl">{selectedActivity.icon}</span>
+                  {selectedActivity.icon_image ? (
+                    <img src={selectedActivity.icon_image} alt="icon" className="w-12 h-12 object-contain" />
+                  ) : (
+                    <span className="text-5xl">{selectedActivity.icon}</span>
+                  )}
                   <h2 className="text-4xl font-bold bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
                     {selectedActivity.title}
                   </h2>
