@@ -144,10 +144,9 @@ const AdminBlogs = () => {
                 setShowForm(true);
               }
             }}
-            className="px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold flex items-center gap-2"
+            className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
           >
-            <span className="text-xl">{showForm ? "✕" : "+"}</span>
-            {showForm ? "Cancel" : "New Blog"}
+            {showForm ? "📋 View All Blogs" : "➕ Add Blog"}
           </motion.button>
         </motion.div>
 
@@ -411,136 +410,83 @@ const AdminBlogs = () => {
         )}
 
         {/* Blog List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden relative"
-        >
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
-
-          <div className="relative z-10 overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-gray-300 bg-blue-50/30">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Author
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-royal-blue uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {blogs.map((blog, index) => (
-                  <motion.tr
-                    key={blog.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="hover:bg-blue-50/30 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {blog.title}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-paragraph-text">
-                      {blog.author}
-                    </td>
-                    <td className="px-6 py-4 text-paragraph-text">
+        {!showForm && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogs.map((blog) => (
+              <motion.div
+                key={blog.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden group hover:border-royal-blue transition-all"
+              >
+                {blog.banner && (
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={
+                        blog.banner.startsWith("http")
+                          ? blog.banner
+                          : `${API_URL}${blog.banner}`
+                      }
+                      alt={blog.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs px-2 py-1 bg-gold-accent/20 text-gold-accent rounded">
                       {blog.category}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          blog.status === "published"
-                            ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                            : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                        }`}
-                      >
-                        {blog.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-paragraph-text">
-                      {new Date(blog.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleEdit(blog)}
-                          className="p-2 text-gold-accent hover:bg-gold-accent/10 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDelete(blog.id)}
-                          className="p-2 text-newari-red hover:bg-newari-red/10 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </motion.button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-            {blogs.length === 0 && (
-              <div className="text-center py-16">
-                <div className="text-6xl mb-4 opacity-20">📝</div>
-                <p className="text-royal-blue text-lg font-semibold">
-                  No blogs yet
-                </p>
-                <p className="text-paragraph-text text-sm mt-2">
-                  Click "New Blog" to add one
-                </p>
-              </div>
-            )}
+                    </span>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        blog.status === "published"
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-yellow-500/20 text-yellow-400"
+                      }`}
+                    >
+                      {blog.status}
+                    </span>
+                  </div>
+                  <h3 className="text-gray-900 font-bold text-lg mb-2 line-clamp-2">
+                    {blog.title}
+                  </h3>
+                  <p className="text-paragraph-text text-sm mb-2 line-clamp-2">
+                    {blog.excerpt}
+                  </p>
+                  <div className="text-xs text-paragraph-text mb-4">
+                    {new Date(blog.created_at).toLocaleDateString()} • {blog.author}
+                  </div>
+                  <div className="flex gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleEdit(blog)}
+                      className="flex-1 px-4 py-2 bg-gold-accent/20 text-gold-accent rounded-lg text-sm font-semibold hover:bg-gold-accent/30 transition-all"
+                    >
+                      ✏️ Edit
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleDelete(blog.id)}
+                      className="flex-1 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-all"
+                    >
+                      🗑️ Delete
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+        )}
+
+        {!showForm && blogs.length === 0 && (
+          <div className="text-center py-12 text-royal-blue font-semibold">
+            <p className="text-xl">
+              No blogs found. Create your first one!
+            </p>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

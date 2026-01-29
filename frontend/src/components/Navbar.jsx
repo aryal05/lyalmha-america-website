@@ -7,6 +7,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [mobileSubmenus, setMobileSubmenus] = useState({});
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -112,13 +113,13 @@ const Navbar = () => {
       )}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <div className="flex items-center justify-between py-2 sm:py-3">
+        <div className="flex items-center justify-between py-1.5 sm:py-2">
           {/* Premium Logo with Letterpad Image */}
           <Link to="/" className="flex items-center group relative py-1">
             <img
               src={logo}
               alt="Lyaymha America Guthi"
-              className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[680px] transition-all duration-300 group-hover:scale-105 object-contain"
+              className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto max-w-[380px] sm:max-w-[480px] md:max-w-[580px] lg:max-w-[680px] transition-all duration-300 group-hover:scale-105 object-contain"
             />
           </Link>
 
@@ -254,21 +255,63 @@ const Navbar = () => {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Link
-                    to={link.path}
-                    className={`block py-3 px-4 rounded-lg font-medium transition-all duration-300 relative ${
-                      isActive(link.path)
-                        ? "bg-gold-accent/20 text-gold-accent border-l-4 border-gold-accent"
-                        : "text-paragraph-text hover:text-gold-accent hover:bg-dark-navy/50 hover:translate-x-2"
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                    {/* Small decorative corner for active state */}
-                    {isActive(link.path) && (
-                      <span className="absolute top-1 right-1 w-2 h-2 border-t border-r border-newari-red rounded-tr"></span>
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <Link
+                        to={link.path}
+                        className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 relative ${
+                          isActive(link.path)
+                            ? "bg-gold-accent/20 text-gold-accent border-l-4 border-gold-accent"
+                            : "text-paragraph-text hover:text-gold-accent hover:bg-dark-navy/50"
+                        }`}
+                        onClick={() => !link.hasDropdown && setMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                        {isActive(link.path) && (
+                          <span className="absolute top-1 right-1 w-2 h-2 border-t border-r border-newari-red rounded-tr"></span>
+                        )}
+                      </Link>
+                      {link.hasDropdown && (
+                        <button
+                          onClick={() => setMobileSubmenus(prev => ({ ...prev, [link.path]: !prev[link.path] }))}
+                          className="px-4 py-3 text-gold-accent"
+                        >
+                          <svg
+                            className={`w-4 h-4 transition-transform ${
+                              mobileSubmenus[link.path] ? 'rotate-180' : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                    {link.hasDropdown && mobileSubmenus[link.path] && (
+                      <div className="ml-4 mt-2 space-y-1">
+                        {link.submenu.map((sublink) => (
+                          <a
+                            key={sublink.path}
+                            href={sublink.path}
+                            onClick={(e) => {
+                              handleSubmenuClick(e, sublink.path);
+                              setMobileMenuOpen(false);
+                            }}
+                            className="block py-2 px-4 text-sm text-paragraph-text hover:text-gold-accent hover:bg-dark-navy/30 rounded-lg transition-colors"
+                          >
+                            {sublink.label}
+                          </a>
+                        ))}
+                      </div>
                     )}
-                  </Link>
+                  </div>
                 </motion.div>
               ))}
               <motion.div
