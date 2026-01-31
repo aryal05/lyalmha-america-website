@@ -301,13 +301,14 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <AfterNavBanner />
       <Hero />
       {/* StatsSection temporarily removed per request */}
       {/* <StatsSection /> */}
       <BlogGrid />
       <TestimonialsSection />
       <CTABanner />
+      {/* AfterNavBanner placed before Footer */}
+      <AfterNavBanner />
       <Footer />
       <ScrollToTop />
     </div>

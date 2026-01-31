@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/images/logo/Letter pad copy.png";
+import afternavImage from "../assets/images/afternav/afternav.png";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -91,11 +92,25 @@ const Navbar = () => {
         { path: "/gallery", label: "Gallery" },
       ],
     },
-    { path: "/culture-and-tradition", label: "Culture & Tradition", hasDropdown: true, submenu: [
-        { path: "/culture-and-tradition#biskaa-jatraa", label: "Biskaa Jatraa" },
-        { path: "/culture-and-tradition#mha-puja", label: "Mha Puja Celebrations" },
-        { path: "/culture-and-tradition#yomari-punhi", label: "Yomari Punhi Celebrations" },
-      ] },
+    {
+      path: "/culture-and-tradition",
+      label: "Culture & Tradition",
+      hasDropdown: true,
+      submenu: [
+        {
+          path: "/culture-and-tradition#biskaa-jatraa",
+          label: "Biskaa Jatraa",
+        },
+        {
+          path: "/culture-and-tradition#mha-puja",
+          label: "Mha Puja Celebrations",
+        },
+        {
+          path: "/culture-and-tradition#yomari-punhi",
+          label: "Yomari Punhi Celebrations",
+        },
+      ],
+    },
     { path: "/kids-activities", label: "Kids Activities" },
     { path: "/contact", label: "Contact" },
   ];
@@ -127,7 +142,10 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center space-x-0.5 xl:space-x-1">
             {navLinks.map((link) => (
               <div key={link.path} className="relative group/dropdown">
-                <Link to={link.path} className="relative px-2 xl:px-3 py-2 group block">
+                <Link
+                  to={link.path}
+                  className="relative px-2 xl:px-3 py-2 group block"
+                >
                   <span
                     className={`relative z-10 font-semibold text-sm xl:text-base whitespace-nowrap transition-colors duration-300 ${
                       isActive(link.path)
@@ -264,7 +282,9 @@ const Navbar = () => {
                             ? "bg-gold-accent/20 text-gold-accent border-l-4 border-gold-accent"
                             : "text-paragraph-text hover:text-gold-accent hover:bg-dark-navy/50"
                         }`}
-                        onClick={() => !link.hasDropdown && setMobileMenuOpen(false)}
+                        onClick={() =>
+                          !link.hasDropdown && setMobileMenuOpen(false)
+                        }
                       >
                         {link.label}
                         {isActive(link.path) && (
@@ -273,12 +293,17 @@ const Navbar = () => {
                       </Link>
                       {link.hasDropdown && (
                         <button
-                          onClick={() => setMobileSubmenus(prev => ({ ...prev, [link.path]: !prev[link.path] }))}
+                          onClick={() =>
+                            setMobileSubmenus((prev) => ({
+                              ...prev,
+                              [link.path]: !prev[link.path],
+                            }))
+                          }
                           className="px-4 py-3 text-gold-accent"
                         >
                           <svg
                             className={`w-4 h-4 transition-transform ${
-                              mobileSubmenus[link.path] ? 'rotate-180' : ''
+                              mobileSubmenus[link.path] ? "rotate-180" : ""
                             }`}
                             fill="none"
                             stroke="currentColor"
@@ -332,6 +357,16 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* After Nav Banner
+      <div className="w-full h-48 md:h-64 overflow-hidden">
+        <img 
+          src={afternavImage} 
+          alt="Banner" 
+          style={{ objectPosition: '10% 0%' }}
+          className="w-full h-full object-cover"
+        />
+      </div> */}
     </motion.nav>
   );
 };
