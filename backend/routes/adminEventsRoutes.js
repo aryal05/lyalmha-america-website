@@ -88,7 +88,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?)
     `, title, description, event_date, location, event_type, image)
     
-    const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', result.lastID)
+    const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [result.lastID])
     
     res.status(201).json({ success: true, data: newEvent })
   } catch (error) {
@@ -100,7 +100,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, description, event_date, location, event_type } = req.body
-    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', req.params.id)
+    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
@@ -124,7 +124,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       req.params.id
     )
     
-    const updatedEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', req.params.id)
+    const updatedEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     res.json({ success: true, data: updatedEvent })
   } catch (error) {
@@ -135,13 +135,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // DELETE event
 router.delete('/:id', async (req, res) => {
   try {
-    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', req.params.id)
+    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
     }
     
-    await QueryHelper.run('DELETE FROM events WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM events WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Event deleted successfully' })
   } catch (error) {

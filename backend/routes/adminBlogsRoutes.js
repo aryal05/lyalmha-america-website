@@ -36,7 +36,7 @@ router.get('/admin/all', async (req, res) => {
 // GET single blog (public - no auth)
 router.get('/:id', async (req, res) => {
   try {
-    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', req.params.id)
+    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
     
     if (!blog) {
       return res.status(404).json({ success: false, error: 'Blog not found' })
@@ -87,7 +87,7 @@ router.post('/', upload.single('banner'), async (req, res) => {
       status || 'draft'
     ])
     
-    const newBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', result.lastID)
+    const newBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [result.lastID])
     
     res.status(201).json({ success: true, data: newBlog })
   } catch (error) {
@@ -103,7 +103,7 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
     console.log('Has file:', !!req.file)
     
     const { title, excerpt, content, category, author, status } = req.body
-    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', req.params.id)
+    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
     
     if (!blog) {
       return res.status(404).json({ success: false, error: 'Blog not found' })
@@ -141,7 +141,7 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
       req.params.id
     ])
     
-    const updatedBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', req.params.id)
+    const updatedBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
     
     res.json({ success: true, data: updatedBlog })
   } catch (error) {
@@ -153,13 +153,13 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
 // DELETE blog
 router.delete('/:id', async (req, res) => {
   try {
-    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', req.params.id)
+    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
     
     if (!blog) {
       return res.status(404).json({ success: false, error: 'Blog not found' })
     }
     
-    await QueryHelper.run('DELETE FROM blogs WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM blogs WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Blog deleted successfully' })
   } catch (error) {
