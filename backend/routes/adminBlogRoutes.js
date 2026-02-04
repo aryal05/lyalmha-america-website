@@ -3,7 +3,7 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken, isAdmin } from '../middleware/auth.js'
 
 const router = express.Router()

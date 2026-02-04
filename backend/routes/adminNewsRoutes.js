@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import { upload, uploadToCloudinary } from '../utils/uploadHelper.js'
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateAdmin } from '../middleware/auth.js'
 
 const router = express.Router()

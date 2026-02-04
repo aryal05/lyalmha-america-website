@@ -1,7 +1,11 @@
 import express from 'express';
-import { getDatabase } from '../database.js';
+import { QueryHelper } from '../utils/queryHelper.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Admin routes - require authentication
+router.use(authenticateToken);
 
 // Get all RSVPs
 router.get('/', async (req, res) => {

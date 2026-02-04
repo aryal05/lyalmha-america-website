@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -18,7 +18,7 @@ router.post('/submit', async (req, res) => {
 
     const result = await QueryHelper.run(
       `INSERT INTO contact_messages (name, email, subject, message, status, created_at) 
-       VALUES (?, ?, ?, ?, 'unread', datetime('now'))`,
+       VALUES (?, ?, ?, ?, 'unread', CURRENT_TIMESTAMP)`,
       [name, email, subject, message]
     )
 
@@ -82,7 +82,7 @@ router.patch('/:id/read', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
     await QueryHelper.run(
-      `UPDATE contact_messages SET status = 'read', updated_at = datetime('now') WHERE id = ?`,
+      `UPDATE contact_messages SET status = 'read', updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
       [id]
     )
 
