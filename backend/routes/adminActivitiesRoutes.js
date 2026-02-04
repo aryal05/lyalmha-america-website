@@ -3,7 +3,7 @@ import multer from 'multer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateAdmin } from '../middleware/auth.js'
 import cloudinary from '../config/cloudinary.js'
 
@@ -31,8 +31,7 @@ const upload = multer({
 // Get all activities
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase()
-    const activities = await db.all(
+    const activities = await QueryHelper.all(
       'SELECT * FROM activities WHERE active = 1 ORDER BY order_index ASC, created_at DESC'
     )
     res.json({ success: true, data: activities })

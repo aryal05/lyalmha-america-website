@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
@@ -29,9 +29,8 @@ const uploadToCloudinary = (buffer) => {
 
 // GET all supporters (public - no auth)
 router.get('/', async (req, res) => {
-  const db = getDatabase()
   try {
-    const supporters = await db.all('SELECT * FROM supporters ORDER BY type, name')
+    const supporters = await QueryHelper.all('SELECT * FROM supporters ORDER BY type, name')
     res.json({ success: true, data: supporters })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })

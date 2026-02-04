@@ -1,6 +1,6 @@
 import express from 'express'
 import multer from 'multer'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import cloudinary from '../config/cloudinary.js'
 
@@ -22,8 +22,7 @@ const upload = multer({
 // GET all festivals (public - no auth)
 router.get('/festivals', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const festivals = await db.all('SELECT * FROM culture_festivals WHERE active = 1 ORDER BY order_index')
+    const festivals = await QueryHelper.all('SELECT * FROM culture_festivals WHERE active = 1 ORDER BY order_index')
     res.json({ success: true, data: festivals })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -33,8 +32,7 @@ router.get('/festivals', async (req, res) => {
 // GET all traditions (public - no auth)
 router.get('/traditions', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const traditions = await db.all('SELECT * FROM culture_traditions WHERE active = 1 ORDER BY order_index')
+    const traditions = await QueryHelper.all('SELECT * FROM culture_traditions WHERE active = 1 ORDER BY order_index')
     res.json({ success: true, data: traditions })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })

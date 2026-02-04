@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { getDatabase } from '../database.js';
+import { QueryHelper } from '../utils/queryHelper.js';
 import cloudinary from '../config/cloudinary.js';
 
 const router = express.Router();
@@ -25,8 +25,7 @@ const uploadToCloudinary = (buffer) => {
 // Get active projects (public) - MUST be before /:id route
 router.get('/active', async (req, res) => {
   try {
-    const db = getDatabase();
-    const projects = await db.all('SELECT * FROM projects WHERE active = 1 ORDER BY order_index ASC, created_at DESC');
+    const projects = await QueryHelper.all('SELECT * FROM projects WHERE active = 1 ORDER BY order_index ASC, created_at DESC');
     res.json({ success: true, data: projects });
   } catch (error) {
     console.error('Error fetching active projects:', error);
