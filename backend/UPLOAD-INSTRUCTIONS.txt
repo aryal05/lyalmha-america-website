@@ -1,0 +1,26 @@
+# FILES TO UPLOAD TO CPANEL
+
+## Upload these folders (with all their contents):
+1. routes/
+2. config/
+3. middleware/
+4. utils/
+
+## Upload these individual files:
+1. server-production.js  (RENAME to server.js after upload)
+2. database.js
+3. package.json
+4. .htaccess
+
+## DO NOT upload:
+- node_modules/
+- .env files
+- .db or .sqlite files
+- Any migration scripts
+
+---
+
+## After Upload:
+1. Rename server-production.js to server.js
+2. Continue with Node.js App setup
+D

@@ -20,7 +20,15 @@ const BlogGrid = () => {
       const response = await apiClient.get(API_ENDPOINTS.STORIES.GET_ALL);
       setStories(response.data.data || []);
     } catch (error) {
+      // Improved error logging for debugging
       console.error("Error fetching stories:", error);
+      if (error.response) {
+        console.error("Response:", error.response);
+      } else if (error.request) {
+        console.error("Request:", error.request);
+      } else {
+        console.error("Message:", error.message);
+      }
       setStories([]);
     } finally {
       setLoading(false);

@@ -33,7 +33,15 @@ const Hero = () => {
       );
       setBanners(response.data.data || []);
     } catch (error) {
+      // Improved error logging for debugging
       console.error("Error fetching hero banners:", error);
+      if (error.response) {
+        console.error("Response:", error.response);
+      } else if (error.request) {
+        console.error("Request:", error.request);
+      } else {
+        console.error("Message:", error.message);
+      }
       setBanners([]);
     } finally {
       setLoading(false);

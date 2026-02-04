@@ -28,27 +28,14 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 
 // Initialize database
 await initializeDatabase()
 
 // Middleware
-app.use((req, res, next) => {
-  // Log the origin of every request for CORS debugging
-  console.log('Incoming request from origin:', req.headers.origin);
-  next();
-});
 app.use(cors({
-  origin: [
-    'https://lyalmha-america-website.vercel.app',
-    'https://lyalmha-america-website-g888.vercel.app',
-    'https://lyaymhaamerica.org',
-    'http://localhost:5173',
-    'http://localhost:5000',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ],
+  origin: '*', // Allow all origins for cPanel
   credentials: true
 }))
 app.use(express.json())
@@ -61,29 +48,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Welcome to Lyalmha America API',
-    status: 'Server is running',
-    version: '2.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      blogs: '/api/blogs',
-      admin: {
-        blogs: '/api/admin/blogs',
-        team: '/api/admin/team',
-        events: '/api/admin/events',
-        supporters: '/api/admin/supporters',
-        banners: '/api/admin/banners',
-        culture: '/api/admin/culture',
-        activities: '/api/admin/activities',
-        testimonials: '/api/admin/testimonials',
-        news: '/api/admin/news',
-        gallery: '/api/admin/gallery',
-        contact: '/api/admin/contact',
-        rsvps: '/api/admin/rsvps',
-        projects: '/api/admin/projects'
-      },
-      contact: '/api/contact/submit',
-      rsvp: '/api/rsvp'
-    }
+    status: 'Server is running on cPanel',
+    version: '2.0.0'
   })
 })
 
@@ -106,7 +72,7 @@ app.use('/api/admin/rsvps', adminRsvpRoutes)
 app.use('/api/rsvp', rsvpRoutes)
 app.use('/api/admin/projects', adminProjectsRoutes)
 
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).json({ 
@@ -120,17 +86,7 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 
-// For Vercel serverless deployment - export the app
-export default app
-
-// For local development - only listen if not in Vercel
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`)
-    console.log(`📍 API URL: http://localhost:${PORT}`)
-    console.log(`🔐 Admin credentials:`)
-    console.log(`   Username: admin`)
-    console.log(`   Password: admin123`)
-    console.log(`   ⚠️  CHANGE THIS PASSWORD IMMEDIATELY!`)
-  })
-}
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`)
+})
