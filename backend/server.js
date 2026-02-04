@@ -37,6 +37,7 @@ await initializeDatabase()
 app.use(cors({
   origin: [
     'https://lyalmha-america-website.vercel.app',
+    'https://lyalmha-america-website-g888.vercel.app',
     'https://lyaymhaamerica.org',
     'http://localhost:5173',
     'http://localhost:5000',
