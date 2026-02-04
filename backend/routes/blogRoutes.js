@@ -1,17 +1,16 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 
 const router = express.Router()
 
 // GET all published blogs (public route)
 router.get('/', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const blogs = await db.all(`
+    const blogs = await QueryHelper.all(`
       SELECT * FROM blogs 
-      WHERE status = 'published' 
+      WHERE status = ? 
       ORDER BY created_at DESC
-    `)
+    `, ['published'])
     
     res.json({
       success: true,
@@ -26,8 +25,10 @@ router.get('/', async (req, res) => {
 // GET single blog by ID (public route)
 router.get('/:id', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const blog = await db.get('SELECT * FROM blogs WHERE id = ? AND status = ?', [req.params.id, 'published'])
+    const blog = await QueryHelper.get(
+      'SELECT * FROM blogs WHERE id = ? AND status = ?', 
+      [req.params.id, 'published']
+    )
     
     if (!blog) {
       return res.status(404).json({ success: false, error: 'Blog not found' })
