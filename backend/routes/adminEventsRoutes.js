@@ -1,15 +1,15 @@
-// GET single event by ID (public)
-router.get('/:id', async (req, res) => {
-  try {
-    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id]);
-    if (!event) {
-      return res.status(404).json({ success: false, error: 'Event not found' });
-    }
-    res.json({ success: true, data: event });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+// // GET single event by ID (public)
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id]);
+//     if (!event) {
+//       return res.status(404).json({ success: false, error: 'Event not found' });
+//     }
+//     res.json({ success: true, data: event });
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
 import express from 'express'
 import { QueryHelper } from '../utils/queryHelper.js'
 import { isPostgresDB } from '../database.js'
