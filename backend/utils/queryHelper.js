@@ -33,9 +33,20 @@ export class QueryHelper {
     const db = await getDatabase()
     
     if (isPostgresDB()) {
-      const pgSql = this.convertSqlToPostgres(sql)
+      let pgSql = this.convertSqlToPostgres(sql)
+      
+      // Add RETURNING id for INSERT statements to get the new ID
+      if (pgSql.trim().toUpperCase().startsWith('INSERT')) {
+        pgSql += ' RETURNING id'
+      }
+      
       const result = await db.query(pgSql, params)
-      return { lastID: null, changes: result.rowCount }
+      
+      // Return format compatible with SQLite
+      return {
+        lastID: result.rows && result.rows.length > 0 ? result.rows[0].id : null,
+        changes: result.rowCount
+      }
     } else {
       return await db.run(sql, params)
     }
