@@ -51,7 +51,6 @@ router.use(authenticateToken)
 
 // POST create team member
 router.post('/', upload.single('image'), async (req, res) => {
-  const db = getDatabase()
   try {
     console.log('POST /team - Request body:', req.body)
     console.log('POST /team - Request file:', req.file)
@@ -68,12 +67,12 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       INSERT INTO team_members (name, role, category, bio, image, order_index)
       VALUES (?, ?, ?, ?, ?, ?)
     `, [name, role, category, bio, image, order_index || 0])
     
-    const newMember = await db.get('SELECT * FROM team_members WHERE id = ?', [result.lastID])
+    const newMember = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [result.lastID])
     
     console.log('Created team member:', newMember)
     
@@ -86,13 +85,12 @@ router.post('/', upload.single('image'), async (req, res) => {
 
 // PUT update team member
 router.put('/:id', upload.single('image'), async (req, res) => {
-  const db = getDatabase()
   try {
     console.log('PUT /team/:id - Request body:', req.body)
     console.log('PUT /team/:id - Request file:', req.file)
     
     const { name, role, category, bio, order_index } = req.body
-    const member = await db.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
+    const member = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
     
     if (!member) {
       return res.status(404).json({ success: false, error: 'Team member not found' })
@@ -116,7 +114,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       console.log('New image path:', image)
     }
     
-    await db.run(`
+    await QueryHelper.run(`
       UPDATE team_members 
       SET name = ?, role = ?, category = ?, bio = ?, image = ?, order_index = ?
       WHERE id = ?
@@ -130,7 +128,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       req.params.id
     ])
     
-    const updatedMember = await db.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
+    const updatedMember = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
     
     console.log('Updated team member:', updatedMember)
     
@@ -143,9 +141,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
 // DELETE team member
 router.delete('/:id', async (req, res) => {
-  const db = getDatabase()
   try {
-    const member = await db.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
+    const member = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
     
     if (!member) {
       return res.status(404).json({ success: false, error: 'Team member not found' })
@@ -161,7 +158,7 @@ router.delete('/:id', async (req, res) => {
       }
     }
     
-    await db.run('DELETE FROM team_members WHERE id = ?', [req.params.id])
+    await QueryHelper.run('DELETE FROM team_members WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Team member deleted successfully' })
   } catch (error) {

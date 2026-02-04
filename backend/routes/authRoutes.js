@@ -51,8 +51,7 @@ router.post('/login', async (req, res) => {
 // Verify token and get current user
 router.get('/me', authenticateToken, async (req, res) => {
   try {
-    const db = getDatabase()
-    const user = await db.get('SELECT id, username, email, role FROM users WHERE id = ?', [req.user.id])
+    const user = await QueryHelper.get('SELECT id, username, email, role FROM users WHERE id = ?', [req.user.id])
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' })
@@ -78,8 +77,7 @@ router.post('/change-password', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'New password must be at least 6 characters' })
     }
 
-    const db = getDatabase()
-    const user = await db.get('SELECT * FROM users WHERE id = ?', [req.user.id])
+    const user = await QueryHelper.get('SELECT * FROM users WHERE id = ?', [req.user.id])
 
     const validPassword = await bcrypt.compare(currentPassword, user.password)
 
@@ -89,7 +87,7 @@ router.post('/change-password', authenticateToken, async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    await db.run(
+    await QueryHelper.run(
       'UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       [hashedPassword, req.user.id]
     )

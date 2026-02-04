@@ -6,8 +6,7 @@ const router = express.Router();
 // Get all RSVPs
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase();
-    const rsvps = await db.all(`
+    const rsvps = await QueryHelper.all(`
       SELECT r.*, e.title as event_title, e.event_date, e.location
       FROM event_rsvps r
       LEFT JOIN events e ON r.event_id = e.id
@@ -23,8 +22,7 @@ router.get('/', async (req, res) => {
 // Delete RSVP
 router.delete('/:id', async (req, res) => {
   try {
-    const db = getDatabase();
-    await db.run('DELETE FROM event_rsvps WHERE id = ?', [req.params.id]);
+    await QueryHelper.run('DELETE FROM event_rsvps WHERE id = ?', [req.params.id]);
     res.json({ success: true, message: 'RSVP deleted successfully' });
   } catch (error) {
     console.error('Error deleting RSVP:', error);

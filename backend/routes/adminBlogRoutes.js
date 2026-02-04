@@ -45,7 +45,6 @@ const upload = multer({
 // GET all blogs (public)
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase()
     const { status = 'published', category, limit = 100 } = req.query
 
     let query = 'SELECT * FROM blogs WHERE status = ?'
@@ -59,7 +58,7 @@ router.get('/', async (req, res) => {
     query += ' ORDER BY date DESC LIMIT ?'
     params.push(parseInt(limit))
 
-    const blogs = await db.all(query, params)
+    const blogs = await QueryHelper.all(query, params)
 
     res.json({
       success: true,
@@ -75,8 +74,7 @@ router.get('/', async (req, res) => {
 // GET single blog (public)
 router.get('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const blog = await db.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
+    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
 
     if (!blog) {
       return res.status(404).json({ error: 'Blog not found' })
@@ -100,14 +98,13 @@ router.post('/', authenticateToken, isAdmin, upload.single('banner'), async (req
 
     const banner = req.file ? `/uploads/${req.file.filename}` : null
 
-    const db = getDatabase()
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO blogs (title, excerpt, content, banner, category, author, date, read_time, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, excerpt, content, banner, category, author, date || new Date().toISOString().split('T')[0], readTime || 5, status]
     )
 
-    const newBlog = await db.get('SELECT * FROM blogs WHERE id = ?', [result.lastID])
+    const newBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [result.lastID])
 
     res.status(201).json({
       success: true,
@@ -125,8 +122,7 @@ router.put('/:id', authenticateToken, isAdmin, upload.single('banner'), async (r
   try {
     const { title, excerpt, content, category, author, date, readTime, status } = req.body
 
-    const db = getDatabase()
-    const existingBlog = await db.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
+    const existingBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
 
     if (!existingBlog) {
       return res.status(404).json({ error: 'Blog not found' })
@@ -134,7 +130,7 @@ router.put('/:id', authenticateToken, isAdmin, upload.single('banner'), async (r
 
     const banner = req.file ? `/uploads/${req.file.filename}` : existingBlog.banner
 
-    await db.run(
+    await QueryHelper.run(
       `UPDATE blogs SET 
         title = ?, excerpt = ?, content = ?, banner = ?, category = ?, 
         author = ?, date = ?, read_time = ?, status = ?, updated_at = CURRENT_TIMESTAMP
@@ -153,7 +149,7 @@ router.put('/:id', authenticateToken, isAdmin, upload.single('banner'), async (r
       ]
     )
 
-    const updatedBlog = await db.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
+    const updatedBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
 
     res.json({
       success: true,
@@ -169,8 +165,7 @@ router.put('/:id', authenticateToken, isAdmin, upload.single('banner'), async (r
 // DELETE blog (admin only)
 router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
-    const db = getDatabase()
-    const blog = await db.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
+    const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
 
     if (!blog) {
       return res.status(404).json({ error: 'Blog not found' })
@@ -184,7 +179,7 @@ router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
       }
     }
 
-    await db.run('DELETE FROM blogs WHERE id = ?', [req.params.id])
+    await QueryHelper.run('DELETE FROM blogs WHERE id = ?', [req.params.id])
 
     res.json({
       success: true,

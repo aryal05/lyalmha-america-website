@@ -44,8 +44,7 @@ router.get('/', async (req, res) => {
 // Get single activity
 router.get('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const activity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
+    const activity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
     if (!activity) {
       return res.status(404).json({ success: false, error: 'Activity not found' })
     }
@@ -93,14 +92,13 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
       })
     }
 
-    const db = getDatabase()
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO activities (title, description, category, image, icon, icon_image, order_index, active) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1]
     )
 
-    const newActivity = await db.get('SELECT * FROM activities WHERE id = ?', [result.lastID])
+    const newActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [result.lastID])
     res.status(201).json({ success: true, data: newActivity })
   } catch (error) {
     console.error('Error creating activity:', error)
@@ -112,9 +110,7 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
 router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'iconImage' }]), async (req, res) => {
   try {
     const { title, description, category, icon, orderIndex, active } = req.body
-    const db = getDatabase()
-
-    const existingActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
+    const existingActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
     if (!existingActivity) {
       return res.status(404).json({ success: false, error: 'Activity not found' })
     }
@@ -148,14 +144,14 @@ router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 
       })
     }
 
-    await db.run(
+    await QueryHelper.run(
       `UPDATE activities 
        SET title = ?, description = ?, category = ?, image = ?, icon = ?, icon_image = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
       [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1, req.params.id]
     )
 
-    const updatedActivity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
+    const updatedActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
     res.json({ success: true, data: updatedActivity })
   } catch (error) {
     console.error('Error updating activity:', error)
@@ -166,15 +162,14 @@ router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 
 // Delete activity (Admin only)
 router.delete('/:id', authenticateAdmin, async (req, res) => {
   try {
-    const db = getDatabase()
-    const activity = await db.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
+    const activity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
     
     if (!activity) {
       return res.status(404).json({ success: false, error: 'Activity not found' })
     }
 
     // Soft delete
-    await db.run('UPDATE activities SET active = 0 WHERE id = ?', [req.params.id])
+    await QueryHelper.run('UPDATE activities SET active = 0 WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Activity deleted successfully' })
   } catch (error) {

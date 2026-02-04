@@ -8,9 +8,8 @@ const router = express.Router()
 // Get all events with their thumbnail images for gallery
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase()
     // Get all events with their thumbnail image
-    const events = await db.all(`
+    const events = await QueryHelper.all(`
       SELECT 
         e.id as event_id,
         e.title,
@@ -34,8 +33,7 @@ router.get('/', async (req, res) => {
 // Get single gallery image
 router.get('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const image = await db.get('SELECT * FROM gallery WHERE id = ?', [req.params.id])
+    const image = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', [req.params.id])
     if (!image) {
       return res.status(404).json({ success: false, error: 'Image not found' })
     }
@@ -64,14 +62,13 @@ router.post('/', upload.single('image'), async (req, res) => {
     // Upload to Cloudinary
     const imageUrl = await uploadToCloudinary(req.file.buffer, 'gallery')
 
-    const db = getDatabase()
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO gallery (title, description, image, category, active, order_index) 
        VALUES (?, ?, ?, ?, ?, ?)`,
       [title, description || '', imageUrl, category || 'event', active !== undefined ? active : 1, order_index || 0]
     )
 
-    const newImage = await db.get('SELECT * FROM gallery WHERE id = ?', result.lastID)
+    const newImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', result.lastID)
     res.status(201).json({ success: true, data: newImage })
   } catch (error) {
     console.error('Error uploading image:', error)
@@ -83,9 +80,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, description, category, active, order_index } = req.body
-    const db = getDatabase()
-
-    const galleryItem = await db.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
     if (!galleryItem) {
       return res.status(404).json({ success: false, error: 'Image not found' })
     }
@@ -96,7 +91,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       image = await uploadToCloudinary(req.file.buffer, 'gallery')
     }
 
-    await db.run(
+    await QueryHelper.run(
       `UPDATE gallery 
        SET title = ?, description = ?, image = ?, category = ?, active = ?, order_index = ?,
            updated_at = CURRENT_TIMESTAMP
@@ -112,7 +107,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const updatedImage = await db.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const updatedImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
     res.json({ success: true, data: updatedImage })
   } catch (error) {
     console.error('Error updating image:', error)
@@ -123,14 +118,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete gallery image
 router.delete('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const galleryItem = await db.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
     
     if (!galleryItem) {
       return res.status(404).json({ success: false, error: 'Gallery image not found' })
     }
 
-    await db.run('DELETE FROM gallery WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM gallery WHERE id = ?', req.params.id)
     
     res.json({ success: true, message: 'Gallery image deleted successfully' })
   } catch (error) {

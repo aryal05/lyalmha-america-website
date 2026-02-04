@@ -45,7 +45,6 @@ router.use(authenticateToken)
 // POST create festival
 router.post('/festivals', authenticateToken, upload.single('image'), async (req, res) => {
   try {
-    const db = await getDatabase()
     const { title, description, highlights, order_index } = req.body
     let imageUrl = null
     
@@ -69,12 +68,12 @@ router.post('/festivals', authenticateToken, upload.single('image'), async (req,
       })
     }
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       INSERT INTO culture_festivals (title, description, image, highlights, order_index)
       VALUES (?, ?, ?, ?, ?)
     `, [title, description, imageUrl, highlights, order_index || 0])
     
-    const newFestival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [result.lastID])
+    const newFestival = await QueryHelper.get('SELECT * FROM culture_festivals WHERE id = ?', [result.lastID])
     
     res.status(201).json({ success: true, data: newFestival })
   } catch (error) {
@@ -85,9 +84,8 @@ router.post('/festivals', authenticateToken, upload.single('image'), async (req,
 // PUT update festival
 router.put('/festivals/:id', authenticateToken, upload.single('image'), async (req, res) => {
   try {
-    const db = await getDatabase()
     const { title, description, highlights, order_index, active } = req.body
-    const festival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
+    const festival = await QueryHelper.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
     
     if (!festival) {
       return res.status(404).json({ success: false, error: 'Festival not found' })
@@ -108,7 +106,7 @@ router.put('/festivals/:id', authenticateToken, upload.single('image'), async (r
       })
     }
     
-    await db.run(`
+    await QueryHelper.run(`
       UPDATE culture_festivals 
       SET title = ?, description = ?, image = ?, highlights = ?, order_index = ?, active = ?
       WHERE id = ?
@@ -122,7 +120,7 @@ router.put('/festivals/:id', authenticateToken, upload.single('image'), async (r
       req.params.id
     ])
     
-    const updatedFestival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
+    const updatedFestival = await QueryHelper.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
     
     res.json({ success: true, data: updatedFestival })
   } catch (error) {
@@ -133,14 +131,13 @@ router.put('/festivals/:id', authenticateToken, upload.single('image'), async (r
 // DELETE festival
 router.delete('/festivals/:id', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const festival = await db.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
+    const festival = await QueryHelper.get('SELECT * FROM culture_festivals WHERE id = ?', [req.params.id])
     
     if (!festival) {
       return res.status(404).json({ success: false, error: 'Festival not found' })
     }
     
-    await db.run('DELETE FROM culture_festivals WHERE id = ?', [req.params.id])
+    await QueryHelper.run('DELETE FROM culture_festivals WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Festival deleted successfully' })
   } catch (error) {
@@ -151,7 +148,6 @@ router.delete('/festivals/:id', async (req, res) => {
 // POST create tradition
 router.post('/traditions', async (req, res) => {
   try {
-    const db = await getDatabase()
     const { icon, title, description, order_index } = req.body
     
     if (!icon || !title || !description) {
@@ -161,12 +157,12 @@ router.post('/traditions', async (req, res) => {
       })
     }
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       INSERT INTO culture_traditions (icon, title, description, order_index)
       VALUES (?, ?, ?, ?)
     `, [icon, title, description, order_index || 0])
     
-    const newTradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [result.lastID])
+    const newTradition = await QueryHelper.get('SELECT * FROM culture_traditions WHERE id = ?', [result.lastID])
     
     res.status(201).json({ success: true, data: newTradition })
   } catch (error) {
@@ -177,15 +173,14 @@ router.post('/traditions', async (req, res) => {
 // PUT update tradition
 router.put('/traditions/:id', async (req, res) => {
   try {
-    const db = await getDatabase()
     const { icon, title, description, order_index, active } = req.body
-    const tradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
+    const tradition = await QueryHelper.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
     
     if (!tradition) {
       return res.status(404).json({ success: false, error: 'Tradition not found' })
     }
     
-    await db.run(`
+    await QueryHelper.run(`
       UPDATE culture_traditions 
       SET icon = ?, title = ?, description = ?, order_index = ?, active = ?
       WHERE id = ?
@@ -198,7 +193,7 @@ router.put('/traditions/:id', async (req, res) => {
       req.params.id
     ])
     
-    const updatedTradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
+    const updatedTradition = await QueryHelper.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
     
     res.json({ success: true, data: updatedTradition })
   } catch (error) {
@@ -209,14 +204,13 @@ router.put('/traditions/:id', async (req, res) => {
 // DELETE tradition
 router.delete('/traditions/:id', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const tradition = await db.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
+    const tradition = await QueryHelper.get('SELECT * FROM culture_traditions WHERE id = ?', [req.params.id])
     
     if (!tradition) {
       return res.status(404).json({ success: false, error: 'Tradition not found' })
     }
     
-    await db.run('DELETE FROM culture_traditions WHERE id = ?', [req.params.id])
+    await QueryHelper.run('DELETE FROM culture_traditions WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Tradition deleted successfully' })
   } catch (error) {

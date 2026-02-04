@@ -16,8 +16,7 @@ router.post('/submit', async (req, res) => {
       })
     }
 
-    const db = getDatabase()
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO contact_messages (name, email, subject, message, status, created_at) 
        VALUES (?, ?, ?, ?, 'unread', datetime('now'))`,
       [name, email, subject, message]
@@ -41,8 +40,7 @@ router.post('/submit', async (req, res) => {
 // Get all contact messages
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const db = getDatabase()
-    const messages = await db.all(
+    const messages = await QueryHelper.all(
       `SELECT * FROM contact_messages ORDER BY created_at DESC`
     )
 
@@ -62,8 +60,7 @@ router.get('/', authenticateToken, async (req, res) => {
 // Get unread message count
 router.get('/unread-count', authenticateToken, async (req, res) => {
   try {
-    const db = getDatabase()
-    const result = await db.get(
+    const result = await QueryHelper.get(
       `SELECT COUNT(*) as count FROM contact_messages WHERE status = 'unread'`
     )
 
@@ -84,9 +81,7 @@ router.get('/unread-count', authenticateToken, async (req, res) => {
 router.patch('/:id/read', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
-    const db = getDatabase()
-
-    await db.run(
+    await QueryHelper.run(
       `UPDATE contact_messages SET status = 'read', updated_at = datetime('now') WHERE id = ?`,
       [id]
     )
@@ -108,9 +103,7 @@ router.patch('/:id/read', authenticateToken, async (req, res) => {
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
-    const db = getDatabase()
-
-    await db.run(`DELETE FROM contact_messages WHERE id = ?`, [id])
+    await QueryHelper.run(`DELETE FROM contact_messages WHERE id = ?`, [id])
 
     res.json({
       success: true,

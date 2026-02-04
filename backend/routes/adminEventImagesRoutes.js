@@ -8,8 +8,7 @@ const router = express.Router();
 // Get all images for an event
 router.get('/:event_id', async (req, res) => {
   try {
-    const db = getDatabase();
-    const images = await db.all(
+    const images = await QueryHelper.all(
       'SELECT * FROM event_images WHERE event_id = ? ORDER BY is_thumbnail DESC, created_at ASC',
       [req.params.event_id]
     );
@@ -30,8 +29,6 @@ router.post('/:event_id', upload.array('images', 10), async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, error: 'No images uploaded' });
     }
-    const db = getDatabase();
-    
     // Upload all images to Cloudinary in parallel (faster)
     const uploadPromises = req.files.map((file, i) => 
       uploadToCloudinary(file.buffer, 'event_images')
@@ -63,13 +60,12 @@ router.post('/:event_id', upload.array('images', 10), async (req, res) => {
 // Update thumbnail for an event
 router.put('/thumbnail/:image_id', async (req, res) => {
   try {
-    const db = getDatabase();
-    const image = await db.get('SELECT * FROM event_images WHERE id = ?', [req.params.image_id]);
+    const image = await QueryHelper.get('SELECT * FROM event_images WHERE id = ?', [req.params.image_id]);
     if (!image) {
       return res.status(404).json({ success: false, error: 'Image not found' });
     }
-    await db.run('UPDATE event_images SET is_thumbnail = 0 WHERE event_id = ?', [image.event_id]);
-    await db.run('UPDATE event_images SET is_thumbnail = 1 WHERE id = ?', [req.params.image_id]);
+    await QueryHelper.run('UPDATE event_images SET is_thumbnail = 0 WHERE event_id = ?', [image.event_id]);
+    await QueryHelper.run('UPDATE event_images SET is_thumbnail = 1 WHERE id = ?', [req.params.image_id]);
     res.json({ success: true, message: 'Thumbnail updated' });
   } catch (error) {
     console.error('Error updating thumbnail:', error);
@@ -80,8 +76,7 @@ router.put('/thumbnail/:image_id', async (req, res) => {
 // Delete an image
 router.delete('/:image_id', async (req, res) => {
   try {
-    const db = getDatabase();
-    await db.run('DELETE FROM event_images WHERE id = ?', [req.params.image_id]);
+    await QueryHelper.run('DELETE FROM event_images WHERE id = ?', [req.params.image_id]);
     res.json({ success: true, message: 'Image deleted' });
   } catch (error) {
     console.error('Error deleting image:', error);

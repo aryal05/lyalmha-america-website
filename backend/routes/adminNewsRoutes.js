@@ -8,8 +8,7 @@ const router = express.Router()
 // Get all news
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase()
-    const news = await db.all(
+    const news = await QueryHelper.all(
       'SELECT * FROM news WHERE active = 1 ORDER BY published_date DESC, order_index ASC'
     )
     res.json({ success: true, data: news })
@@ -22,8 +21,7 @@ router.get('/', async (req, res) => {
 // Get single news item
 router.get('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const newsItem = await db.get('SELECT * FROM news WHERE id = ?', [req.params.id])
+    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [req.params.id])
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News not found' })
     }
@@ -57,8 +55,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     
     const date = published_date || new Date().toISOString().split('T')[0]
 
-    const db = getDatabase()
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO news (title, excerpt, content, image, author, category, published_date, active, order_index) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -74,7 +71,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const newNews = await db.get('SELECT * FROM news WHERE id = ?', result.lastID)
+    const newNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', result.lastID)
     res.status(201).json({ success: true, data: newNews })
   } catch (error) {
     console.error('Error creating news:', error)
@@ -90,9 +87,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('📸 Has file:', !!req.file)
     
     const { title, excerpt, content, category, author, published_date, active, order_index } = req.body
-    const db = getDatabase()
-
-    const newsItem = await db.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News not found' })
     }
@@ -113,7 +108,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       }
     }
 
-    await db.run(
+    await QueryHelper.run(
       `UPDATE news 
        SET title = ?, excerpt = ?, content = ?, image = ?, 
            category = ?, author = ?, published_date = ?, active = ?, order_index = ?,
@@ -133,7 +128,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const updatedNews = await db.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const updatedNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
     console.log('✅ News updated successfully')
     res.json({ success: true, data: updatedNews })
   } catch (error) {
@@ -145,14 +140,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete news
 router.delete('/:id', async (req, res) => {
   try {
-    const db = getDatabase()
-    const newsItem = await db.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
     
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News item not found' })
     }
 
-    await db.run('DELETE FROM news WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM news WHERE id = ?', req.params.id)
     
     res.json({ success: true, message: 'News item deleted successfully' })
   } catch (error) {

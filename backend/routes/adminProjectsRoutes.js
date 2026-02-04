@@ -36,8 +36,7 @@ router.get('/active', async (req, res) => {
 // Get all projects (admin)
 router.get('/', async (req, res) => {
   try {
-    const db = getDatabase();
-    const projects = await db.all('SELECT * FROM projects ORDER BY order_index ASC, created_at DESC');
+    const projects = await QueryHelper.all('SELECT * FROM projects ORDER BY order_index ASC, created_at DESC');
     res.json({ success: true, data: projects });
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -48,8 +47,7 @@ router.get('/', async (req, res) => {
 // Get single project
 router.get('/:id', async (req, res) => {
   try {
-    const db = getDatabase();
-    const project = await db.get('SELECT * FROM projects WHERE id = ?', [req.params.id]);
+    const project = await QueryHelper.get('SELECT * FROM projects WHERE id = ?', [req.params.id]);
     if (!project) {
       return res.status(404).json({ success: false, message: 'Project not found' });
     }
@@ -70,8 +68,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       imageUrl = await uploadToCloudinary(req.file.buffer);
     }
 
-    const db = getDatabase();
-    const result = await db.run(
+    const result = await QueryHelper.run(
       `INSERT INTO projects (title, description, full_description, image, status, start_date, end_date, location, featured, order_index, active) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, description, full_description, imageUrl, status || 'active', start_date, end_date, location, featured || 0, order_index || 0, active !== undefined ? active : 1]
@@ -89,8 +86,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, description, full_description, status, start_date, end_date, location, featured, order_index, active } = req.body;
     
-    const db = getDatabase();
-    const existingProject = await db.get('SELECT * FROM projects WHERE id = ?', [req.params.id]);
+    const existingProject = await QueryHelper.get('SELECT * FROM projects WHERE id = ?', [req.params.id]);
     
     if (!existingProject) {
       return res.status(404).json({ success: false, message: 'Project not found' });
@@ -101,7 +97,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       imageUrl = await uploadToCloudinary(req.file.buffer);
     }
 
-    await db.run(
+    await QueryHelper.run(
       `UPDATE projects SET title = ?, description = ?, full_description = ?, image = ?, status = ?, start_date = ?, end_date = ?, location = ?, featured = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
       [title, description, full_description, imageUrl, status, start_date, end_date, location, featured, order_index, active, req.params.id]
     );
@@ -116,8 +112,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete project
 router.delete('/:id', async (req, res) => {
   try {
-    const db = getDatabase();
-    await db.run('DELETE FROM projects WHERE id = ?', [req.params.id]);
+    await QueryHelper.run('DELETE FROM projects WHERE id = ?', [req.params.id]);
     res.json({ success: true, message: 'Project deleted successfully' });
   } catch (error) {
     console.error('Error deleting project:', error);

@@ -98,7 +98,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     
     console.log('📊 Auto-assigned order:', nextOrder)
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       INSERT INTO banners (title, description, image, position, order_index, active)
       VALUES (?, ?, ?, ?, ?, ?)
     `,
@@ -110,7 +110,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       active === 'true' || active === true || active === 1 ? 1 : 0
     )
     
-    const newBanner = await db.get('SELECT * FROM banners WHERE id = ?', result.lastID)
+    const newBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', result.lastID)
     console.log('✅ Banner created successfully')
     
     res.status(201).json({ success: true, data: newBanner })
@@ -123,7 +123,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update banner
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const db = await getDatabase()
     console.log('='.repeat(60))
     console.log('📝 BANNER UPDATE RECEIVED')
     console.log('Banner ID:', req.params.id)
@@ -138,7 +137,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('  - position:', position, '(type:', typeof position, ')')
     console.log('  - active:', active, '(type:', typeof active, ')')
     
-    const banner = await db.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
     
     if (!banner) {
       console.log('❌ Banner not found:', req.params.id)
@@ -166,7 +165,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     // If position changed, recalculate order_index
     let order_index = banner.order_index
     if (position && position !== banner.position) {
-      const maxOrder = await db.get(
+      const maxOrder = await QueryHelper.get(
         'SELECT MAX(order_index) as max FROM banners WHERE position = ?', 
         [position]
       )
@@ -196,7 +195,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       id: req.params.id
     })
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       UPDATE banners 
       SET title = ?, description = ?, image = ?, 
           position = ?, order_index = ?, active = ?
@@ -215,7 +214,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('  - changes:', result.changes)
     console.log('  - lastID:', result.lastID)
     
-    const updatedBanner = await db.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const updatedBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
     
     console.log('✅ Banner after UPDATE:', JSON.stringify(updatedBanner, null, 2))
     console.log('='.repeat(60))
@@ -233,14 +232,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // DELETE banner
 router.delete('/:id', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const banner = await db.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
     
     if (!banner) {
       return res.status(404).json({ success: false, error: 'Banner not found' })
     }
     
-    await db.run('DELETE FROM banners WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM banners WHERE id = ?', req.params.id)
     
     res.json({ success: true, message: 'Banner deleted successfully' })
   } catch (error) {

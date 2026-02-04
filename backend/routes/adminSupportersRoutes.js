@@ -39,9 +39,8 @@ router.get('/', async (req, res) => {
 
 // GET supporters by type
 router.get('/type/:type', async (req, res) => {
-  const db = getDatabase()
   try {
-    const supporters = await db.all('SELECT * FROM supporters WHERE type = ? ORDER BY name', [req.params.type])
+    const supporters = await QueryHelper.all('SELECT * FROM supporters WHERE type = ? ORDER BY name', [req.params.type])
     res.json({ success: true, data: supporters })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -53,7 +52,6 @@ router.use(authenticateToken)
 
 // POST create supporter
 router.post('/', upload.single('logo'), async (req, res) => {
-  const db = getDatabase()
   try {
     const { name, type, contact_person, description } = req.body
     
@@ -69,12 +67,12 @@ router.post('/', upload.single('logo'), async (req, res) => {
       logoUrl = await uploadToCloudinary(req.file.buffer)
     }
     
-    const result = await db.run(`
+    const result = await QueryHelper.run(`
       INSERT INTO supporters (name, type, logo, contact_person, description)
       VALUES (?, ?, ?, ?, ?)
     `, [name, type, logoUrl, contact_person, description])
     
-    const newSupporter = await db.get('SELECT * FROM supporters WHERE id = ?', [result.lastID])
+    const newSupporter = await QueryHelper.get('SELECT * FROM supporters WHERE id = ?', [result.lastID])
     
     res.status(201).json({ success: true, data: newSupporter })
   } catch (error) {
@@ -84,10 +82,9 @@ router.post('/', upload.single('logo'), async (req, res) => {
 
 // PUT update supporter
 router.put('/:id', upload.single('logo'), async (req, res) => {
-  const db = getDatabase()
   try {
     const { name, type, contact_person, description } = req.body
-    const supporter = await db.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
+    const supporter = await QueryHelper.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
     
     if (!supporter) {
       return res.status(404).json({ success: false, error: 'Supporter not found' })
@@ -98,7 +95,7 @@ router.put('/:id', upload.single('logo'), async (req, res) => {
       logoUrl = await uploadToCloudinary(req.file.buffer)
     }
     
-    await db.run(`
+    await QueryHelper.run(`
       UPDATE supporters 
       SET name = ?, type = ?, logo = ?, contact_person = ?, description = ?
       WHERE id = ?
@@ -111,7 +108,7 @@ router.put('/:id', upload.single('logo'), async (req, res) => {
       req.params.id
     ])
     
-    const updatedSupporter = await db.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
+    const updatedSupporter = await QueryHelper.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
     
     res.json({ success: true, data: updatedSupporter })
   } catch (error) {
@@ -121,15 +118,14 @@ router.put('/:id', upload.single('logo'), async (req, res) => {
 
 // DELETE supporter
 router.delete('/:id', async (req, res) => {
-  const db = getDatabase()
   try {
-    const supporter = await db.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
+    const supporter = await QueryHelper.get('SELECT * FROM supporters WHERE id = ?', [req.params.id])
     
     if (!supporter) {
       return res.status(404).json({ success: false, error: 'Supporter not found' })
     }
     
-    await db.run('DELETE FROM supporters WHERE id = ?', [req.params.id])
+    await QueryHelper.run('DELETE FROM supporters WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Supporter deleted successfully' })
   } catch (error) {
