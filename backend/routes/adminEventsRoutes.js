@@ -41,10 +41,10 @@ router.get('/', async (req, res) => {
 // GET upcoming events
 router.get('/upcoming', async (req, res) => {
   try {
-    const sql = isPostgresDB()
-      ? `SELECT * FROM events WHERE event_date >= CURRENT_DATE ORDER BY event_date ASC`
-      : `SELECT * FROM events WHERE event_date >= date('now') ORDER BY event_date ASC`;
-    const events = await QueryHelper.all(sql);
+    const events = await QueryHelper.all(
+      'SELECT * FROM events WHERE event_type = ? ORDER BY event_date ASC',
+      ['upcoming']
+    );
     res.json({ success: true, data: events });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -54,10 +54,10 @@ router.get('/upcoming', async (req, res) => {
 // GET past events
 router.get('/past', async (req, res) => {
   try {
-    const sql = isPostgresDB()
-      ? `SELECT * FROM events WHERE event_date < CURRENT_DATE ORDER BY event_date DESC`
-      : `SELECT * FROM events WHERE event_date < date('now') ORDER BY event_date DESC`;
-    const events = await QueryHelper.all(sql);
+    const events = await QueryHelper.all(
+      'SELECT * FROM events WHERE event_type = ? ORDER BY event_date DESC',
+      ['past']
+    );
     res.json({ success: true, data: events });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
