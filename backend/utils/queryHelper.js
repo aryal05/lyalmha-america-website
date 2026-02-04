@@ -5,7 +5,7 @@ import { getDatabase, isPostgresDB } from '../database.js'
  */
 export class QueryHelper {
   static async all(sql, params = []) {
-    const db = await getDatabase()
+    const db = getDatabase()
     
     if (isPostgresDB()) {
       // Convert SQLite ? placeholders to PostgreSQL $1, $2, etc.
@@ -18,7 +18,7 @@ export class QueryHelper {
   }
 
   static async get(sql, params = []) {
-    const db = await getDatabase()
+    const db = getDatabase()
     
     if (isPostgresDB()) {
       const pgSql = this.convertSqlToPostgres(sql)
@@ -30,7 +30,7 @@ export class QueryHelper {
   }
 
   static async run(sql, params = []) {
-    const db = await getDatabase()
+    const db = getDatabase()
     
     if (isPostgresDB()) {
       let pgSql = this.convertSqlToPostgres(sql)
