@@ -113,7 +113,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       SET title = ?, description = ?, event_date = ?, 
           location = ?, event_type = ?, image = ?
       WHERE id = ?
-    `,
+    `, [
       title || event.title,
       description || event.description,
       event_date || event.event_date,
@@ -121,7 +121,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       event_type || event.event_type,
       image,
       req.params.id
-    )
+    ])
     
     const updatedEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
