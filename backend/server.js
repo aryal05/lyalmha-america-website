@@ -114,11 +114,17 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`)
-  console.log(`📍 API URL: http://localhost:${PORT}`)
-  console.log(`🔐 Admin credentials:`)
-  console.log(`   Username: admin`)
-  console.log(`   Password: admin123`)
-  console.log(`   ⚠️  CHANGE THIS PASSWORD IMMEDIATELY!`)
-})
+// For Vercel serverless deployment
+if (process.env.VERCEL) {
+  export default app
+} else {
+  // For local development
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`)
+    console.log(`📍 API URL: http://localhost:${PORT}`)
+    console.log(`🔐 Admin credentials:`)
+    console.log(`   Username: admin`)
+    console.log(`   Password: admin123`)
+    console.log(`   ⚠️  CHANGE THIS PASSWORD IMMEDIATELY!`)
+  })
+}
