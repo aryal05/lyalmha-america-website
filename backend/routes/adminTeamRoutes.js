@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
 import { v2 as cloudinary } from 'cloudinary'
@@ -22,9 +22,8 @@ const upload = multer({ storage: storage })
 
 // GET all team members (public - no auth)
 router.get('/', async (req, res) => {
-  const db = getDatabase()
   try {
-    const team = await db.all('SELECT * FROM team_members ORDER BY category, order_index, name')
+    const team = await QueryHelper.all('SELECT * FROM team_members ORDER BY category, order_index, name')
     console.log('GET /team - Fetched team members:', team)
     console.log('GET /team - Number of members:', team.length)
     if (team.length > 0) {
@@ -39,9 +38,8 @@ router.get('/', async (req, res) => {
 
 // GET team by category
 router.get('/category/:category', async (req, res) => {
-  const db = getDatabase()
   try {
-    const team = await db.all('SELECT * FROM team_members WHERE category = ? ORDER BY order_index, name', [req.params.category])
+    const team = await QueryHelper.all('SELECT * FROM team_members WHERE category = ? ORDER BY order_index, name', [req.params.category])
     res.json({ success: true, data: team })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })

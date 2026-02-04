@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
@@ -30,8 +30,7 @@ const uploadToCloudinary = (buffer) => {
 // GET all events (public - no auth)
 router.get('/', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const events = await db.all('SELECT * FROM events ORDER BY event_date DESC')
+    const events = await QueryHelper.all('SELECT * FROM events ORDER BY event_date DESC')
     res.json({ success: true, data: events })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -41,8 +40,7 @@ router.get('/', async (req, res) => {
 // GET upcoming events
 router.get('/upcoming', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const events = await db.all(`
+    const events = await QueryHelper.all(`
       SELECT * FROM events 
       WHERE event_date >= date('now') 
       ORDER BY event_date ASC

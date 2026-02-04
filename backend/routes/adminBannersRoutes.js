@@ -1,5 +1,5 @@
 import express from 'express'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
@@ -30,8 +30,7 @@ const uploadToCloudinary = (buffer) => {
 // GET all banners (public - no auth)
 router.get('/', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const banners = await db.all(`
+    const banners = await QueryHelper.all(`
       SELECT * FROM banners 
       WHERE active = 1 
       ORDER BY order_index
@@ -45,12 +44,11 @@ router.get('/', async (req, res) => {
 // GET banners by location
 router.get('/location/:location', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const banners = await db.all(`
+    const banners = await QueryHelper.all(`
       SELECT * FROM banners 
       WHERE position = ? AND active = 1 
       ORDER BY order_index
-    `, req.params.location)
+    `, [req.params.location])
     res.json({ success: true, data: banners })
   } catch (error) {
     res.status(500).json({ success: false, error: error.message })
@@ -63,8 +61,7 @@ router.use(authenticateToken)
 // GET all banners (admin - includes inactive)
 router.get('/admin/all', async (req, res) => {
   try {
-    const db = await getDatabase()
-    const banners = await db.all('SELECT * FROM banners ORDER BY position, order_index')
+    const banners = await QueryHelper.all('SELECT * FROM banners ORDER BY position, order_index')
     console.log('📋 Fetched', banners.length, 'banners for admin')
     res.json({ success: true, data: banners })
   } catch (error) {
@@ -76,7 +73,6 @@ router.get('/admin/all', async (req, res) => {
 // POST create banner
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const db = await getDatabase()
     const { title, description, position, active } = req.body
     
     console.log('📝 Creating banner for position:', position)
@@ -94,7 +90,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.log('✅ Image uploaded:', imageUrl)
     
     // Auto-calculate order_index (get max for this position and add 1)
-    const maxOrder = await db.get(
+    const maxOrder = await QueryHelper.get(
       'SELECT MAX(order_index) as max FROM banners WHERE position = ?', 
       [position || 'home']
     )
