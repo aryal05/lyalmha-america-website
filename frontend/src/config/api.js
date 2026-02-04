@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 // API Configuration
-export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-api.onrender.com'
+export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-46dv.vercel.app'
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
