@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDatabase } from '../database.js';
+import { QueryHelper } from '../utils/queryHelper.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { upload, uploadToCloudinary } from '../utils/uploadHelper.js';
 
@@ -42,7 +42,7 @@ router.post('/:event_id', upload.array('images', 10), async (req, res) => {
     
     // Insert all images into database
     const insertPromises = uploadedImages.map(({ imageUrl, isThumbnail }) =>
-      db.run(
+      QueryHelper.run(
         `INSERT INTO event_images (event_id, image_url, is_thumbnail) VALUES (?, ?, ?)`,
         [req.params.event_id, imageUrl, isThumbnail]
       )
