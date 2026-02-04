@@ -68,7 +68,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       [title, description || '', imageUrl, category || 'event', active !== undefined ? active : 1, order_index || 0]
     )
 
-    const newImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', result.lastID)
+    const newImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', [result.lastID])
     res.status(201).json({ success: true, data: newImage })
   } catch (error) {
     console.error('Error uploading image:', error)
@@ -80,7 +80,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, description, category, active, order_index } = req.body
-    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', [req.params.id])
     if (!galleryItem) {
       return res.status(404).json({ success: false, error: 'Image not found' })
     }
@@ -107,7 +107,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const updatedImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const updatedImage = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', [req.params.id])
     res.json({ success: true, data: updatedImage })
   } catch (error) {
     console.error('Error updating image:', error)
@@ -118,13 +118,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete gallery image
 router.delete('/:id', async (req, res) => {
   try {
-    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', req.params.id)
+    const galleryItem = await QueryHelper.get('SELECT * FROM gallery WHERE id = ?', [req.params.id])
     
     if (!galleryItem) {
       return res.status(404).json({ success: false, error: 'Gallery image not found' })
     }
 
-    await QueryHelper.run('DELETE FROM gallery WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM gallery WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Gallery image deleted successfully' })
   } catch (error) {

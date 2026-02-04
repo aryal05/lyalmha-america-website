@@ -71,7 +71,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const newNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', result.lastID)
+    const newNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [result.lastID])
     res.status(201).json({ success: true, data: newNews })
   } catch (error) {
     console.error('Error creating news:', error)
@@ -87,7 +87,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('📸 Has file:', !!req.file)
     
     const { title, excerpt, content, category, author, published_date, active, order_index } = req.body
-    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [req.params.id])
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News not found' })
     }
@@ -128,7 +128,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       ]
     )
 
-    const updatedNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const updatedNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [req.params.id])
     console.log('✅ News updated successfully')
     res.json({ success: true, data: updatedNews })
   } catch (error) {
@@ -140,13 +140,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // Delete news
 router.delete('/:id', async (req, res) => {
   try {
-    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', req.params.id)
+    const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [req.params.id])
     
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News item not found' })
     }
 
-    await QueryHelper.run('DELETE FROM news WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM news WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'News item deleted successfully' })
   } catch (error) {

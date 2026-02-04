@@ -110,7 +110,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       active === 'true' || active === true || active === 1 ? 1 : 0
     )
     
-    const newBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', result.lastID)
+    const newBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [result.lastID])
     console.log('✅ Banner created successfully')
     
     res.status(201).json({ success: true, data: newBanner })
@@ -137,7 +137,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('  - position:', position, '(type:', typeof position, ')')
     console.log('  - active:', active, '(type:', typeof active, ')')
     
-    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [req.params.id])
     
     if (!banner) {
       console.log('❌ Banner not found:', req.params.id)
@@ -214,7 +214,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('  - changes:', result.changes)
     console.log('  - lastID:', result.lastID)
     
-    const updatedBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const updatedBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [req.params.id])
     
     console.log('✅ Banner after UPDATE:', JSON.stringify(updatedBanner, null, 2))
     console.log('='.repeat(60))
@@ -232,13 +232,13 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // DELETE banner
 router.delete('/:id', async (req, res) => {
   try {
-    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', req.params.id)
+    const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [req.params.id])
     
     if (!banner) {
       return res.status(404).json({ success: false, error: 'Banner not found' })
     }
     
-    await QueryHelper.run('DELETE FROM banners WHERE id = ?', req.params.id)
+    await QueryHelper.run('DELETE FROM banners WHERE id = ?', [req.params.id])
     
     res.json({ success: true, message: 'Banner deleted successfully' })
   } catch (error) {
