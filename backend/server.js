@@ -114,11 +114,11 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 
-// For Vercel serverless deployment
-if (process.env.VERCEL) {
-  export default app
-} else {
-  // For local development
+// For Vercel serverless deployment - export the app
+export default app
+
+// For local development - only listen if not in Vercel
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`)
     console.log(`📍 API URL: http://localhost:${PORT}`)
