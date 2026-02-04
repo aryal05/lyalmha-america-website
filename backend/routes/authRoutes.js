@@ -1,6 +1,6 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
-import { getDatabase } from '../database.js'
+import { QueryHelper } from '../utils/queryHelper.js'
 import { generateToken, authenticateToken } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -14,8 +14,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Username and password required' })
     }
 
-    const db = getDatabase()
-    const user = await db.get('SELECT * FROM users WHERE username = ?', [username])
+    const user = await QueryHelper.get('SELECT * FROM users WHERE username = ?', [username])
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' })
