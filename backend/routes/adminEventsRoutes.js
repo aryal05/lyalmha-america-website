@@ -1,5 +1,6 @@
 import express from 'express'
 import { QueryHelper } from '../utils/queryHelper.js'
+import { isPostgresDB } from '../database.js'
 import { authenticateToken } from '../middleware/auth.js'
 import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
@@ -40,30 +41,28 @@ router.get('/', async (req, res) => {
 // GET upcoming events
 router.get('/upcoming', async (req, res) => {
   try {
-    const events = await QueryHelper.all(`
-      SELECT * FROM events 
-      WHERE event_date >= date('now') 
-      ORDER BY event_date ASC
-    `)
-    res.json({ success: true, data: events })
+    const sql = isPostgresDB()
+      ? `SELECT * FROM events WHERE event_date >= CURRENT_DATE ORDER BY event_date ASC`
+      : `SELECT * FROM events WHERE event_date >= date('now') ORDER BY event_date ASC`;
+    const events = await QueryHelper.all(sql);
+    res.json({ success: true, data: events });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message })
+    res.status(500).json({ success: false, error: error.message });
   }
-})
+});
 
 // GET past events
 router.get('/past', async (req, res) => {
   try {
-    const events = await QueryHelper.all(`
-      SELECT * FROM events 
-      WHERE event_date < date('now') 
-      ORDER BY event_date DESC
-    `)
-    res.json({ success: true, data: events })
+    const sql = isPostgresDB()
+      ? `SELECT * FROM events WHERE event_date < CURRENT_DATE ORDER BY event_date DESC`
+      : `SELECT * FROM events WHERE event_date < date('now') ORDER BY event_date DESC`;
+    const events = await QueryHelper.all(sql);
+    res.json({ success: true, data: events });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message })
+    res.status(500).json({ success: false, error: error.message });
   }
-})
+});
 
 // Admin routes - require authentication
 router.use(authenticateToken)
