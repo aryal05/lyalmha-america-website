@@ -43,17 +43,23 @@ app.use(cors({
   origin: [
     'https://lyalmha-america-website.vercel.app',
     'https://lyalmha-america-website-g888.vercel.app',
+<<<<<<< HEAD
 
 
     'https://lyalmha-america-website-lbw9.vercel.app/',
     'https://lyalmha-america-website-f7yk.vercel.app/',
 
 
+=======
+    'https://lyalmha-america-website-theta.vercel.app',
+    'https://lyalmha-america-website-wzb9.vercel.app',
+>>>>>>> 379ef02e6ab41caa257bd7ff305d4e4712041e32
     'https://lyaymhaamerica.org',
     'http://localhost:5173',
     'http://localhost:5000',
     'http://localhost:3000',
-    'http://localhost:3001'
+    'http://localhost:3001',
+    /\.vercel\.app$/ // Allow all Vercel preview deployments
   ],
   credentials: true
 }))
