@@ -280,7 +280,7 @@ const Contact = () => {
                         Email
                       </p>
                       <p className="text-paragraph-text text-sm group-hover:text-gold-accent transition-colors">
-                        info@lyalmha-america.org
+                        lyaymhaAmerica@gmail.com
                       </p>
                     </div>
                   </a>
@@ -332,9 +332,9 @@ const Contact = () => {
                         Location
                       </p>
                       <p className="text-paragraph-text text-sm">
-                        DMV Region
+                        Virginia City
                         <br />
-                        (DC, Maryland, Virginia)
+                        VA
                         <br />
                         United States
                       </p>
