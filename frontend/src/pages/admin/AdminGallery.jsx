@@ -231,7 +231,9 @@ const AdminGallery = () => {
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                     required
                   />
@@ -243,7 +245,9 @@ const AdminGallery = () => {
                   <input
                     type="date"
                     value={formData.event_date}
-                    onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, event_date: e.target.value })
+                    }
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                     required
                   />
@@ -252,19 +256,27 @@ const AdminGallery = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Location</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Location
+                  </label>
                   <input
                     type="text"
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                   />
                 </div>
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Event Type</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Event Type
+                  </label>
                   <select
                     value={formData.event_type}
-                    onChange={(e) => setFormData({ ...formData, event_type: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, event_type: e.target.value })
+                    }
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                   >
                     <option value="event">Event</option>
@@ -272,15 +284,21 @@ const AdminGallery = () => {
                     <option value="workshop">Workshop</option>
                     <option value="community">Community</option>
                     <option value="celebration">Celebration</option>
+                    <option value="past">Past</option>
+                    <option value="upcoming">Upcoming</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-royal-blue font-semibold mb-2">Description</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                   rows="3"
                 />
@@ -301,7 +319,11 @@ const AdminGallery = () => {
                 {thumbnailPreview && (
                   <div className="mt-4">
                     <img
-                      src={thumbnailPreview.startsWith("http") ? thumbnailPreview : thumbnailPreview}
+                      src={
+                        thumbnailPreview.startsWith("http")
+                          ? thumbnailPreview
+                          : thumbnailPreview
+                      }
                       alt="Thumbnail preview"
                       className="w-full max-w-md h-64 object-cover rounded-lg border-4 border-gold-accent"
                     />
@@ -314,16 +336,22 @@ const AdminGallery = () => {
                 <label className="block text-royal-blue font-bold mb-3 text-lg">
                   🖼️ Other Images (Gallery Images)
                 </label>
-                
+
                 {/* Show existing images when editing */}
                 {editingEvent && existingOtherImages.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">Existing Images:</p>
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      Existing Images:
+                    </p>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       {existingOtherImages.map((img) => (
                         <div key={img.id} className="relative">
                           <img
-                            src={img.image_url.startsWith("http") ? img.image_url : `${API_URL}${img.image_url}`}
+                            src={
+                              img.image_url.startsWith("http")
+                                ? img.image_url
+                                : `${API_URL}${img.image_url}`
+                            }
                             alt="Existing"
                             className="w-full h-32 object-cover rounded-lg border-2 border-gray-300"
                           />
@@ -339,7 +367,7 @@ const AdminGallery = () => {
                     </div>
                   </div>
                 )}
-                
+
                 <input
                   type="file"
                   accept="image/*"
@@ -350,7 +378,7 @@ const AdminGallery = () => {
                 <p className="text-sm text-gray-600 mt-2">
                   You can select multiple images at once or add them one by one
                 </p>
-                
+
                 {otherImagePreviews.length > 0 && (
                   <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                     {otherImagePreviews.map((preview, idx) => (
@@ -409,7 +437,11 @@ const AdminGallery = () => {
                   <div className="relative h-64 overflow-hidden bg-gray-200">
                     {event.image ? (
                       <img
-                        src={event.image.startsWith("http") ? event.image : `${API_URL}${event.image}`}
+                        src={
+                          event.image.startsWith("http")
+                            ? event.image
+                            : `${API_URL}${event.image}`
+                        }
                         alt={event.title}
                         className="w-full h-full object-cover"
                       />
@@ -432,7 +464,9 @@ const AdminGallery = () => {
                       {event.title}
                     </h3>
                     {event.location && (
-                      <p className="text-paragraph-text text-sm mb-2">📍 {event.location}</p>
+                      <p className="text-paragraph-text text-sm mb-2">
+                        📍 {event.location}
+                      </p>
                     )}
                     <div className="flex gap-2 mt-4">
                       <motion.button
@@ -459,7 +493,9 @@ const AdminGallery = () => {
 
             {events.length === 0 && (
               <div className="text-center py-12 text-royal-blue font-semibold">
-                <p className="text-xl">No events found. Create your first event!</p>
+                <p className="text-xl">
+                  No events found. Create your first event!
+                </p>
               </div>
             )}
           </>
