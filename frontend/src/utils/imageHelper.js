@@ -8,7 +8,7 @@ export const getImageUrl = (imagePath) => {
   }
   
   // If it's a local path starting with /uploads/, use the backend URL
-  const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-awzr.vercel.app';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://backend-nine-beryl-57.vercel.app';
   
   // Return the backend URL for local uploads
   return `${API_URL}${imagePath}`;

@@ -53,6 +53,7 @@ if (!process.env.VERCEL) {
 // Middleware - CORS configuration
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  'https://frontend-green-mu-41.vercel.app',
   'https://lyalmha-america-website-phi.vercel.app',
   'http://localhost:3000',
   'http://localhost:5173',
