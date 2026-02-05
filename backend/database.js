@@ -9,11 +9,16 @@ export async function initializeDatabase() {
 
   // Require DATABASE_URL for production
   if (!process.env.DATABASE_URL) {
-    throw new Error(
+    const error = new Error(
       '❌ DATABASE_URL environment variable is required. ' +
       'Please set up Supabase or Vercel Postgres and add the connection string to your environment variables.'
     );
+    console.error(error.message);
+    throw error;
   }
+
+  console.log('🔗 Connecting to PostgreSQL...');
+  console.log('Database URL:', process.env.DATABASE_URL.substring(0, 30) + '...');
 
   // Connect to Supabase PostgreSQL
   const pool = new Pool({
@@ -33,11 +38,13 @@ export async function initializeDatabase() {
   try {
     const client = await pool.connect();
     const result = await client.query('SELECT NOW()');
-    console.log('✅ Connected to Supabase PostgreSQL at', result.rows[0].now);
+    console.log('✅ Connected to PostgreSQL at', result.rows[0].now);
     client.release();
   } catch (err) {
-    console.error('❌ Failed to connect to Supabase PostgreSQL:', err.message);
-    console.error('Make sure your DATABASE_URL is correct and your Supabase database is accessible.');
+    console.error('❌ Failed to connect to PostgreSQL:', err.message);
+    console.error('Full error:', err);
+    console.error('Make sure your DATABASE_URL is correct and your database is accessible.');
+    db = null; // Reset db so it can retry
     throw err;
   }
 

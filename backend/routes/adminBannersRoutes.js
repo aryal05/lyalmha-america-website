@@ -44,13 +44,16 @@ router.get('/', async (req, res) => {
 // GET banners by location
 router.get('/location/:location', async (req, res) => {
   try {
+    console.log(`🎯 Fetching banners for location: ${req.params.location}`)
     const banners = await QueryHelper.all(`
       SELECT * FROM banners 
-      WHERE position = ? AND active = 1 
+      WHERE position = $1 AND active = 1 
       ORDER BY order_index
     `, [req.params.location])
+    console.log(`✅ Found ${banners.length} banners for ${req.params.location}`)
     res.json({ success: true, data: banners })
   } catch (error) {
+    console.error(`❌ Error fetching banners for ${req.params.location}:`, error.message)
     res.status(500).json({ success: false, error: error.message })
   }
 })

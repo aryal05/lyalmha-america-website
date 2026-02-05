@@ -14,6 +14,11 @@ export class QueryHelper {
       try {
         const result = await client.query(pgSql, params)
         return result.rows
+      } catch (error) {
+        console.error('❌ QueryHelper.all error:', error.message)
+        console.error('SQL:', pgSql)
+        console.error('Params:', params)
+        throw error
       } finally {
         client.release()
       }
@@ -31,6 +36,11 @@ export class QueryHelper {
       try {
         const result = await client.query(pgSql, params)
         return result.rows[0]
+      } catch (error) {
+        console.error('❌ QueryHelper.get error:', error.message)
+        console.error('SQL:', pgSql)
+        console.error('Params:', params)
+        throw error
       } finally {
         client.release()
       }
@@ -59,6 +69,11 @@ export class QueryHelper {
           lastID: result.rows && result.rows.length > 0 ? result.rows[0].id : null,
           changes: result.rowCount
         }
+      } catch (error) {
+        console.error('❌ QueryHelper.run error:', error.message)
+        console.error('SQL:', pgSql)
+        console.error('Params:', params)
+        throw error
       } finally {
         client.release()
       }

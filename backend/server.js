@@ -30,27 +30,53 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// Initialize database
-await initializeDatabase()
+// Initialize database (with error handling for serverless)
+let dbInitialized = false
+const initDB = async () => {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase()
+      dbInitialized = true
+      console.log('✅ Database initialized')
+    } catch (error) {
+      console.error('❌ Database initialization failed:', error.message)
+      throw error
+    }
+  }
+}
 
-// Middleware
-app.use((req, res, next) => {
-  // Log the origin of every request for CORS debugging
-  console.log('Incoming request from origin:', req.headers.origin);
-  next();
-});
+// Initialize DB immediately for local dev
+if (!process.env.VERCEL) {
+  await initDB()
+}
+
+// Middleware - CORS must be first
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    /\.vercel\.app$/ // Allow all Vercel preview deployments
-  ],
-  credentials: true
+  origin: true, // Allow all origins in development/testing
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
+// Database initialization middleware for serverless
+app.use(async (req, res, next) => {
+  try {
+    await initDB()
+    next()
+  } catch (error) {
+    console.error('Database initialization error:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: 'Database connection failed',
+      message: error.message 
+    })
+  }
+})
 
 // Routes
 app.get('/', (req, res) => {
@@ -103,10 +129,15 @@ app.use('/api/admin/projects', adminProjectsRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack)
+  console.error('='.repeat(60))
+  console.error('❌ ERROR:', err.message)
+  console.error('Stack:', err.stack)
+  console.error('='.repeat(60))
+  
   res.status(500).json({ 
+    success: false,
     error: 'Something went wrong!',
-    message: err.message 
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
   })
 })
 
