@@ -12,7 +12,7 @@ const AdminTeam = () => {
   const [formData, setFormData] = useState({
     name: "",
     role: "",
-    category: "Advisor",
+    category: "Advisors",
     bio: "",
   });
   const [imageFile, setImageFile] = useState(null);
@@ -63,7 +63,7 @@ const AdminTeam = () => {
         console.log("Completed crop:", completedCrop);
         const croppedImageBlob = await getCroppedImg(
           imgRef.current,
-          completedCrop
+          completedCrop,
         );
         console.log("Cropped image blob:", croppedImageBlob);
         data.append("image", croppedImageBlob, "team-member.jpg");
@@ -87,7 +87,7 @@ const AdminTeam = () => {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
       } else {
         response = await apiClient.post(API_ENDPOINTS.TEAM.CREATE, data, {
@@ -105,7 +105,7 @@ const AdminTeam = () => {
       console.error("Error details:", error.response?.data);
       alert(
         "Error saving team member: " +
-          (error.response?.data?.error || error.message)
+          (error.response?.data?.error || error.message),
       );
     }
   };
@@ -149,7 +149,7 @@ const AdminTeam = () => {
       0,
       0,
       crop.width,
-      crop.height
+      crop.height,
     );
 
     return new Promise((resolve) => {
@@ -158,7 +158,7 @@ const AdminTeam = () => {
           resolve(blob);
         },
         "image/jpeg",
-        0.95
+        0.95,
       );
     });
   };
@@ -192,7 +192,7 @@ const AdminTeam = () => {
     setFormData({
       name: "",
       role: "",
-      category: "Advisor",
+      category: "Advisors",
       bio: "",
     });
     setImageFile(null);
@@ -314,9 +314,9 @@ const AdminTeam = () => {
                     }
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                   >
-                    <option value="Advisor">Advisor</option>
+                    <option value="Advisors">Advisors</option>
                     <option value="Executive">Executive</option>
-                    <option value="Life Member">Life Member</option>
+                    <option value="Life Members">Life Members</option>
                   </select>
                 </div>
 
@@ -362,7 +362,7 @@ const AdminTeam = () => {
                               const { width, height } = e.currentTarget;
                               const cropWidth = Math.min(
                                 width * 0.9,
-                                height * 0.9
+                                height * 0.9,
                               );
                               const cropX = (width - cropWidth) / 2;
                               const cropY = (height - cropWidth) / 2;
@@ -512,8 +512,8 @@ const AdminTeam = () => {
                           member.category === "Executive"
                             ? "bg-newari-red/20 text-newari-red border border-newari-red/30"
                             : member.category === "Advisor"
-                            ? "bg-gold-accent/20 text-gold-accent border border-gold-accent/30"
-                            : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                              ? "bg-gold-accent/20 text-gold-accent border border-gold-accent/30"
+                              : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
                         }`}
                       >
                         {member.category}
