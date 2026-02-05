@@ -30,7 +30,7 @@ const Teams = () => {
     {
       title: "Executive Team",
       description:
-        "Our dedicated leadership team guiding Lyaymha America's vision and mission",
+        "Our dedicated leadership team guiding Lyaymha America Guthi's vision and mission",
       icon: (
         <svg
           className="w-8 h-8"

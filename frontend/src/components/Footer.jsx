@@ -34,14 +34,14 @@ const Footer = () => {
                   <div className="relative bg-white rounded-full p-2">
                     <img
                       src={logo}
-                      alt="Lyalmha America"
+                      alt="Lyaymha America Guthi"
                       className="h-20 w-20 object-contain"
                     />
                   </div>
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-pure-white">
-                    Lyaymha America
+                    Lyaymha America Guthi
                   </h3>
                   <p className="text-gold-accent font-semibold text-sm">
                     Newari Culture & Heritage
@@ -255,7 +255,7 @@ const Footer = () => {
             >
               © {currentYear}{" "}
               <span className="text-gold-accent font-semibold">
-                Lyaymha America
+                Lyaymha America Guthi
               </span>
               . All rights reserved.
               <span className="hidden md:inline">

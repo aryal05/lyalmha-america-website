@@ -119,7 +119,7 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       quote:
-        "Lyalmha America has been instrumental in keeping our Newari traditions alive for our children. The cultural events are amazing!",
+        "Lyaymha America Guthi has been instrumental in keeping our Newari traditions alive for our children. The cultural events are amazing!",
       author: "Sunita Shrestha",
       role: "Community Member",
       location: "Boston, MA",

@@ -69,7 +69,7 @@ const AdminLogin = () => {
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.8 }}
                       src={logo}
-                      alt="Lyalmha America"
+                      alt="Lyaymha America Guthi"
                       className="w-full h-full object-contain drop-shadow-gold"
                     />
                   </div>
@@ -85,7 +85,7 @@ const AdminLogin = () => {
                 Admin Login
               </motion.h2>
               <p className="text-gold-accent/60 font-medium">
-                Lyalmha America CMS
+                Lyaymha America Guthi CMS
               </p>
               <div className="pagoda-divider opacity-30 mt-4"></div>
             </div>

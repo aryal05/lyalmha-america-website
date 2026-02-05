@@ -90,8 +90,18 @@ const BlogDetail = () => {
               onClick={() => navigate("/blogs")}
               className="text-white hover:text-gold-accent transition-colors mb-6 flex items-center gap-2"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Back to Blogs
             </button>
@@ -112,11 +122,23 @@ const BlogDetail = () => {
                 <div className="w-10 h-10 bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center text-charcoal-black font-bold">
                   {blog.author?.charAt(0) || "L"}
                 </div>
-                <span className="font-medium">{blog.author || "Lyalmha America"}</span>
+                <span className="font-medium">
+                  {blog.author || "Lyaymha America Guthi"}
+                </span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-5 h-5 text-gold-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
                 {new Date(blog.date).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -126,8 +148,18 @@ const BlogDetail = () => {
               </div>
               {blog.read_time && (
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-5 h-5 text-gold-accent"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   {blog.read_time} min read
                 </div>
@@ -156,12 +188,12 @@ const BlogDetail = () => {
             )}
 
             {/* Content */}
-            <div 
+            <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: blog.content }}
               style={{
-                color: '#4A5568',
-                lineHeight: '1.8',
+                color: "#4A5568",
+                lineHeight: "1.8",
               }}
             />
 
@@ -169,15 +201,22 @@ const BlogDetail = () => {
             <div className="mt-12 pt-8 border-t border-border-line">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-paragraph-text">
-                  <svg className="w-5 h-5 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  <svg
+                    className="w-5 h-5 text-gold-accent"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                    />
                   </svg>
                   <span className="font-semibold">Share this article</span>
                 </div>
-                <button
-                  onClick={() => navigate("/blogs")}
-                  className="btn-gold"
-                >
+                <button onClick={() => navigate("/blogs")} className="btn-gold">
                   View More Blogs
                 </button>
               </div>

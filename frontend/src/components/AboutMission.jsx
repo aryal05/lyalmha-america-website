@@ -52,7 +52,7 @@ const AboutMission = () => {
               Our focus is on the younger generation, as they are the future
               bearers of our legacy and identity. We strive to educate and raise
               awareness among our children about our culture, language, and
-              festivals. Lyaymha America has consistently demonstrated its
+              festivals. Lyaymha America Guthi has consistently demonstrated its
               concern for and commitment to preserving our identity through
               various programs.
             </motion.p>

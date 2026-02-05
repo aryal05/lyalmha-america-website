@@ -47,7 +47,7 @@ const AboutHero = () => {
               ? getImageUrl(activeBanner.image)
               : fallbackBanner
           }
-          alt="About Lyalmha America"
+          alt="About Lyaymha America Guthi"
           className="w-full h-full object-cover"
         />
         {/* Dark Overlay */}
