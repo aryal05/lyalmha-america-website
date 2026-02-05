@@ -1,15 +1,3 @@
-// // GET single event by ID (public)
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id]);
-//     if (!event) {
-//       return res.status(404).json({ success: false, error: 'Event not found' });
-//     }
-//     res.json({ success: true, data: event });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// });
 import express from 'express'
 import { QueryHelper } from '../utils/queryHelper.js'
 import { isPostgresDB } from '../database.js'
@@ -71,6 +59,26 @@ router.get('/past', async (req, res) => {
       ['past']
     );
     res.json({ success: true, data: events });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET single event by ID (public)
+router.get('/:id', async (req, res) => {
+  try {
+    const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id]);
+    if (!event) {
+      return res.status(404).json({ success: false, error: 'Event not found' });
+    }
+    
+    // Also fetch event images
+    const images = await QueryHelper.all(
+      'SELECT * FROM event_images WHERE event_id = ? ORDER BY is_thumbnail DESC, created_at ASC',
+      [req.params.id]
+    );
+    
+    res.json({ success: true, data: { ...event, images } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

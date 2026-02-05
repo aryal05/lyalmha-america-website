@@ -1,8 +1,8 @@
-
 import axios from 'axios'
 
-// API Configuration
-export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-f7yk.vercel.app'
+// API Configuration - defaults to production URL, override with VITE_API_URL env var
+export const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-awzr.vercel.app'
+
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -56,6 +56,7 @@ export const API_ENDPOINTS = {
   },
   EVENTS: {
     GET_ALL: '/api/admin/events',
+    GET_BY_ID: (id) => `/api/admin/events/${id}`,
     GET_UPCOMING: '/api/admin/events/upcoming',
     GET_PAST: '/api/admin/events/past',
     CREATE: '/api/admin/events',

@@ -16,26 +16,31 @@ const GalleryEventDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchEventImages();
+    fetchEventDetails();
   }, [id]);
 
-  const fetchEventImages = async () => {
+  const fetchEventDetails = async () => {
     try {
-      // Fetch event details
-      const eventRes = await fetch(`${API_URL}/api/admin/events`);
-      const eventData = await eventRes.json();
-      const currentEvent = eventData.data.find(e => e.id === parseInt(id));
-      setEvent(currentEvent);
-
-      // Fetch OTHER images for this event (not thumbnail)
-      const res = await fetch(`${API_URL}/api/admin/event-images/${id}`);
+      // Fetch event details with images in a single request
+      const res = await fetch(`${API_URL}/api/admin/events/${id}`);
       const data = await res.json();
-      const eventImages = data.data || [];
-      
-      // Only set the OTHER images (from event_images table), NOT the thumbnail
-      setImages(eventImages.map(img => img.image_url));
+
+      if (data.success && data.data) {
+        setEvent(data.data);
+        // Extract images from the response (excluding thumbnail)
+        const eventImages = data.data.images || [];
+        setImages(
+          eventImages
+            .filter((img) => !img.is_thumbnail)
+            .map((img) => img.image_url),
+        );
+      } else {
+        setEvent(null);
+        setImages([]);
+      }
     } catch (err) {
-      console.error("Error fetching images:", err);
+      console.error("Error fetching event details:", err);
+      setEvent(null);
       setImages([]);
     } finally {
       setLoading(false);

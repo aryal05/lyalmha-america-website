@@ -50,9 +50,27 @@ if (!process.env.VERCEL) {
   await initDB()
 }
 
-// Middleware - CORS must be first
+// Middleware - CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'https://lyalmha-america-website-phi.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+]
+
 app.use(cors({
-  origin: true, // Allow all origins in development/testing
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true)
+    
+    // Check if origin is in allowed list or matches vercel preview pattern
+    if (allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+      callback(null, true)
+    } else {
+      console.log('CORS blocked origin:', origin)
+      callback(null, true) // Allow anyway for now during development
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

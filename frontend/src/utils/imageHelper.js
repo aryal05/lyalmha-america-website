@@ -7,11 +7,9 @@ export const getImageUrl = (imagePath) => {
     return imagePath;
   }
   
-  // If it's a local path starting with /uploads/, it's likely a legacy path
-  // These files may not exist on Railway (ephemeral storage)
-  // Try to load from Railway backend, but will show placeholder if not found
-  const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-production.up.railway.app';
+  // If it's a local path starting with /uploads/, use the backend URL
+  const API_URL = import.meta.env.VITE_API_URL || 'https://lyalmha-america-website-awzr.vercel.app';
   
-  // Return the Railway URL (will 404 if file doesn't exist)
+  // Return the backend URL for local uploads
   return `${API_URL}${imagePath}`;
 };

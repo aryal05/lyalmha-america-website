@@ -426,6 +426,7 @@ const EventsSidebar = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.03 }}
+                  onClick={() => navigate(`/gallery/event/${event.id}`)}
                   className="group cursor-pointer relative"
                 >
                   <div className="relative h-40 rounded-lg overflow-hidden mb-3 border-2 border-gold-accent/20 group-hover:border-gold-accent transition-all">
@@ -604,7 +605,9 @@ const EventsSidebar = () => {
                       type="text"
                       placeholder="Your Name"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
@@ -612,7 +615,9 @@ const EventsSidebar = () => {
                       type="email"
                       placeholder="Email Address"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
@@ -620,13 +625,17 @@ const EventsSidebar = () => {
                       type="tel"
                       placeholder="Phone Number"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-500 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     />
                     <select
                       value={formData.attendees}
-                      onChange={(e) => setFormData({...formData, attendees: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, attendees: e.target.value })
+                      }
                       required
                       className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-900 focus:border-royal-blue focus:ring-2 focus:ring-royal-blue/20 focus:outline-none transition-all"
                     >
@@ -644,14 +653,14 @@ const EventsSidebar = () => {
                       whileTap={{ scale: 0.98 }}
                       className="w-full py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white font-bold rounded-lg hover:shadow-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {submitting ? 'Submitting...' : 'Confirm RSVP'}
+                      {submitting ? "Submitting..." : "Confirm RSVP"}
                     </motion.button>
                   </form>
                 </div>
               </motion.div>
             </motion.div>
           </AnimatePresence>,
-          document.body
+          document.body,
         )}
     </div>
   );
