@@ -4,10 +4,10 @@ import { QueryHelper } from '../utils/queryHelper.js'
 import { generateToken, authenticateToken } from '../middleware/auth.js'
 
 
-// Starting express router
+
 const router = express.Router()
 
-// Login
+// Login changed
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body
