@@ -10,8 +10,13 @@ export class QueryHelper {
     if (isPostgresDB()) {
       // Convert SQLite ? placeholders to PostgreSQL $1, $2, etc.
       const pgSql = this.convertSqlToPostgres(sql)
-      const result = await db.query(pgSql, params)
-      return result.rows
+      const client = await db.connect()
+      try {
+        const result = await client.query(pgSql, params)
+        return result.rows
+      } finally {
+        client.release()
+      }
     } else {
       return await db.all(sql, params)
     }
@@ -22,8 +27,13 @@ export class QueryHelper {
     
     if (isPostgresDB()) {
       const pgSql = this.convertSqlToPostgres(sql)
-      const result = await db.query(pgSql, params)
-      return result.rows[0]
+      const client = await db.connect()
+      try {
+        const result = await client.query(pgSql, params)
+        return result.rows[0]
+      } finally {
+        client.release()
+      }
     } else {
       return await db.get(sql, params)
     }
@@ -40,12 +50,17 @@ export class QueryHelper {
         pgSql += ' RETURNING id'
       }
       
-      const result = await db.query(pgSql, params)
-      
-      // Return format compatible with SQLite
-      return {
-        lastID: result.rows && result.rows.length > 0 ? result.rows[0].id : null,
-        changes: result.rowCount
+      const client = await db.connect()
+      try {
+        const result = await client.query(pgSql, params)
+        
+        // Return format compatible with SQLite
+        return {
+          lastID: result.rows && result.rows.length > 0 ? result.rows[0].id : null,
+          changes: result.rowCount
+        }
+      } finally {
+        client.release()
       }
     } else {
       return await db.run(sql, params)

@@ -52,6 +52,10 @@ export function getDatabase() {
   return db;
 }
 
+export function isPostgresDB() {
+  return true; // Always using PostgreSQL
+}
+
 // Helper function to execute queries
 export async function query(text, params) {
   const client = await db.connect();
@@ -63,4 +67,4 @@ export async function query(text, params) {
   }
 }
 
-export default { initializeDatabase, getDatabase, query };
+export default { initializeDatabase, getDatabase, isPostgresDB, query };
