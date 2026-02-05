@@ -1,6 +1,10 @@
 import pkg from 'pg';
+import dns from 'dns';
 
 const { Pool } = pkg;
+
+// Force IPv4 lookups
+dns.setDefaultResultOrder('ipv4first');
 
 let db = null;
 
@@ -18,19 +22,47 @@ export async function initializeDatabase() {
   }
 
   console.log('🔗 Connecting to PostgreSQL...');
-  console.log('Database URL:', process.env.DATABASE_URL.substring(0, 30) + '...');
+  
+  // Clean up the DATABASE_URL (remove any trailing whitespace/newlines)
+  const connectionUrl = process.env.DATABASE_URL.trim();
+  
+  // Parse to extract connection parameters
+  let poolConfig;
+  try {
+    const url = new URL(connectionUrl);
+    console.log('Database Host:', url.hostname);
+    console.log('Database Port:', url.port || '5432');
+    
+    // Use individual parameters for better compatibility with serverless
+    poolConfig = {
+      host: url.hostname,
+      port: parseInt(url.port) || 5432,
+      user: url.username,
+      password: decodeURIComponent(url.password),
+      database: url.pathname.slice(1), // Remove leading /
+      ssl: {
+        rejectUnauthorized: false
+      },
+      // Connection pool settings for serverless
+      max: 5, // Reduced for serverless
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    };
+  } catch (e) {
+    console.log('Error parsing DATABASE_URL, falling back to connection string');
+    poolConfig = {
+      connectionString: connectionUrl,
+      ssl: {
+        rejectUnauthorized: false
+      },
+      max: 5,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    };
+  }
 
   // Connect to Supabase PostgreSQL
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    },
-    // Connection pool settings for serverless
-    max: 10, // Maximum number of clients
-    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 10000, // Return an error if connection takes longer than 10 seconds
-  });
+  const pool = new Pool(poolConfig);
   
   db = pool;
   
