@@ -43,13 +43,14 @@ app.use(cors({
   origin: [
     'https://lyalmha-america-website.vercel.app',
     'https://lyalmha-america-website-g888.vercel.app',
+    'https://lyalmha-america-website-theta.vercel.app',
+    'https://lyalmha-america-website-wzb9.vercel.app',
     'https://lyaymhaamerica.org',
     'http://localhost:5173',
     'http://localhost:5000',
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://lyalmha-america-website-theta.vercel.app',
-    'https://vercel.com/rajataryals-projects/'
+    /\.vercel\.app$/ // Allow all Vercel preview deployments
   ],
   credentials: true
 }))
