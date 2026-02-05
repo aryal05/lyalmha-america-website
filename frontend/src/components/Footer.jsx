@@ -31,11 +31,11 @@ const Footer = () => {
               <div className="flex items-center space-x-4 mb-6">
                 <div className="relative">
                   <div className="absolute inset-0 bg-white rounded-full blur-md"></div>
-                  <div className="relative bg-white rounded-full p-3 overflow-hidden">
+                  <div className="relative bg-white rounded-full p-2">
                     <img
                       src={logo}
                       alt="Lyalmha America"
-                      className="h-20 w-20 object-cover rounded-full scale-150"
+                      className="h-20 w-20 object-contain"
                     />
                   </div>
                 </div>
@@ -109,7 +109,10 @@ const Footer = () => {
                 {[
                   { name: "Home", path: "/" },
                   { name: "Blogs", path: "/blogs" },
-                  { name: "Culture & Tradition", path: "/culture-and-tradition" },
+                  {
+                    name: "Culture & Tradition",
+                    path: "/culture-and-tradition",
+                  },
                   { name: "About Us", path: "/about" },
                   { name: "Contact", path: "/contact" },
                 ].map((item, index) => (
@@ -143,7 +146,10 @@ const Footer = () => {
                   { name: "Kids Activities", path: "/kids-activities" },
                   { name: "News", path: "/news" },
                   { name: "Gallery", path: "/gallery" },
-                  { name: "Culture & Tradition", path: "/culture-and-tradition" },
+                  {
+                    name: "Culture & Tradition",
+                    path: "/culture-and-tradition",
+                  },
                   { name: "Contact", path: "/contact" },
                 ].map((item, index) => (
                   <li key={index}>
