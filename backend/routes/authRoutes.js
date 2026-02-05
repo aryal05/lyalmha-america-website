@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import { QueryHelper } from '../utils/queryHelper.js'
 import { generateToken, authenticateToken } from '../middleware/auth.js'
 
+
+// Starting express router
 const router = express.Router()
 
 // Login
@@ -47,6 +49,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Server error during login' })
   }
 })
+
 
 // Verify token and get current user
 router.get('/me', authenticateToken, async (req, res) => {
