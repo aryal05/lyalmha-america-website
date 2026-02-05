@@ -55,6 +55,10 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   'https://frontend-green-mu-41.vercel.app',
   'https://lyalmha-america-website-phi.vercel.app',
+  'https://lyaymhaamerica.org',
+  'https://www.lyaymhaamerica.org',
+  'http://lyaymhaamerica.org',
+  'http://www.lyaymhaamerica.org',
   'http://localhost:3000',
   'http://localhost:5173',
 ]
