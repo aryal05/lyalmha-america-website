@@ -38,6 +38,10 @@ router.use(authenticateToken)
 // Create news
 router.post('/', upload.single('image'), async (req, res) => {
   try {
+    console.log('📰 Creating news...')
+    console.log('📦 Request body:', req.body)
+    console.log('📸 Has file:', !!req.file)
+    
     const { title, excerpt, content, category, author, published_date, active, order_index } = req.body
     
     if (!title || !excerpt || !content) {
@@ -47,13 +51,29 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     
-    // Upload to Cloudinary if image uploaded
+    // Check if Cloudinary is configured
+    const cloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
+                                  process.env.CLOUDINARY_API_KEY && 
+                                  process.env.CLOUDINARY_API_SECRET
+
+    // Upload to Cloudinary if image uploaded and configured
     let image = null
-    if (req.file) {
-      image = await uploadToCloudinary(req.file.buffer, 'news')
+    if (req.file && cloudinaryConfigured) {
+      try {
+        image = await uploadToCloudinary(req.file.buffer, 'news')
+        console.log('☁️ Image uploaded:', image)
+      } catch (uploadError) {
+        console.error('Error uploading image:', uploadError)
+        // Continue without image if upload fails
+      }
+    } else if (req.file && !cloudinaryConfigured) {
+      console.warn('Cloudinary not configured, skipping image upload')
     }
     
     const date = published_date || new Date().toISOString().split('T')[0]
+
+    console.log('Inserting news into database...')
+    console.log('Values:', { title, excerpt, content: content.substring(0, 50) + '...', image, author, category, date, active, order_index })
 
     const result = await QueryHelper.run(
       `INSERT INTO news (title, excerpt, content, image, author, category, published_date, active, order_index) 
@@ -66,16 +86,20 @@ router.post('/', upload.single('image'), async (req, res) => {
         author || 'Admin',
         category || 'announcement',
         date,
-        active !== undefined ? active : 1,
-        order_index || 0
+        active !== undefined ? parseInt(active) : 1,
+        order_index ? parseInt(order_index) : 0
       ]
     )
 
+    console.log('Insert result:', result)
     const newNews = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [result.lastID])
+    console.log('New news created:', newNews?.id)
+    
     res.status(201).json({ success: true, data: newNews })
   } catch (error) {
     console.error('Error creating news:', error)
-    res.status(500).json({ success: false, error: error.message })
+    console.error('Error stack:', error.stack)
+    res.status(500).json({ success: false, error: error.message, details: error.stack })
   }
 })
 

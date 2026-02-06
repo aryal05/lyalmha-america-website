@@ -71,7 +71,12 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
     let imageUrl = null
     let iconImageUrl = null
 
-    if (req.files?.image) {
+    // Check if Cloudinary is configured
+    const cloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
+                                  process.env.CLOUDINARY_API_KEY && 
+                                  process.env.CLOUDINARY_API_SECRET
+
+    if (req.files?.image && cloudinaryConfigured) {
       try {
         await new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
@@ -86,10 +91,13 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
         console.log('Main image uploaded:', imageUrl)
       } catch (uploadError) {
         console.error('Error uploading main image:', uploadError)
+        // Continue without image if upload fails
       }
+    } else if (req.files?.image && !cloudinaryConfigured) {
+      console.warn('Cloudinary not configured, skipping image upload')
     }
 
-    if (req.files?.iconImage) {
+    if (req.files?.iconImage && cloudinaryConfigured) {
       try {
         await new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
@@ -107,10 +115,12 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
       }
     }
 
-    // Use icon_image if uploaded, otherwise use icon text
+    // Use iconImage if uploaded, otherwise use icon text
     const finalIcon = iconImageUrl || icon || ''
     
     console.log('Inserting activity into database...')
+    console.log('Values:', { title, description, category: category || 'kids', imageUrl, finalIcon, orderIndex: parseInt(orderIndex) || 0, active: parseInt(active) || 1 })
+    
     const result = await QueryHelper.run(
       `INSERT INTO activities (title, description, category, image, icon, order_index, active) 
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -124,7 +134,8 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
     res.status(201).json({ success: true, data: newActivity })
   } catch (error) {
     console.error('Error creating activity:', error)
-    res.status(500).json({ success: false, error: error.message })
+    console.error('Error stack:', error.stack)
+    res.status(500).json({ success: false, error: error.message, details: error.stack })
   }
 })
 
