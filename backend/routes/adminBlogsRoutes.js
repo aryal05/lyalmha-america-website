@@ -54,9 +54,14 @@ router.use(authenticateToken)
 // POST create new blog
 router.post('/', upload.single('banner'), async (req, res) => {
   try {
+    console.log('Creating new blog...')
+    console.log('Request body:', req.body)
+    console.log('Has file:', !!req.file)
+    
     const { title, excerpt, content, category, author, status } = req.body
     
     if (!title || !excerpt || !content) {
+      console.log('Validation failed - missing required fields')
       return res.status(400).json({ 
         success: false, 
         error: 'Title, excerpt, and content are required' 
@@ -66,11 +71,21 @@ router.post('/', upload.single('banner'), async (req, res) => {
     // Upload to Cloudinary if image provided
     let banner = null
     if (req.file) {
-      banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+      try {
+        console.log('Uploading image to Cloudinary...')
+        banner = await uploadToCloudinary(req.file.buffer, 'blogs')
+        console.log('Image uploaded:', banner)
+      } catch (uploadError) {
+        console.error('Cloudinary upload failed:', uploadError)
+        return res.status(500).json({ success: false, error: 'Image upload failed: ' + uploadError.message })
+      }
     }
     
-    const readTime = Math.ceil(content.split(' ').length / 200)
+    const readTime = Math.ceil(content.split(' ').length / 200) || 5
     const date = new Date().toISOString().split('T')[0]
+    const finalStatus = status || 'published'
+    
+    console.log('Inserting blog with status:', finalStatus)
     
     const result = await QueryHelper.run(`
       INSERT INTO blogs (title, excerpt, content, banner, category, author, date, read_time, status)
@@ -84,13 +99,17 @@ router.post('/', upload.single('banner'), async (req, res) => {
       author || 'Admin',
       date,
       readTime,
-      status || 'published'
+      finalStatus
     ])
+    
+    console.log('Insert result:', result)
     
     const newBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [result.lastID])
     
+    console.log('New blog created:', newBlog?.id)
     res.status(201).json({ success: true, data: newBlog })
   } catch (error) {
+    console.error('Error creating blog:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
