@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
+import SuccessPopup from "./SuccessPopup";
 import event1 from "../assets/images/posts/471944315_555366943987150_1453996420800501859_n.jpg";
 import event2 from "../assets/images/posts/467736461_487936857446592_6777699176984050234_n (1).jpg";
 import event3 from "../assets/images/posts/462650425_598936739649734_2260957587124948845_n.jpg";
@@ -15,12 +16,18 @@ const EventsSidebar = () => {
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showRSVPModal, setShowRSVPModal] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupConfig, setPopupConfig] = useState({
+    title: "",
+    message: "",
+    type: "success",
+  });
   const [countdowns, setCountdowns] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    attendees: ''
+    name: "",
+    email: "",
+    phone: "",
+    attendees: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -60,7 +67,7 @@ const EventsSidebar = () => {
     try {
       // Fetch upcoming events
       const upcomingResponse = await apiClient.get(
-        API_ENDPOINTS.EVENTS.GET_UPCOMING
+        API_ENDPOINTS.EVENTS.GET_UPCOMING,
       );
       setUpcomingEvents(upcomingResponse.data.data || []);
 
@@ -112,10 +119,10 @@ const EventsSidebar = () => {
 
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
+        url,
       )}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        text
+        text,
       )}&url=${encodeURIComponent(url)}`,
       whatsapp: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`,
     };
@@ -125,26 +132,39 @@ const EventsSidebar = () => {
 
   const handleRSVP = (event) => {
     setSelectedEvent(event);
-    setFormData({ name: '', email: '', phone: '', attendees: '' });
+    setFormData({ name: "", email: "", phone: "", attendees: "" });
     setShowRSVPModal(true);
   };
 
   const handleSubmitRSVP = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    
+
     try {
       await apiClient.post(API_ENDPOINTS.RSVP.SUBMIT, {
         event_id: selectedEvent.id,
-        ...formData
+        ...formData,
       });
-      
-      alert('RSVP submitted successfully! We look forward to seeing you.');
+
       setShowRSVPModal(false);
-      setFormData({ name: '', email: '', phone: '', attendees: '' });
+      setFormData({ name: "", email: "", phone: "", attendees: "" });
+      setPopupConfig({
+        title: "RSVP Confirmed!",
+        message: `Thank you for your RSVP to "${selectedEvent.title}". We look forward to seeing you!`,
+        type: "success",
+      });
+      setShowPopup(true);
     } catch (error) {
-      console.error('Error submitting RSVP:', error);
-      alert('Failed to submit RSVP. Please try again.');
+      console.error("Error submitting RSVP:", error);
+      setShowRSVPModal(false);
+      setPopupConfig({
+        title: "RSVP Failed",
+        message:
+          error.response?.data?.message ||
+          "Failed to submit RSVP. Please try again.",
+        type: "error",
+      });
+      setShowPopup(true);
     } finally {
       setSubmitting(false);
     }
@@ -662,6 +682,15 @@ const EventsSidebar = () => {
           </AnimatePresence>,
           document.body,
         )}
+
+      {/* Success/Error Popup */}
+      <SuccessPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        type={popupConfig.type}
+      />
     </div>
   );
 };

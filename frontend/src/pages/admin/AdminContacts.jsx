@@ -77,11 +77,21 @@ const AdminContacts = () => {
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate('/admin/dashboard')}
+          onClick={() => navigate("/admin/dashboard")}
           className="flex items-center gap-2 text-royal-blue hover:text-gold-accent mb-6 transition-colors font-semibold group"
         >
-          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Back to Dashboard
         </motion.button>
@@ -169,8 +179,12 @@ const AdminContacts = () => {
               />
             </svg>
           </div>
-          <p className="text-gray-600 text-lg font-medium">No messages to display</p>
-          <p className="text-gray-400 text-sm mt-2">Contact messages will appear here</p>
+          <p className="text-gray-600 text-lg font-medium">
+            No messages to display
+          </p>
+          <p className="text-gray-400 text-sm mt-2">
+            Contact messages will appear here
+          </p>
         </motion.div>
       ) : (
         <div className="grid lg:grid-cols-2 gap-6">
@@ -185,8 +199,8 @@ const AdminContacts = () => {
                   selectedMessage?.id === message.id
                     ? "border-royal-blue bg-gradient-to-r from-blue-50 to-gold-accent/5"
                     : message.status === "unread"
-                    ? "border-newari-red/40 bg-gradient-to-r from-red-50 to-newari-red/5"
-                    : "border-gray-200 bg-white hover:border-gray-300"
+                      ? "border-newari-red/40 bg-gradient-to-r from-red-50 to-newari-red/5"
+                      : "border-gray-200 bg-white hover:border-gray-300"
                 }`}
                 onClick={() => {
                   setSelectedMessage(message);
@@ -212,9 +226,33 @@ const AdminContacts = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">
-                    {new Date(message.created_at).toLocaleDateString()}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500 font-medium">
+                      {new Date(message.created_at).toLocaleDateString()}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteMessage(message.id);
+                      }}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-200"
+                      title="Delete message"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <p className="font-semibold text-royal-blue text-sm mb-1">
                   {message.subject}

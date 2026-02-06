@@ -58,47 +58,69 @@ router.get('/:id', async (req, res) => {
 // Create new activity (Admin only)
 router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'iconImage' }]), async (req, res) => {
   try {
+    console.log('Creating new activity...')
+    console.log('Request body:', req.body)
+    console.log('Has files:', !!req.files)
+    
     const { title, description, category, icon, orderIndex, active } = req.body
+    
+    if (!title || !description) {
+      return res.status(400).json({ success: false, error: 'Title and description are required' })
+    }
+    
     let imageUrl = null
     let iconImageUrl = null
 
     if (req.files?.image) {
-      const result = await cloudinary.uploader.upload_stream(
-        { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
-        (error, result) => result
-      )
-      await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
-          (error, result) => {
-            if (error) reject(error)
-            else { imageUrl = result.secure_url; resolve() }
-          }
-        )
-        stream.end(req.files.image[0].buffer)
-      })
+      try {
+        await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
+            (error, result) => {
+              if (error) reject(error)
+              else { imageUrl = result.secure_url; resolve() }
+            }
+          )
+          stream.end(req.files.image[0].buffer)
+        })
+        console.log('Main image uploaded:', imageUrl)
+      } catch (uploadError) {
+        console.error('Error uploading main image:', uploadError)
+      }
     }
 
     if (req.files?.iconImage) {
-      await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
-          (error, result) => {
-            if (error) reject(error)
-            else { iconImageUrl = result.secure_url; resolve() }
-          }
-        )
-        stream.end(req.files.iconImage[0].buffer)
-      })
+      try {
+        await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
+            (error, result) => {
+              if (error) reject(error)
+              else { iconImageUrl = result.secure_url; resolve() }
+            }
+          )
+          stream.end(req.files.iconImage[0].buffer)
+        })
+        console.log('Icon image uploaded:', iconImageUrl)
+      } catch (uploadError) {
+        console.error('Error uploading icon image:', uploadError)
+      }
     }
 
+    // Use icon_image if uploaded, otherwise use icon text
+    const finalIcon = iconImageUrl || icon || ''
+    
+    console.log('Inserting activity into database...')
     const result = await QueryHelper.run(
-      `INSERT INTO activities (title, description, category, image, icon, icon_image, order_index, active) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1]
+      `INSERT INTO activities (title, description, category, image, icon, order_index, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, category || 'kids', imageUrl, finalIcon, parseInt(orderIndex) || 0, parseInt(active) || 1]
     )
 
+    console.log('Insert result:', result)
     const newActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [result.lastID])
+    console.log('New activity created:', newActivity?.id)
+    
     res.status(201).json({ success: true, data: newActivity })
   } catch (error) {
     console.error('Error creating activity:', error)
@@ -109,6 +131,7 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
 // Update activity (Admin only)
 router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'iconImage' }]), async (req, res) => {
   try {
+    console.log('Updating activity:', req.params.id)
     const { title, description, category, icon, orderIndex, active } = req.body
     const existingActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
     if (!existingActivity) {
@@ -116,39 +139,51 @@ router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 
     }
 
     let imageUrl = existingActivity.image
-    let iconImageUrl = existingActivity.icon_image
+    let iconUrl = existingActivity.icon
 
     if (req.files?.image) {
-      await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
-          (error, result) => {
-            if (error) reject(error)
-            else { imageUrl = result.secure_url; resolve() }
-          }
-        )
-        stream.end(req.files.image[0].buffer)
-      })
+      try {
+        await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'lyalmha-activities', transformation: [{ width: 800, height: 600, crop: 'limit' }] },
+            (error, result) => {
+              if (error) reject(error)
+              else { imageUrl = result.secure_url; resolve() }
+            }
+          )
+          stream.end(req.files.image[0].buffer)
+        })
+        console.log('Updated main image:', imageUrl)
+      } catch (uploadError) {
+        console.error('Error uploading main image:', uploadError)
+      }
     }
 
     if (req.files?.iconImage) {
-      await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
-          (error, result) => {
-            if (error) reject(error)
-            else { iconImageUrl = result.secure_url; resolve() }
-          }
-        )
-        stream.end(req.files.iconImage[0].buffer)
-      })
+      try {
+        await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
+            (error, result) => {
+              if (error) reject(error)
+              else { iconUrl = result.secure_url; resolve() }
+            }
+          )
+          stream.end(req.files.iconImage[0].buffer)
+        })
+        console.log('Updated icon image:', iconUrl)
+      } catch (uploadError) {
+        console.error('Error uploading icon image:', uploadError)
+      }
+    } else if (icon) {
+      iconUrl = icon
     }
 
     await QueryHelper.run(
       `UPDATE activities 
-       SET title = ?, description = ?, category = ?, image = ?, icon = ?, icon_image = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
+       SET title = ?, description = ?, category = ?, image = ?, icon = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, orderIndex || 0, active || 1, req.params.id]
+      [title || existingActivity.title, description || existingActivity.description, category || existingActivity.category, imageUrl, iconUrl, parseInt(orderIndex) || existingActivity.order_index, parseInt(active) ?? existingActivity.active, req.params.id]
     )
 
     const updatedActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])

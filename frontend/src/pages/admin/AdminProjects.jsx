@@ -94,25 +94,37 @@ const AdminProjects = () => {
       <div className="p-6">
         <div className="mb-8">
           <motion.button
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => navigate("/admin/dashboard")}
             className="flex items-center gap-2 text-royal-blue hover:text-gold-accent mb-6 font-semibold"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Dashboard
           </motion.button>
 
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-royal-blue to-gold-accent bg-clip-text text-transparent">Manage Projects</h1>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-royal-blue to-gold-accent bg-clip-text text-transparent">
+                Manage Projects
+              </h1>
               <p className="text-gray-600 mt-1">Create and manage projects</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
               className="px-6 py-3 bg-gradient-to-r from-royal-blue to-gold-accent text-white font-semibold rounded-lg"
             >
-              {showForm ? 'Cancel' : '+ Add Project'}
+              {showForm ? "Cancel" : "+ Add Project"}
             </button>
           </div>
           <div className="h-1 w-32 bg-gradient-to-r from-gold-accent to-newari-red rounded-full mt-4"></div>
@@ -122,64 +134,167 @@ const AdminProjects = () => {
           {showForm && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="mb-8 bg-white rounded-xl border-2 p-6"
             >
               <h2 className="text-xl font-bold text-royal-blue mb-4">
-                {editingProject ? 'Edit Project' : 'Add New Project'}
+                {editingProject ? "Edit Project" : "Add New Project"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <input type="text" required placeholder="Title" value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
-                  <input type="text" placeholder="Location" value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="Title"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    value={formData.location}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
+                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                  />
                 </div>
-                <textarea required rows="3" placeholder="Short Description" value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
-                <textarea rows="6" placeholder="Full Description (HTML)" value={formData.full_description}
-                  onChange={(e) => setFormData({ ...formData, full_description: e.target.value })}
-                  className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
+                <textarea
+                  required
+                  rows="3"
+                  placeholder="Short Description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                />
+                <textarea
+                  rows="6"
+                  placeholder="Full Description (HTML)"
+                  value={formData.full_description}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      full_description: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                />
                 <div className="grid grid-cols-3 gap-4">
-                  <input type="text" placeholder="Start Date" value={formData.start_date}
-                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
-                  <input type="text" placeholder="End Date" value={formData.end_date}
-                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
-                  <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none">
-                    <option value="active">Active</option>
-                    <option value="completed">Completed</option>
-                  </select>
+                  <div>
+                    <label className="block text-sm font-medium text-royal-blue mb-1">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.start_date}
+                      onChange={(e) =>
+                        setFormData({ ...formData, start_date: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-royal-blue mb-1">
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.end_date}
+                      onChange={(e) =>
+                        setFormData({ ...formData, end_date: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-royal-blue mb-1">
+                      Status
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                    >
+                      <option value="active">Active</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
-                  <input type="number" placeholder="Order" value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none" />
-                  <select value={formData.featured} onChange={(e) => setFormData({ ...formData, featured: parseInt(e.target.value) })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none">
+                  <input
+                    type="number"
+                    placeholder="Order"
+                    value={formData.order_index}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        order_index: parseInt(e.target.value),
+                      })
+                    }
+                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                  />
+                  <select
+                    value={formData.featured}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        featured: parseInt(e.target.value),
+                      })
+                    }
+                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                  >
                     <option value={0}>Not Featured</option>
                     <option value={1}>Featured</option>
                   </select>
-                  <select value={formData.active} onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
-                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none">
+                  <select
+                    value={formData.active}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        active: parseInt(e.target.value),
+                      })
+                    }
+                    className="px-4 py-2 border-2 rounded-lg focus:border-royal-blue focus:outline-none"
+                  >
                     <option value={1}>Active</option>
                     <option value={0}>Inactive</option>
                   </select>
                 </div>
-                <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])}
-                  className="w-full px-4 py-2 border-2 rounded-lg" />
-                {editingProject?.image && <img src={getImageUrl(editingProject.image)} alt="Current" className="h-20 rounded" />}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  className="w-full px-4 py-2 border-2 rounded-lg"
+                />
+                {editingProject?.image && (
+                  <img
+                    src={getImageUrl(editingProject.image)}
+                    alt="Current"
+                    className="h-20 rounded"
+                  />
+                )}
                 <div className="flex gap-4">
-                  <button type="submit" className="px-6 py-3 bg-gradient-to-r from-royal-blue to-gold-accent text-white font-semibold rounded-lg">
-                    {editingProject ? 'Update' : 'Create'}
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-gradient-to-r from-royal-blue to-gold-accent text-white font-semibold rounded-lg"
+                  >
+                    {editingProject ? "Update" : "Create"}
                   </button>
-                  <button type="button" onClick={resetForm} className="px-6 py-3 border-2 rounded-lg">Cancel</button>
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-6 py-3 border-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </form>
             </motion.div>
@@ -197,27 +312,46 @@ const AdminProjects = () => {
         ) : (
           <div className="space-y-4">
             {projects.map((project) => (
-              <div key={project.id} className="bg-white border-2 rounded-xl overflow-hidden hover:border-gold-accent transition-all">
-                <div onClick={() => setExpandedId(expandedId === project.id ? null : project.id)}
-                  className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-50">
+              <div
+                key={project.id}
+                className="bg-white border-2 rounded-xl overflow-hidden hover:border-gold-accent transition-all"
+              >
+                <div
+                  onClick={() =>
+                    setExpandedId(expandedId === project.id ? null : project.id)
+                  }
+                  className="p-5 cursor-pointer flex items-center justify-between hover:bg-gray-50"
+                >
                   <div className="flex-1 grid grid-cols-4 gap-6">
                     <div className="flex items-center gap-3">
-                      {project.image && <img src={getImageUrl(project.image)} alt={project.title} className="w-16 h-16 rounded-lg object-cover" />}
+                      {project.image && (
+                        <img
+                          src={getImageUrl(project.image)}
+                          alt={project.title}
+                          className="w-16 h-16 rounded-lg object-cover"
+                        />
+                      )}
                       <div>
                         <p className="text-xs text-gray-500">Title</p>
-                        <p className="font-bold text-royal-blue">{project.title}</p>
+                        <p className="font-bold text-royal-blue">
+                          {project.title}
+                        </p>
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Status</p>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${project.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {project.active ? 'Active' : 'Inactive'}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${project.active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                      >
+                        {project.active ? "Active" : "Inactive"}
                       </span>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Featured</p>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${project.featured ? 'bg-gold-accent text-charcoal-black' : 'bg-gray-100'}`}>
-                        {project.featured ? '⭐ Yes' : 'No'}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${project.featured ? "bg-gold-accent text-charcoal-black" : "bg-gray-100"}`}
+                      >
+                        {project.featured ? "⭐ Yes" : "No"}
                       </span>
                     </div>
                     <div>
@@ -226,29 +360,77 @@ const AdminProjects = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 ml-6">
-                    <button onClick={(e) => { e.stopPropagation(); handleEdit(project); }}
-                      className="p-2.5 text-blue-600 hover:bg-blue-50 rounded-lg">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(project);
+                      }}
+                      className="p-2.5 text-blue-600 hover:bg-blue-50 rounded-lg"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); handleDelete(project.id); }}
-                      className="p-2.5 text-red-600 hover:bg-red-50 rounded-lg">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(project.id);
+                      }}
+                      className="p-2.5 text-red-600 hover:bg-red-50 rounded-lg"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
-                    <svg className="w-6 h-6 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <svg
+                      className="w-6 h-6 text-gold-accent"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </div>
                 </div>
                 <AnimatePresence>
                   {expandedId === project.id && (
-                    <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }}
-                      className="border-t-2 bg-gray-50 p-6">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      className="border-t-2 bg-gray-50 p-6"
+                    >
                       <p className="text-gray-800">{project.description}</p>
-                      {project.location && <p className="mt-2"><strong>Location:</strong> {project.location}</p>}
+                      {project.location && (
+                        <p className="mt-2">
+                          <strong>Location:</strong> {project.location}
+                        </p>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>

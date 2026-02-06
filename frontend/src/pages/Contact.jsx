@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
+import SuccessPopup from "../components/SuccessPopup";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
@@ -17,12 +18,18 @@ const Contact = () => {
     subject: "",
     message: "",
   });
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupConfig, setPopupConfig] = useState({
+    title: "",
+    message: "",
+    type: "success",
+  });
 
   useEffect(() => {
     const fetchBanner = async () => {
       try {
         const response = await apiClient.get(
-          API_ENDPOINTS.BANNERS.GET_BY_LOCATION("contact")
+          API_ENDPOINTS.BANNERS.GET_BY_LOCATION("contact"),
         );
         console.log("Contact banner response:", response.data.data);
         const bannersData = response.data.data || [];
@@ -51,19 +58,29 @@ const Contact = () => {
     try {
       const response = await apiClient.post(
         API_ENDPOINTS.CONTACT.SUBMIT,
-        formData
+        formData,
       );
 
       if (response.data.success) {
-        alert(response.data.message);
+        setPopupConfig({
+          title: "Message Sent!",
+          message:
+            "Thank you for reaching out to us. We will get back to you as soon as possible.",
+          type: "success",
+        });
+        setShowPopup(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
       }
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      alert(
-        error.response?.data?.message ||
-          "Failed to send message. Please try again."
-      );
+      setPopupConfig({
+        title: "Oops!",
+        message:
+          error.response?.data?.message ||
+          "Failed to send message. Please try again.",
+        type: "error",
+      });
+      setShowPopup(true);
     }
   };
 
@@ -420,6 +437,14 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      <SuccessPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        type={popupConfig.type}
+      />
 
       <Footer />
       <ScrollToTop />
