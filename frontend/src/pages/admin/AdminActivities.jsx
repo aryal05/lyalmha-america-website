@@ -17,6 +17,28 @@ const AdminActivities = () => {
     order_index: 0,
     active: 1
   });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [iconPreview, setIconPreview] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, image: file });
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleIconImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, iconImage: file });
+      const reader = new FileReader();
+      reader.onloadend = () => setIconPreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     fetchActivities();
@@ -82,6 +104,8 @@ const AdminActivities = () => {
       order_index: activity.order_index,
       active: activity.active
     });
+    setImagePreview(activity.image || null);
+    setIconPreview(activity.icon_image || null);
     setShowForm(true);
   };
 
@@ -101,6 +125,8 @@ const AdminActivities = () => {
     setFormData({ title: '', description: '', icon: '', iconImage: null, image: null, order_index: 0, active: 1 });
     setEditingActivity(null);
     setShowForm(false);
+    setImagePreview(null);
+    setIconPreview(null);
   };
 
   return (
@@ -112,7 +138,7 @@ const AdminActivities = () => {
             onClick={() => setShowForm(!showForm)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            {showForm ? 'Cancel' : '+ Add Activity'}
+            {showForm ? "Cancel" : "+ Add Activity"}
           </button>
         </div>
 
@@ -123,75 +149,120 @@ const AdminActivities = () => {
             className="bg-white p-6 rounded-lg shadow-lg mb-6"
           >
             <h2 className="text-xl font-bold mb-4">
-              {editingActivity ? 'Edit Activity' : 'Add New Activity'}
+              {editingActivity ? "Edit Activity" : "Add New Activity"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Title *</label>
+                <label className="block text-sm font-medium mb-1">
+                  Title *
+                </label>
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Description *</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description *
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-4 py-2 border rounded-lg"
                   rows="4"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Icon Image (Symbol/Logo) *</label>
+                <label className="block text-sm font-medium mb-1">
+                  Icon Image (Symbol/Logo)
+                </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setFormData({ ...formData, iconImage: e.target.files[0] })}
+                  onChange={handleIconImageChange}
                   className="w-full px-4 py-2 border rounded-lg"
                 />
-                {editingActivity?.icon_image && (
+                {iconPreview && (
                   <div className="mt-2">
-                    <img src={editingActivity.icon_image} alt="Current icon" className="h-16 w-16 object-contain rounded" />
-                    <p className="text-xs text-gray-500 mt-1">Current icon (upload new to replace)</p>
+                    <img
+                      src={iconPreview}
+                      alt="Icon preview"
+                      className="h-16 w-16 object-contain rounded border"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {editingActivity
+                        ? "Current icon (upload new to replace)"
+                        : "Icon preview"}
+                    </p>
                   </div>
                 )}
-                <p className="text-xs text-gray-500 mt-1">Upload a small icon/symbol (will be displayed same size as emoji)</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Upload a small icon/symbol (will be displayed same size as
+                  emoji)
+                </p>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Activity Image</label>
+                <label className="block text-sm font-medium mb-1">
+                  Activity Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                  onChange={handleImageChange}
                   className="w-full px-4 py-2 border rounded-lg"
                 />
-                {editingActivity?.image && (
+                {imagePreview && (
                   <div className="mt-2">
-                    <img src={editingActivity.image} alt="Current" className="h-20 w-20 object-cover rounded" />
-                    <p className="text-xs text-gray-500 mt-1">Current image (upload new to replace)</p>
+                    <img
+                      src={imagePreview}
+                      alt="Image preview"
+                      className="h-24 w-32 object-cover rounded border"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {editingActivity
+                        ? "Current image (upload new to replace)"
+                        : "Image preview"}
+                    </p>
                   </div>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Order</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Order
+                  </label>
                   <input
                     type="number"
                     value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        order_index: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Status</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Status
+                  </label>
                   <select
                     value={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        active: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border rounded-lg"
                   >
                     <option value={1}>Active</option>
@@ -200,10 +271,17 @@ const AdminActivities = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                  {editingActivity ? 'Update' : 'Create'}
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  {editingActivity ? "Update" : "Create"}
                 </button>
-                <button type="button" onClick={resetForm} className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
                   Cancel
                 </button>
               </div>
@@ -218,13 +296,27 @@ const AdminActivities = () => {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Icon</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Icon
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Image
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Description
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Order
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -232,33 +324,55 @@ const AdminActivities = () => {
                   <tr key={activity.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       {activity.icon_image ? (
-                        <img src={activity.icon_image} alt="icon" className="h-12 w-12 object-contain" />
+                        <img
+                          src={activity.icon_image}
+                          alt="icon"
+                          className="h-12 w-12 object-contain"
+                        />
                       ) : activity.icon ? (
                         <span className="text-2xl">{activity.icon}</span>
                       ) : (
-                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">No icon</div>
+                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                          No icon
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       {activity.image ? (
-                        <img src={activity.image} alt={activity.title} className="h-12 w-12 object-cover rounded" />
+                        <img
+                          src={activity.image}
+                          alt={activity.title}
+                          className="h-12 w-12 object-cover rounded"
+                        />
                       ) : (
-                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">No img</div>
+                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                          No img
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4 font-medium">{activity.title}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 max-w-md truncate">{activity.description}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 max-w-md truncate">
+                      {activity.description}
+                    </td>
                     <td className="px-6 py-4">{activity.order_index}</td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full ${activity.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {activity.active ? 'Active' : 'Inactive'}
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${activity.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                      >
+                        {activity.active ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <button onClick={() => handleEdit(activity)} className="text-blue-600 hover:text-blue-800 mr-3">
+                      <button
+                        onClick={() => handleEdit(activity)}
+                        className="text-blue-600 hover:text-blue-800 mr-3"
+                      >
                         Edit
                       </button>
-                      <button onClick={() => handleDelete(activity.id)} className="text-red-600 hover:text-red-800">
+                      <button
+                        onClick={() => handleDelete(activity.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
                         Delete
                       </button>
                     </td>

@@ -115,16 +115,13 @@ router.post('/', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 'i
       }
     }
 
-    // Use iconImage if uploaded, otherwise use icon text
-    const finalIcon = iconImageUrl || icon || ''
-    
     console.log('Inserting activity into database...')
-    console.log('Values:', { title, description, category: category || 'kids', imageUrl, finalIcon, orderIndex: parseInt(orderIndex) || 0, active: parseInt(active) || 1 })
+    console.log('Values:', { title, description, category: category || 'kids', imageUrl, icon: icon || '', iconImageUrl, orderIndex: parseInt(orderIndex) || 0, active: parseInt(active) || 1 })
     
     const result = await QueryHelper.run(
-      `INSERT INTO activities (title, description, category, image, icon, order_index, active) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, category || 'kids', imageUrl, finalIcon, parseInt(orderIndex) || 0, parseInt(active) || 1]
+      `INSERT INTO activities (title, description, category, image, icon, icon_image, order_index, active) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, category || 'kids', imageUrl, icon || '', iconImageUrl, parseInt(orderIndex) || 0, parseInt(active) || 1]
     )
 
     console.log('Insert result:', result)
@@ -150,7 +147,8 @@ router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 
     }
 
     let imageUrl = existingActivity.image
-    let iconUrl = existingActivity.icon
+    let iconImageUrl = existingActivity.icon_image
+    let iconText = icon || existingActivity.icon
 
     if (req.files?.image) {
       try {
@@ -177,24 +175,22 @@ router.put('/:id', authenticateAdmin, upload.fields([{ name: 'image' }, { name: 
             { folder: 'lyalmha-activities/icons', transformation: [{ width: 200, height: 200, crop: 'limit' }] },
             (error, result) => {
               if (error) reject(error)
-              else { iconUrl = result.secure_url; resolve() }
+              else { iconImageUrl = result.secure_url; resolve() }
             }
           )
           stream.end(req.files.iconImage[0].buffer)
         })
-        console.log('Updated icon image:', iconUrl)
+        console.log('Updated icon image:', iconImageUrl)
       } catch (uploadError) {
         console.error('Error uploading icon image:', uploadError)
       }
-    } else if (icon) {
-      iconUrl = icon
     }
 
     await QueryHelper.run(
       `UPDATE activities 
-       SET title = ?, description = ?, category = ?, image = ?, icon = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
+       SET title = ?, description = ?, category = ?, image = ?, icon = ?, icon_image = ?, order_index = ?, active = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [title || existingActivity.title, description || existingActivity.description, category || existingActivity.category, imageUrl, iconUrl, parseInt(orderIndex) || existingActivity.order_index, parseInt(active) ?? existingActivity.active, req.params.id]
+      [title || existingActivity.title, description || existingActivity.description, category || existingActivity.category, imageUrl, iconText, iconImageUrl, parseInt(orderIndex) || existingActivity.order_index, parseInt(active) ?? existingActivity.active, req.params.id]
     )
 
     const updatedActivity = await QueryHelper.get('SELECT * FROM activities WHERE id = ?', [req.params.id])
