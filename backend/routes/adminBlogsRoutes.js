@@ -84,7 +84,7 @@ router.post('/', upload.single('banner'), async (req, res) => {
       author || 'Admin',
       date,
       readTime,
-      status || 'draft'
+      status || 'published'
     ])
     
     const newBlog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [result.lastID])

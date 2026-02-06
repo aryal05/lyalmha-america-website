@@ -1,0 +1,47 @@
+============================================
+  HOW TO DEPLOY CHANGES TO CPANEL
+============================================
+
+After making any changes to your code:
+
+OPTION 1: Run the Script (Easiest)
+----------------------------------
+1. Right-click on "deploy-to-cpanel.ps1" file
+2. Select "Run with PowerShell"
+3. Wait for it to complete
+4. Done! Your site is updated.
+
+
+OPTION 2: From VS Code Terminal
+-------------------------------
+1. Open terminal in VS Code
+2. Type:  .\deploy-to-cpanel.ps1
+3. Press Enter
+4. Done!
+
+
+OPTION 3: Manual Steps
+----------------------
+1. Build:    cd frontend && npm run build
+2. Upload:   powershell -File .\upload-ftp.ps1
+3. GitHub:   git add -A && git commit -m "Your message" && git push
+
+
+============================================
+  WEBSITE URLS
+============================================
+
+Live Website:  https://lyaymhaamerica.org
+Backend API:   https://lyalmha-america-website-g888.vercel.app
+GitHub Repo:   https://github.com/aryal05/lyalmha-america-website
+
+
+============================================
+  NOTES
+============================================
+
+- Always save your files before deploying
+- The script builds, uploads, and pushes to GitHub automatically
+- If you only want to push to GitHub (no cPanel), use: git push
+- Clear browser cache (Ctrl+Shift+R) if changes don't appear
+

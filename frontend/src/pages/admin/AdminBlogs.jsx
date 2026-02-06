@@ -17,7 +17,7 @@ const AdminBlogs = () => {
     content: "",
     category: "",
     author: "",
-    status: "draft",
+    status: "published",
   });
   const [imageFile, setImageFile] = useState(null);
   const quillRef = useRef(null);
@@ -56,7 +56,8 @@ const AdminBlogs = () => {
     } catch (error) {
       console.error("Error saving blog:", error);
       alert(
-        "Error saving blog: " + (error.response?.data?.error || "Unknown error")
+        "Error saving blog: " +
+          (error.response?.data?.error || "Unknown error"),
       );
     }
   };
@@ -93,7 +94,7 @@ const AdminBlogs = () => {
       content: "",
       category: "",
       author: "",
-      status: "draft",
+      status: "published",
     });
     setImageFile(null);
     setEditingBlog(null);
