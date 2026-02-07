@@ -54,9 +54,10 @@ export class QueryHelper {
     
     if (isPostgresDB()) {
       let pgSql = this.convertSqlToPostgres(sql)
+      const isInsert = pgSql.trim().toUpperCase().startsWith('INSERT')
       
       // Add RETURNING id for INSERT statements to get the new ID
-      if (pgSql.trim().toUpperCase().startsWith('INSERT')) {
+      if (isInsert) {
         pgSql += ' RETURNING id'
       }
       
@@ -70,6 +71,29 @@ export class QueryHelper {
           changes: result.rowCount
         }
       } catch (error) {
+        // Handle duplicate key error by fixing sequence and retrying
+        if (isInsert && error.code === '23505' && error.constraint && error.constraint.endsWith('_pkey')) {
+          console.log('🔧 Duplicate key detected, fixing sequence and retrying...')
+          try {
+            // Extract table name from INSERT statement
+            const tableMatch = sql.match(/INSERT INTO\s+(\w+)/i)
+            if (tableMatch) {
+              const tableName = tableMatch[1]
+              // Fix the sequence
+              await client.query(`SELECT setval('${tableName}_id_seq', (SELECT MAX(id) FROM ${tableName}))`)
+              console.log(`✅ Fixed sequence for ${tableName}, retrying insert...`)
+              // Retry the insert
+              const retryResult = await client.query(pgSql, params)
+              return {
+                lastID: retryResult.rows && retryResult.rows.length > 0 ? retryResult.rows[0].id : null,
+                changes: retryResult.rowCount
+              }
+            }
+          } catch (retryError) {
+            console.error('❌ Retry failed:', retryError.message)
+            throw retryError
+          }
+        }
         console.error('❌ QueryHelper.run error:', error.message)
         console.error('SQL:', pgSql)
         console.error('Params:', params)

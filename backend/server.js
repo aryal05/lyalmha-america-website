@@ -21,6 +21,7 @@ import adminContactRoutes from './routes/adminContactRoutes.js'
 import adminRsvpRoutes from './routes/adminRsvpRoutes.js'
 import rsvpRoutes from './routes/rsvpRoutes.js'
 import adminProjectsRoutes from './routes/adminProjectsRoutes.js'
+import { fixAllSequences } from './utils/fixSequences.js'
 
 dotenv.config()
 
@@ -48,6 +49,12 @@ const initDB = async () => {
 // Initialize DB immediately for local dev
 if (!process.env.VERCEL) {
   await initDB()
+  // Fix PostgreSQL sequences on startup
+  try {
+    await fixAllSequences()
+  } catch (err) {
+    console.error('Warning: Could not fix sequences:', err.message)
+  }
 }
 
 // Middleware - CORS configuration

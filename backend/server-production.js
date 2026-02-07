@@ -21,6 +21,7 @@ import adminContactRoutes from './routes/adminContactRoutes.js'
 import adminRsvpRoutes from './routes/adminRsvpRoutes.js'
 import rsvpRoutes from './routes/rsvpRoutes.js'
 import adminProjectsRoutes from './routes/adminProjectsRoutes.js'
+import { fixAllSequences } from './utils/fixSequences.js'
 
 dotenv.config()
 
@@ -31,6 +32,13 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 await initializeDatabase()
+
+// Fix PostgreSQL sequences on startup
+try {
+  await fixAllSequences()
+} catch (err) {
+  console.error('Warning: Could not fix sequences:', err.message)
+}
 
 app.use(cors({
   origin: [

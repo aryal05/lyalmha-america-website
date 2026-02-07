@@ -203,14 +203,6 @@ const AdminGallery = () => {
               Manage events with thumbnail and gallery images
             </p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowForm(!showForm)}
-            className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow-lg"
-          >
-            {showForm ? "📋 View Events" : "➕ Create Event"}
-          </motion.button>
         </div>
 
         {showForm && (
