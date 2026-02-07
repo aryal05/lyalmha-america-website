@@ -27,7 +27,8 @@ router.post('/register', async (req, res) => {
       family_id,
       referred_by,
       referral_name,
-      referral_contact
+      referral_contact,
+      membership_type
     } = req.body
 
     // Validate required fields
@@ -53,13 +54,16 @@ router.post('/register', async (req, res) => {
 
     // Generate unique token
     const token = generateToken()
+    
+    // Calculate membership fee based on type
+    const membershipFee = membership_type === 'family' ? 300.00 : 200.00
 
     // Insert registration
     const result = await QueryHelper.run(`
       INSERT INTO membership_registrations 
-      (first_name, last_name, full_address, city, zipcode, contact_no, email, family_id, referred_by, referral_name, referral_contact, membership_token, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
-    `, [first_name, last_name, full_address, city, zipcode, contact_no, email, family_id, referred_by, referral_name, referral_contact, token])
+      (first_name, last_name, full_address, city, zipcode, contact_no, email, family_id, referred_by, referral_name, referral_contact, membership_token, membership_type, membership_fee, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    `, [first_name, last_name, full_address, city, zipcode, contact_no, email, family_id, referred_by, referral_name, referral_contact, token, membership_type || 'individual', membershipFee])
 
     const newRegistration = await QueryHelper.get(
       'SELECT * FROM membership_registrations WHERE id = ?',

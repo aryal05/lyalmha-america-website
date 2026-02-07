@@ -249,7 +249,8 @@ CREATE TABLE IF NOT EXISTS membership_registrations (
   referral_name TEXT,
   referral_contact TEXT,
   membership_token TEXT UNIQUE NOT NULL,
-  membership_fee DECIMAL(10,2) DEFAULT 100.00,
+  membership_type TEXT DEFAULT 'individual',
+  membership_fee DECIMAL(10,2) DEFAULT 200.00,
   status TEXT DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

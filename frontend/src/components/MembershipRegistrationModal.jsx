@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
+import letterpadLogo from "../assets/images/logo/Letter pad copy.png";
 
 const MembershipRegistrationModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
     referred_by: "",
     referral_name: "",
     referral_contact: "",
+    membership_type: "individual",
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -34,7 +36,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
     try {
       const response = await apiClient.post(
         API_ENDPOINTS.MEMBERSHIP.REGISTER,
-        formData
+        formData,
       );
 
       if (response.data.success) {
@@ -43,7 +45,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
       }
     } catch (err) {
       setError(
-        err.response?.data?.error || "Registration failed. Please try again."
+        err.response?.data?.error || "Registration failed. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -63,6 +65,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
       referred_by: "",
       referral_name: "",
       referral_contact: "",
+      membership_type: "individual",
     });
     setSuccess(false);
     setToken("");
@@ -88,11 +91,11 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
           className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto my-8"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-royal-blue to-royal-blue/90 p-6 rounded-t-2xl relative">
+          {/* Header with Logo */}
+          <div className="bg-white p-6 rounded-t-2xl border-b border-gray-200 relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -109,11 +112,27 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
               </svg>
             </button>
             <div className="text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                Life Membership Registration
+              {/* Logo */}
+              <div className="bg-white p-2 rounded-lg inline-block mb-4">
+                <img
+                  src={letterpadLogo}
+                  alt="Lyaymha America Guthi"
+                  className="h-24 w-auto mx-auto"
+                />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-royal-blue mb-4">
+                Life Membership Registration Form
               </h2>
-              <p className="text-cream-white/90 text-sm">
-                Lyaymha America Guthi - Preserving Newari Culture & Heritage
+              <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
+                Lyaymha America Guthi is a non-profit community organization
+                based in the DMV area, with the aim of preserving and advancing
+                a deeper understanding of the Newah rich music, language, arts,
+                and cultural heritage of Nepal. Our focus is on the younger
+                generation, as they are the future bearers of our legacy and
+                identity. We strive to educate and raise awareness among our
+                children about our culture, language, and festivals. Lyaymha
+                America has consistently demonstrated its concern for and
+                commitment to preserving our identity through various programs.
               </p>
             </div>
           </div>
@@ -155,15 +174,41 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                 Please save this token for your records. A confirmation email
                 has been sent to your email address.
               </p>
-              <p className="text-sm text-gray-500 mb-6">
-                <strong>Membership Fee:</strong> $100
-                <br />
-                Please complete your payment using:
-                <br />
-                <span className="text-royal-blue font-medium">
-                  Zelle: lyaymhaamerica@gmail.com
-                </span>
-              </p>
+
+              {/* Payment QR Code */}
+              <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
+                <p className="text-sm text-gray-600 mb-3 font-semibold">
+                  QR Code for online payment to LYAYMHA AMERICA GUTHI (LAG)
+                </p>
+                <p className="text-sm text-royal-blue font-medium mb-4">
+                  Zelle Email ID: lyaymhaAmerica@gmail.com
+                </p>
+                <div className="bg-white p-3 rounded-lg inline-block border border-gray-200">
+                  <img
+                    src="https://res.cloudinary.com/dxqm6iyxc/image/upload/v1738996800/lag-zelle-qr_xyzabc.png"
+                    alt="Zelle Payment QR Code"
+                    className="w-48 h-48 mx-auto"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "block";
+                    }}
+                  />
+                  <div className="hidden text-center p-4">
+                    <p className="text-sm text-gray-500">
+                      Scan QR with Zelle app
+                    </p>
+                    <p className="text-royal-blue font-bold">
+                      lyaymhaAmerica@gmail.com
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  <strong>Membership Fees:</strong>
+                  <br />
+                  Individual - $200 | Family - $300
+                </p>
+              </div>
+
               <button
                 onClick={handleClose}
                 className="px-8 py-3 bg-royal-blue text-white rounded-xl font-semibold hover:bg-royal-blue/90 transition-colors"
@@ -174,12 +219,42 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
           ) : (
             /* Registration Form */
             <form onSubmit={handleSubmit} className="p-6">
-              {/* Membership Fee Notice */}
-              <div className="bg-gold-accent/10 border-l-4 border-gold-accent p-4 rounded-r-lg mb-6">
-                <p className="text-royal-blue font-semibold">
-                  Membership Fee: <span className="text-gold-accent">$100</span>
-                </p>
-                <p className="text-sm text-gray-600">
+              {/* Membership Type Selection */}
+              <div className="bg-royal-blue/5 border-2 border-royal-blue/20 p-4 rounded-xl mb-6">
+                <h3 className="text-royal-blue font-bold mb-3">
+                  Select Membership Type <span className="text-red-500">*</span>
+                </h3>
+                <div className="flex gap-6">
+                  <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border-2 transition-all hover:bg-royal-blue/5 flex-1 ${formData.membership_type === 'individual' ? 'border-royal-blue bg-royal-blue/5' : 'border-gray-200'}">
+                    <input
+                      type="radio"
+                      name="membership_type"
+                      value="individual"
+                      checked={formData.membership_type === "individual"}
+                      onChange={handleChange}
+                      className="w-5 h-5 text-royal-blue"
+                    />
+                    <div>
+                      <span className="text-gray-800 font-semibold">Individual</span>
+                      <p className="text-gold-accent font-bold text-lg">$200</p>
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border-2 transition-all hover:bg-royal-blue/5 flex-1 ${formData.membership_type === 'family' ? 'border-royal-blue bg-royal-blue/5' : 'border-gray-200'}">
+                    <input
+                      type="radio"
+                      name="membership_type"
+                      value="family"
+                      checked={formData.membership_type === "family"}
+                      onChange={handleChange}
+                      className="w-5 h-5 text-royal-blue"
+                    />
+                    <div>
+                      <span className="text-gray-800 font-semibold">Family</span>
+                      <p className="text-gold-accent font-bold text-lg">$300</p>
+                    </div>
+                  </label>
+                </div>
+                <p className="text-sm text-gray-600 mt-3">
                   One-time payment for lifetime membership
                 </p>
               </div>
@@ -309,7 +384,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                     Referred By
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
@@ -331,6 +406,17 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                           className="w-4 h-4 text-royal-blue"
                         />
                         <span className="text-gray-700">Community Members</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="referred_by"
+                          value="Others"
+                          checked={formData.referred_by === "Others"}
+                          onChange={handleChange}
+                          className="w-4 h-4 text-royal-blue"
+                        />
+                        <span className="text-gray-700">Others</span>
                       </label>
                     </div>
 
@@ -514,10 +600,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                 >
                   {loading ? (
                     <>
-                      <svg
-                        className="animate-spin h-5 w-5"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                         <circle
                           className="opacity-25"
                           cx="12"
