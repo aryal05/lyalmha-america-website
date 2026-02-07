@@ -105,7 +105,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     const result = await QueryHelper.run(`
       INSERT INTO events (title, description, event_date, location, event_type, image)
       VALUES (?, ?, ?, ?, ?, ?)
-    `, title, description, event_date, location, event_type, image)
+    `, [title, description, event_date, location, event_type, image])
     
     const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [result.lastID])
     
