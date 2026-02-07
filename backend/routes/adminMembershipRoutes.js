@@ -6,12 +6,16 @@ import crypto from 'crypto'
 
 const router = express.Router()
 
-// Generate unique token
+// Generate token: LAG-XXXX (4 random digits)
 const generateToken = () => {
-  const prefix = 'LAG'
-  const year = new Date().getFullYear()
-  const random = crypto.randomBytes(4).toString('hex').toUpperCase()
-  return `${prefix}-${year}-${random}`
+  const num = crypto.randomInt(1000, 9999)
+  return `LAG-${num}`
+}
+
+// Validate email format
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
 }
 
 // POST submit membership registration (public)
@@ -37,6 +41,14 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({
         success: false,
         error: 'First name, last name, email, and contact number are required'
+      })
+    }
+
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please enter a valid email address'
       })
     }
 
@@ -124,6 +136,44 @@ router.get('/:id', async (req, res) => {
     }
     res.json({ success: true, data: registration })
   } catch (error) {
+    res.status(500).json({ success: false, error: error.message })
+  }
+})
+
+// PUT update full registration
+router.put('/:id', async (req, res) => {
+  try {
+    const { first_name, last_name, email, phone, address, city, state, zip_code, membership_type, family_size, notes } = req.body
+
+    // Check if registration exists
+    const existing = await QueryHelper.get(
+      'SELECT * FROM membership_registrations WHERE id = ?',
+      [req.params.id]
+    )
+
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Registration not found' })
+    }
+
+    // Update the registration
+    await QueryHelper.run(
+      `UPDATE membership_registrations SET 
+        first_name = ?, last_name = ?, email = ?, phone = ?, 
+        address = ?, city = ?, state = ?, zip_code = ?, 
+        membership_type = ?, family_size = ?, notes = ?,
+        updated_at = CURRENT_TIMESTAMP 
+      WHERE id = ?`,
+      [first_name, last_name, email, phone, address, city, state, zip_code, membership_type, family_size || null, notes || null, req.params.id]
+    )
+
+    const updated = await QueryHelper.get(
+      'SELECT * FROM membership_registrations WHERE id = ?',
+      [req.params.id]
+    )
+
+    res.json({ success: true, data: updated, message: 'Registration updated successfully' })
+  } catch (error) {
+    console.error('Error updating registration:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })

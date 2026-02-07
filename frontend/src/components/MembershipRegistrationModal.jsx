@@ -151,34 +151,6 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Payment QR Code Section - Always Visible */}
-          <div className="bg-gray-50 p-4 border-b border-gray-200">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <div className="bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0">
-                <img
-                  src={paymentQR}
-                  alt="Zelle Payment QR Code"
-                  className="w-32 h-32 object-contain"
-                />
-              </div>
-              <div className="text-center md:text-left">
-                <p className="text-sm font-bold text-royal-blue mb-2">
-                  QR Code for online payment to LYAYMHA AMERICA GUTHI (LAG)
-                </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  <strong>Zelle Email ID:</strong>{" "}
-                  <span className="text-royal-blue">
-                    lyaymhaAmerica@gmail.com
-                  </span>
-                </p>
-                <div className="text-xs text-gray-500">
-                  <strong>Membership Fees:</strong> Individual - $200 | Family -
-                  $300
-                </div>
-              </div>
-            </div>
-          </div>
-
           {success ? (
             /* Success State */
             <div className="p-8 text-center">
@@ -624,6 +596,35 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                       </span>
                     </li>
                   </ul>
+                </div>
+
+                {/* Payment QR Code Section */}
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                    <div className="bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0">
+                      <img
+                        src={paymentQR}
+                        alt="Zelle Payment QR Code"
+                        className="w-32 h-32 object-contain"
+                      />
+                    </div>
+                    <div className="text-center md:text-left">
+                      <p className="text-sm font-bold text-royal-blue mb-2">
+                        QR Code for online payment to LYAYMHA AMERICA GUTHI
+                        (LAG)
+                      </p>
+                      <p className="text-sm text-gray-600 mb-2">
+                        <strong>Zelle Email ID:</strong>{" "}
+                        <span className="text-royal-blue">
+                          lyaymhaAmerica@gmail.com
+                        </span>
+                      </p>
+                      <div className="text-xs text-gray-500">
+                        <strong>Membership Fees:</strong> Individual - $200 |
+                        Family - $300
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Submit Button */}

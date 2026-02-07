@@ -113,9 +113,9 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                     className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
                     whileHover={{ scale: 1.01 }}
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-0">
                       {/* Image */}
-                      <div className="relative h-64 md:h-80 overflow-hidden group">
+                      <div className="relative h-64 md:h-full md:col-span-2 overflow-hidden group">
                         {story.banner ? (
                           <img
                             src={getImageUrl(story.banner)}
@@ -132,7 +132,7 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                       </div>
 
                       {/* Content */}
-                      <div className="p-6 md:p-8 flex flex-col justify-center">
+                      <div className="p-6 md:p-8 flex flex-col justify-center md:col-span-3">
                         <h3 className="text-2xl md:text-3xl font-bold text-charcoal-black mb-4 hover:text-gold-accent transition-colors">
                           {story.title}
                         </h3>
@@ -145,15 +145,42 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
 
                         <div className="flex items-center gap-4 text-sm text-muted-text mb-6">
                           <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <svg
+                              className="w-5 h-5 text-gold-accent"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
                             </svg>
-                            {new Date(story.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {new Date(story.created_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              },
+                            )}
                           </span>
                           <span>•</span>
                           <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5 text-newari-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg
+                              className="w-5 h-5 text-newari-red"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                             {story.read_time || "1 min read"}
                           </span>
@@ -164,8 +191,18 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 w-fit shadow-md hover:shadow-lg"
                         >
                           Read Full Story
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -182,36 +219,6 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                   <BlogCard key={blog.id} blog={blog} index={index} />
                 ))}
               </div>
-            )}
-
-            {/* View All Blogs Link - show only when limited */}
-            {limit && stories.length > limit && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mt-10"
-              >
-                <Link
-                  to="/blogs"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-gold-accent to-newari-red text-white font-bold rounded-xl hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  View All Stories
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </Link>
-              </motion.div>
             )}
           </div>
 

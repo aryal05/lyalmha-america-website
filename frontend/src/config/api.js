@@ -139,6 +139,7 @@ export const API_ENDPOINTS = {
     REGISTER: '/api/membership/register',
     GET_ALL: '/api/admin/membership',
     GET_BY_ID: (id) => `/api/admin/membership/${id}`,
+    UPDATE: (id) => `/api/admin/membership/${id}`,
     UPDATE_STATUS: (id) => `/api/admin/membership/${id}/status`,
     DELETE: (id) => `/api/admin/membership/${id}`,
     GET_STATS: '/api/admin/membership/stats/summary',

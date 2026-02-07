@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
+import AdminLayout from '../../components/admin/AdminLayout';
 
 const AdminRSVPs = () => {
-  const navigate = useNavigate();
   const [rsvps, setRsvps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
@@ -49,46 +48,48 @@ const AdminRSVPs = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-12 h-12 border-4 border-gold-accent border-t-transparent rounded-full animate-spin"></div>
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="w-12 h-12 border-4 border-royal-blue border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="p-6">
-      {/* Header with Back Button */}
-      <div className="mb-8">
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate('/admin/dashboard')}
-          className="flex items-center gap-2 text-royal-blue hover:text-gold-accent mb-6 transition-colors font-semibold group"
-        >
-          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Dashboard
-        </motion.button>
-
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-royal-blue to-gold-accent bg-clip-text text-transparent">Event RSVPs</h1>
-            <p className="text-gray-600 mt-1">Manage event registrations and attendee information</p>
-          </div>
-          <div className="px-6 py-3 bg-gradient-to-r from-royal-blue to-gold-accent rounded-lg shadow-lg">
-            <p className="text-white text-sm font-medium">Total RSVPs</p>
-            <p className="text-white text-3xl font-bold">{rsvps.length}</p>
-          </div>
+    <AdminLayout>
+      <div className="relative">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-10 right-10 w-64 h-64 animate-spin-slow"></div>
         </div>
-        <div className="h-1 w-32 bg-gradient-to-r from-gold-accent to-newari-red rounded-full mt-4"></div>
-      </div>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-8 relative z-10"
+        >
+          <div>
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
+              Event RSVPs
+            </h1>
+            <p className="text-paragraph-text">
+              Manage event registrations and attendee information
+            </p>
+            <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
+          </div>
+          <div className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-xl shadow-lg">
+            <p className="text-sm font-medium opacity-90">Total RSVPs</p>
+            <p className="text-3xl font-bold">{rsvps.length}</p>
+          </div>
+        </motion.div>
 
       {rsvps.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center py-16 bg-gradient-to-br from-blue-50 to-gold-accent/5 rounded-xl border-2 border-dashed border-gray-300"
+          className="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-300"
         >
           <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-royal-blue/10 to-gold-accent/10 rounded-full flex items-center justify-center">
             <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +107,7 @@ const AdminRSVPs = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-gold-accent hover:shadow-xl transition-all duration-300"
+              className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-royal-blue hover:shadow-xl transition-all duration-300"
             >
               {/* Collapsed View */}
               <div
@@ -251,7 +252,8 @@ const AdminRSVPs = () => {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
