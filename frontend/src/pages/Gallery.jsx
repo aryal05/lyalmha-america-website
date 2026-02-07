@@ -9,11 +9,11 @@ import { getImageUrl } from "../utils/imageHelper";
 
 const Gallery = () => {
   const navigate = useNavigate();
-  const [pastEvents, setPastEvents] = useState([]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const [eventTypes, setEventTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [filter, setFilter] = useState("past");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetchEvents();
@@ -21,12 +21,20 @@ const Gallery = () => {
 
   const fetchEvents = async () => {
     try {
-      const [pastRes, upcomingRes] = await Promise.all([
-        apiClient.get(API_ENDPOINTS.EVENTS.GET_PAST),
-        apiClient.get(API_ENDPOINTS.EVENTS.GET_UPCOMING)
-      ]);
-      setPastEvents(pastRes.data.data || []);
-      setUpcomingEvents(upcomingRes.data.data || []);
+      const response = await apiClient.get(API_ENDPOINTS.EVENTS.GET_ALL);
+      const events = response.data.data || [];
+      setAllEvents(events);
+
+      // Extract unique event types that have events
+      const types = [
+        ...new Set(events.map((e) => e.event_type).filter(Boolean)),
+      ];
+      setEventTypes(types);
+
+      // Set initial filter to first available type or 'all'
+      if (types.length > 0) {
+        setFilter(types[0]);
+      }
     } catch (error) {
       console.error("Error fetching events:", error);
     } finally {
@@ -34,7 +42,17 @@ const Gallery = () => {
     }
   };
 
-  const displayEvents = filter === "past" ? pastEvents : upcomingEvents;
+  // Filter events based on selected type
+  const displayEvents =
+    filter === "all"
+      ? allEvents
+      : allEvents.filter((event) => event.event_type === filter);
+
+  // Format event type for display (capitalize first letter)
+  const formatEventType = (type) => {
+    if (!type) return "Other";
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-slate-50">
@@ -94,29 +112,36 @@ const Gallery = () => {
 
       {/* Gallery Content */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          <button
-            onClick={() => setFilter("past")}
-            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-              filter === "past"
-                ? "bg-gold-accent text-white shadow-gold"
-                : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
-            }`}
-          >
-            Past Events
-          </button>
-          <button
-            onClick={() => setFilter("upcoming")}
-            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-              filter === "upcoming"
-                ? "bg-gold-accent text-white shadow-gold"
-                : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
-            }`}
-          >
-            Upcoming Events
-          </button>
-        </div>
+        {/* Filter Buttons - Only show types that have events */}
+        {eventTypes.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {eventTypes.length > 1 && (
+              <button
+                onClick={() => setFilter("all")}
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                  filter === "all"
+                    ? "bg-gold-accent text-white shadow-gold"
+                    : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
+                }`}
+              >
+                All Events
+              </button>
+            )}
+            {eventTypes.map((type) => (
+              <button
+                key={type}
+                onClick={() => setFilter(type)}
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                  filter === type
+                    ? "bg-gold-accent text-white shadow-gold"
+                    : "bg-white text-gray-700 hover:text-royal-blue border-2 border-gray-300 hover:border-royal-blue hover:shadow-md"
+                }`}
+              >
+                {formatEventType(type)} Events
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Gallery Grid */}
         {loading ? (
@@ -149,13 +174,23 @@ const Gallery = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-royal-blue to-newari-red flex items-center justify-center">
-                        <svg className="w-20 h-20 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg
+                          className="w-20 h-20 text-white/50"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Info Section - Always Visible */}
                   <div className="bg-white p-4 border-t-2 border-gold-accent group-hover:border-newari-red transition-colors">
                     <h3 className="text-primary-text font-bold text-lg mb-2 group-hover:text-gold-accent transition-colors">
@@ -168,8 +203,18 @@ const Gallery = () => {
                     )}
                     <p className="text-gold-accent text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
                       View Details
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     </p>
                   </div>
@@ -182,7 +227,8 @@ const Gallery = () => {
         {!loading && displayEvents.length === 0 && (
           <div className="text-center py-12">
             <p className="text-paragraph-text text-lg">
-              No {filter} events found.
+              No {filter === "all" ? "" : formatEventType(filter) + " "}events
+              found.
             </p>
           </div>
         )}
