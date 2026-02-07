@@ -1,6 +1,7 @@
 import express from 'express'
 import { QueryHelper } from '../utils/queryHelper.js'
 import { authenticateToken } from '../middleware/auth.js'
+import { sendMembershipConfirmationEmail } from '../utils/emailService.js'
 import crypto from 'crypto'
 
 const router = express.Router()
@@ -70,8 +71,20 @@ router.post('/register', async (req, res) => {
       [result.lastID]
     )
 
-    // Send confirmation email (simplified - you can integrate proper email service)
-    console.log(`📧 Membership confirmation email would be sent to ${email} with token: ${token}`)
+    // Send confirmation email
+    try {
+      await sendMembershipConfirmationEmail({
+        email,
+        first_name,
+        last_name,
+        membership_token: token,
+        membership_type: membership_type || 'individual',
+        membership_fee: membershipFee
+      })
+    } catch (emailError) {
+      console.error('📧 Failed to send confirmation email:', emailError)
+      // Don't fail the registration if email fails
+    }
 
     res.status(201).json({
       success: true,

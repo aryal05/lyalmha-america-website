@@ -8,35 +8,40 @@ const AdminDashboard = () => {
     blogs: 0,
     team: 0,
     events: 0,
-    supporters: 0
-  })
-  const [loading, setLoading] = useState(true)
+    supporters: 0,
+    memberships: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats()
-  }, [])
+    fetchStats();
+  }, []);
 
   const fetchStats = async () => {
     try {
-      const [blogs, team, events, supporters] = await Promise.all([
+      const [blogs, team, events, supporters, memberships] = await Promise.all([
         apiClient.get(API_ENDPOINTS.BLOGS.GET_ADMIN_ALL),
         apiClient.get(API_ENDPOINTS.TEAM.GET_ALL),
         apiClient.get(API_ENDPOINTS.EVENTS.GET_ALL),
-        apiClient.get(API_ENDPOINTS.SUPPORTERS.GET_ALL)
-      ])
+        apiClient.get(API_ENDPOINTS.SUPPORTERS.GET_ALL),
+        apiClient
+          .get(API_ENDPOINTS.MEMBERSHIP.GET_STATS)
+          .catch(() => ({ data: { data: { total: 0 } } })),
+      ]);
 
       setStats({
         blogs: blogs.data.data.length,
         team: team.data.data.length,
         events: events.data.data.length,
-        supporters: supporters.data.data.length
-      })
+        supporters: supporters.data.data.length,
+        memberships: memberships.data.data?.total || 0,
+      });
     } catch (error) {
-      console.error('Error fetching stats:', error)
+      console.error("Error fetching stats:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const statCards = [
     {
@@ -66,6 +71,13 @@ const AdminDashboard = () => {
       icon: "🤝",
       color: "gold-accent",
       link: "/admin/supporters",
+    },
+    {
+      title: "Memberships",
+      value: stats.memberships,
+      icon: "🎫",
+      color: "newari-red",
+      link: "/admin/membership",
     },
   ];
 

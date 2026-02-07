@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import SuccessPopup from "./SuccessPopup";
+import MembershipRegistrationModal from "./MembershipRegistrationModal";
 import event1 from "../assets/images/posts/471944315_555366943987150_1453996420800501859_n.jpg";
 import event2 from "../assets/images/posts/467736461_487936857446592_6777699176984050234_n (1).jpg";
 import event3 from "../assets/images/posts/462650425_598936739649734_2260957587124948845_n.jpg";
@@ -22,6 +23,7 @@ const EventsSidebar = () => {
     message: "",
     type: "success",
   });
+  const [showMembershipModal, setShowMembershipModal] = useState(false);
   const [countdowns, setCountdowns] = useState({});
   const [formData, setFormData] = useState({
     name: "",
@@ -549,15 +551,14 @@ const EventsSidebar = () => {
             culture for future generations.
           </p>
 
-          <Link to="/contact">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
-            >
-              Join Now
-            </motion.button>
-          </Link>
+          <motion.button
+            onClick={() => setShowMembershipModal(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg"
+          >
+            Join Now
+          </motion.button>
 
           {/* Decorative Corners */}
           <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-gold-accent"></div>
@@ -690,6 +691,12 @@ const EventsSidebar = () => {
         title={popupConfig.title}
         message={popupConfig.message}
         type={popupConfig.type}
+      />
+
+      {/* Membership Registration Modal */}
+      <MembershipRegistrationModal
+        isOpen={showMembershipModal}
+        onClose={() => setShowMembershipModal(false)}
       />
     </div>
   );

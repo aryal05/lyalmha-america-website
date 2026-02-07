@@ -6,7 +6,7 @@ import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import EventsSidebar from "./EventsSidebar";
 
-const BlogGrid = () => {
+const BlogGrid = ({ limit = null, showSidebar = true }) => {
   const [activeBlog, setActiveBlog] = useState(null);
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,8 +35,10 @@ const BlogGrid = () => {
     }
   };
 
-  // Featured list (first 2)
-  const featuredStories = stories.slice(0, 2);
+  // Featured list (first 4 for home page)
+  // Apply limit if specified
+  const displayStories = limit ? stories.slice(0, limit) : stories;
+  const featuredStories = displayStories.slice(0, limit ? 4 : 2);
 
   const openBlog = (blog) => setActiveBlog(blog);
   const closeBlog = () => setActiveBlog(null);
@@ -98,106 +100,111 @@ const BlogGrid = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           {/* Left: Latest Stories + Blog Grid */}
           <div className="lg:col-span-2">
-            {/* Latest Stories list (first 3) */}
+            {/* Latest Stories - 2x2 Grid for home page */}
             {featuredStories.length > 0 && (
-              <div className="space-y-6 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                 {featuredStories.map((story) => (
                   <div
                     key={story.id}
-                    className="rounded-3xl overflow-hidden bg-white shadow-lg h-full"
+                    className="rounded-3xl overflow-hidden bg-white shadow-lg h-full flex flex-col"
                   >
-                    <div className="md:flex md:items-stretch h-full">
-                      {/* Left: Image */}
-                      <div className="md:w-1/2 w-full h-56 md:h-auto flex flex-col">
-                        {story.banner ? (
-                          <img
-                            src={getImageUrl(story.banner)}
-                            alt={story.title}
-                            className="w-full h-full object-cover min-h-56 flex-1"
-                            style={{ height: "100%" }}
-                          />
-                        ) : (
-                          <div className="w-full h-full min-h-56 flex-1 bg-gray-100" />
-                        )}
+                    {/* Image */}
+                    <div className="w-full h-48 flex-shrink-0">
+                      {story.banner ? (
+                        <img
+                          src={getImageUrl(story.banner)}
+                          alt={story.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100" />
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <span className="inline-block px-3 py-1 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-xs font-semibold rounded-full shadow-sm mb-3 w-fit">
+                        {story.category || "Featured"}
+                      </span>
+
+                      <div className="flex items-center gap-4 text-sm text-muted-text mb-3">
+                        <span className="flex items-center gap-1">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                          {new Date(story.created_at).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric", year: "numeric" },
+                          )}
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          {story.read_time || "1 min"}
+                        </span>
                       </div>
 
-                      {/* Right: Content */}
-                      <div className="md:w-1/2 w-full p-8 md:p-10 flex flex-col justify-between h-full">
-                        <span className="inline-block px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-semibold rounded-full shadow-sm mb-4">
-                          {story.category || "Featured"}
-                        </span>
+                      <h3 className="text-xl font-bold text-charcoal-black mb-3 line-clamp-2 hover:text-newari-red transition-colors">
+                        {story.title}
+                      </h3>
 
-                        <h3 className="text-3xl md:text-4xl font-bold text-charcoal-black mb-4">
-                          {story.title}
-                        </h3>
+                      <p className="text-paragraph-text text-sm mb-4 line-clamp-3 flex-grow">
+                        {story.excerpt}
+                      </p>
 
-                        <div className="w-14 h-1 bg-gold-accent rounded-full mb-6" />
-
-                        <p className="text-paragraph-text mb-6 max-w-xl">
-                          {story.excerpt}
-                        </p>
-
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-sm text-muted-text">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-6 h-6 text-gold-accent"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                            <div>
-                              <div className="text-xs text-muted-text">
-                                Started
-                              </div>
-                              <div className="font-medium text-charcoal-black">
-                                {new Date(story.created_at).getFullYear() ||
-                                  "—"}
-                              </div>
-                            </div>
+                      <div className="border-t border-gray-100 pt-4 mt-auto flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-gold-accent to-newari-red flex items-center justify-center text-white font-bold">
+                            {(story.author || "A")[0].toUpperCase()}
                           </div>
-
-                          <div className="flex items-center gap-3 text-sm text-muted-text">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-6 h-6 text-newari-red"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 16.657L13.414 12.414a4 4 0 10-5.657 5.657l4.243 4.243a8 8 0 0011.314-11.314l-4.657 4.657z"
-                              />
-                            </svg>
-                            <div>
-                              <div className="text-xs text-muted-text">
-                                Location
-                              </div>
-                              <div className="font-medium text-charcoal-black">
-                                {story.location || "Online"}
-                              </div>
-                            </div>
+                          <div>
+                            <p className="font-semibold text-charcoal-black text-sm">
+                              {story.author || "Author"}
+                            </p>
+                            <p className="text-xs text-muted-text">Author</p>
                           </div>
                         </div>
-
-                        <div className="mt-8">
-                          <button
-                            onClick={() => openBlog(story)}
-                            className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white font-semibold rounded-lg shadow-md"
+                        <button
+                          onClick={() => openBlog(story)}
+                          className="text-gold-accent font-semibold flex items-center gap-1 hover:text-newari-red transition-colors"
+                        >
+                          Read
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                           >
-                            View Full Details
-                          </button>
-                        </div>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -205,18 +212,50 @@ const BlogGrid = () => {
               </div>
             )}
 
-            {/* Remaining blog cards */}
+            {/* Remaining blog cards (after featured ones) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {stories.slice(2).map((blog, index) => (
+              {displayStories.slice(limit ? 4 : 2).map((blog, index) => (
                 <BlogCard key={blog.id} blog={blog} index={index} />
               ))}
             </div>
+
+            {/* View All Blogs Link - show only when limited */}
+            {limit && stories.length > limit && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mt-10"
+              >
+                <Link
+                  to="/blogs"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-gold-accent to-newari-red text-white font-bold rounded-xl hover:from-newari-red hover:to-gold-accent transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  View All Stories
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
+              </motion.div>
+            )}
           </div>
 
           {/* Right: Events Sidebar (reuse component from AboutUs) */}
-          <div className="lg:col-span-1">
-            <EventsSidebar />
-          </div>
+          {showSidebar && (
+            <div className="lg:col-span-1">
+              <EventsSidebar />
+            </div>
+          )}
         </div>
 
         {/* Read More Modal */}

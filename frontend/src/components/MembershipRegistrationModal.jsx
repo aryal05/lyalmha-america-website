@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import letterpadLogo from "../assets/images/logo/Letter pad copy.png";
+import paymentQR from "../assets/QR_PAYMENT/QR.png";
+import SuccessPopup from "./SuccessPopup";
 
 const MembershipRegistrationModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -22,6 +24,12 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
   const [success, setSuccess] = useState(false);
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupConfig, setPopupConfig] = useState({
+    title: "",
+    message: "",
+    type: "success",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +50,12 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
       if (response.data.success) {
         setToken(response.data.data.membership_token);
         setSuccess(true);
+        setPopupConfig({
+          title: "Registration Successful!",
+          message: `Thank you for registering for Life Membership! Your token is: ${response.data.data.membership_token}. A confirmation email has been sent to your email address.`,
+          type: "success",
+        });
+        setShowPopup(true);
       }
     } catch (err) {
       setError(
@@ -92,10 +106,10 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with Logo */}
-          <div className="bg-white p-6 rounded-t-2xl border-b border-gray-200 relative">
+          <div className="bg-gradient-to-br from-royal-blue via-blue-800 to-royal-blue p-8 rounded-t-2xl relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -112,18 +126,20 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
               </svg>
             </button>
             <div className="text-center">
-              {/* Logo */}
-              <div className="bg-white p-2 rounded-lg inline-block mb-4">
-                <img
-                  src={letterpadLogo}
-                  alt="Lyaymha America Guthi"
-                  className="h-24 w-auto mx-auto"
-                />
+              {/* Logo in Circle */}
+              <div className="relative inline-block mb-6">
+                <div className="w-40 h-40 rounded-full bg-white shadow-xl flex items-center justify-center mx-auto border-4 border-gray-100">
+                  <img
+                    src={letterpadLogo}
+                    alt="Lyaymha America Guthi"
+                    className="w-32 h-32 object-contain"
+                  />
+                </div>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-royal-blue mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 Life Membership Registration Form
               </h2>
-              <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
+              <p className="text-white/90 text-sm leading-relaxed max-w-xl mx-auto">
                 Lyaymha America Guthi is a non-profit community organization
                 based in the DMV area, with the aim of preserving and advancing
                 a deeper understanding of the Newah rich music, language, arts,
@@ -185,22 +201,10 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                 </p>
                 <div className="bg-white p-3 rounded-lg inline-block border border-gray-200">
                   <img
-                    src="https://res.cloudinary.com/dxqm6iyxc/image/upload/v1738996800/lag-zelle-qr_xyzabc.png"
+                    src={paymentQR}
                     alt="Zelle Payment QR Code"
-                    className="w-48 h-48 mx-auto"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.nextSibling.style.display = "block";
-                    }}
+                    className="w-48 h-48 mx-auto object-contain"
                   />
-                  <div className="hidden text-center p-4">
-                    <p className="text-sm text-gray-500">
-                      Scan QR with Zelle app
-                    </p>
-                    <p className="text-royal-blue font-bold">
-                      lyaymhaAmerica@gmail.com
-                    </p>
-                  </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
                   <strong>Membership Fees:</strong>
@@ -235,7 +239,9 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                       className="w-5 h-5 text-royal-blue"
                     />
                     <div>
-                      <span className="text-gray-800 font-semibold">Individual</span>
+                      <span className="text-gray-800 font-semibold">
+                        Individual
+                      </span>
                       <p className="text-gold-accent font-bold text-lg">$200</p>
                     </div>
                   </label>
@@ -249,7 +255,9 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                       className="w-5 h-5 text-royal-blue"
                     />
                     <div>
-                      <span className="text-gray-800 font-semibold">Family</span>
+                      <span className="text-gray-800 font-semibold">
+                        Family
+                      </span>
                       <p className="text-gold-accent font-bold text-lg">$300</p>
                     </div>
                   </label>
@@ -636,6 +644,15 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
           )}
         </motion.div>
       </motion.div>
+
+      {/* Success Popup */}
+      <SuccessPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        type={popupConfig.type}
+      />
     </AnimatePresence>
   );
 };
