@@ -106,10 +106,10 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with Logo */}
-          <div className="bg-gradient-to-br from-royal-blue via-blue-800 to-royal-blue p-8 rounded-t-2xl relative">
+          <div className="bg-white p-6 rounded-t-2xl border-b border-gray-200 relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -126,20 +126,18 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
               </svg>
             </button>
             <div className="text-center">
-              {/* Logo in Circle */}
-              <div className="relative inline-block mb-6">
-                <div className="w-40 h-40 rounded-full bg-white shadow-xl flex items-center justify-center mx-auto border-4 border-gray-100">
-                  <img
-                    src={letterpadLogo}
-                    alt="Lyaymha America Guthi"
-                    className="w-32 h-32 object-contain"
-                  />
-                </div>
+              {/* Full Logo - Not Circled */}
+              <div className="mb-6">
+                <img
+                  src={letterpadLogo}
+                  alt="Lyaymha America Guthi"
+                  className="h-32 w-auto mx-auto object-contain"
+                />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-royal-blue mb-4">
                 Life Membership Registration Form
               </h2>
-              <p className="text-white/90 text-sm leading-relaxed max-w-xl mx-auto">
+              <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
                 Lyaymha America Guthi is a non-profit community organization
                 based in the DMV area, with the aim of preserving and advancing
                 a deeper understanding of the Newah rich music, language, arts,
@@ -150,6 +148,34 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
                 America has consistently demonstrated its concern for and
                 commitment to preserving our identity through various programs.
               </p>
+            </div>
+          </div>
+
+          {/* Payment QR Code Section - Always Visible */}
+          <div className="bg-gray-50 p-4 border-b border-gray-200">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <div className="bg-white p-2 rounded-lg border border-gray-200 flex-shrink-0">
+                <img
+                  src={paymentQR}
+                  alt="Zelle Payment QR Code"
+                  className="w-32 h-32 object-contain"
+                />
+              </div>
+              <div className="text-center md:text-left">
+                <p className="text-sm font-bold text-royal-blue mb-2">
+                  QR Code for online payment to LYAYMHA AMERICA GUTHI (LAG)
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Zelle Email ID:</strong>{" "}
+                  <span className="text-royal-blue">
+                    lyaymhaAmerica@gmail.com
+                  </span>
+                </p>
+                <div className="text-xs text-gray-500">
+                  <strong>Membership Fees:</strong> Individual - $200 | Family -
+                  $300
+                </div>
+              </div>
             </div>
           </div>
 

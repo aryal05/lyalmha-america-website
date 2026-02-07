@@ -304,7 +304,7 @@ const Home = () => {
       <Hero />
       {/* StatsSection temporarily removed per request */}
       {/* <StatsSection /> */}
-      <BlogGrid limit={4} />
+      <BlogGrid limit={6} />
       <TestimonialsSection />
       <CTABanner />
       {/* AfterNavBanner placed before Footer */}

@@ -35,10 +35,10 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
     }
   };
 
-  // Featured list (first 4 for home page)
-  // Apply limit if specified
-  const displayStories = limit ? stories.slice(0, limit) : stories;
-  const featuredStories = displayStories.slice(0, limit ? 4 : 2);
+  // For home page (limit=6): 2 horizontal featured + 4 simple cards
+  // For blogs page (no limit): 2 horizontal featured + rest as simple cards
+  const horizontalStories = stories.slice(0, 2);
+  const simpleStories = limit ? stories.slice(2, 6) : stories.slice(2);
 
   const openBlog = (blog) => setActiveBlog(blog);
   const closeBlog = () => setActiveBlog(null);
@@ -100,124 +100,89 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           {/* Left: Latest Stories + Blog Grid */}
           <div className="lg:col-span-2">
-            {/* Latest Stories - 2x2 Grid for home page */}
-            {featuredStories.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                {featuredStories.map((story) => (
-                  <div
+            {/* 2 Horizontal Featured Stories - Like "Our Projects" Style */}
+            {horizontalStories.length > 0 && (
+              <div className="space-y-8 mb-10">
+                {horizontalStories.map((story, index) => (
+                  <motion.div
                     key={story.id}
-                    className="rounded-3xl overflow-hidden bg-white shadow-lg h-full flex flex-col"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+                    whileHover={{ scale: 1.01 }}
                   >
-                    {/* Image */}
-                    <div className="w-full h-48 flex-shrink-0">
-                      {story.banner ? (
-                        <img
-                          src={getImageUrl(story.banner)}
-                          alt={story.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-100" />
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6 flex flex-col flex-grow">
-                      <span className="inline-block px-3 py-1 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-xs font-semibold rounded-full shadow-sm mb-3 w-fit">
-                        {story.category || "Featured"}
-                      </span>
-
-                      <div className="flex items-center gap-4 text-sm text-muted-text mb-3">
-                        <span className="flex items-center gap-1">
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          {new Date(story.created_at).toLocaleDateString(
-                            "en-US",
-                            { month: "short", day: "numeric", year: "numeric" },
-                          )}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          {story.read_time || "1 min"}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                      {/* Image */}
+                      <div className="relative h-64 md:h-80 overflow-hidden group">
+                        {story.banner ? (
+                          <img
+                            src={getImageUrl(story.banner)}
+                            alt={story.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-r from-charcoal-black/50 to-transparent"></div>
+                        <span className="absolute top-4 left-4 px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg">
+                          {story.category || "Featured"}
                         </span>
                       </div>
 
-                      <h3 className="text-xl font-bold text-charcoal-black mb-3 line-clamp-2 hover:text-newari-red transition-colors">
-                        {story.title}
-                      </h3>
+                      {/* Content */}
+                      <div className="p-6 md:p-8 flex flex-col justify-center">
+                        <h3 className="text-2xl md:text-3xl font-bold text-charcoal-black mb-4 hover:text-gold-accent transition-colors">
+                          {story.title}
+                        </h3>
 
-                      <p className="text-paragraph-text text-sm mb-4 line-clamp-3 flex-grow">
-                        {story.excerpt}
-                      </p>
+                        <div className="w-14 h-1 bg-gradient-to-r from-gold-accent to-newari-red rounded-full mb-4" />
 
-                      <div className="border-t border-gray-100 pt-4 mt-auto flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-gold-accent to-newari-red flex items-center justify-center text-white font-bold">
-                            {(story.author || "A")[0].toUpperCase()}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-charcoal-black text-sm">
-                              {story.author || "Author"}
-                            </p>
-                            <p className="text-xs text-muted-text">Author</p>
-                          </div>
+                        <p className="text-paragraph-text mb-6 line-clamp-3">
+                          {story.excerpt}
+                        </p>
+
+                        <div className="flex items-center gap-4 text-sm text-muted-text mb-6">
+                          <span className="flex items-center gap-2">
+                            <svg className="w-5 h-5 text-gold-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {new Date(story.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                          </span>
+                          <span>•</span>
+                          <span className="flex items-center gap-2">
+                            <svg className="w-5 h-5 text-newari-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {story.read_time || "1 min read"}
+                          </span>
                         </div>
+
                         <button
                           onClick={() => openBlog(story)}
-                          className="text-gold-accent font-semibold flex items-center gap-1 hover:text-newari-red transition-colors"
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transition-all duration-300 w-fit shadow-md hover:shadow-lg"
                         >
-                          Read
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14 5l7 7m0 0l-7 7m7-7H3"
-                            />
+                          Read Full Story
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}
 
-            {/* Remaining blog cards (after featured ones) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {displayStories.slice(limit ? 4 : 2).map((blog, index) => (
-                <BlogCard key={blog.id} blog={blog} index={index} />
-              ))}
-            </div>
+            {/* 4 Simple Blog Cards */}
+            {simpleStories.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {simpleStories.map((blog, index) => (
+                  <BlogCard key={blog.id} blog={blog} index={index} />
+                ))}
+              </div>
+            )}
 
             {/* View All Blogs Link - show only when limited */}
             {limit && stories.length > limit && (
@@ -326,6 +291,6 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
       </div>
     </section>
   );
-};
+};;
 
 export default BlogGrid;
