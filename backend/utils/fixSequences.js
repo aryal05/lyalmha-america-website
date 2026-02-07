@@ -25,7 +25,8 @@ export async function fixAllSequences() {
     'activities',
     'testimonials',
     'traditions',
-    'page_banners'
+    'page_banners',
+    'membership_registrations'
   ]
   
   try {

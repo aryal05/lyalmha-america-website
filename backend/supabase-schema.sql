@@ -233,3 +233,24 @@ CREATE TABLE IF NOT EXISTS event_rsvps (
   attendees TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Membership Registrations table
+CREATE TABLE IF NOT EXISTS membership_registrations (
+  id BIGSERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  full_address TEXT,
+  city TEXT,
+  zipcode TEXT,
+  contact_no TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  family_id TEXT,
+  referred_by TEXT,
+  referral_name TEXT,
+  referral_contact TEXT,
+  membership_token TEXT UNIQUE NOT NULL,
+  membership_fee DECIMAL(10,2) DEFAULT 100.00,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

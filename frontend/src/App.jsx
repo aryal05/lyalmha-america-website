@@ -27,6 +27,7 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import AdminActivities from "./pages/admin/AdminActivities";
 import AdminRSVPs from "./pages/admin/AdminRSVPs";
 import AdminProjects from "./pages/admin/AdminProjects";
+import AdminMembership from "./pages/admin/AdminMembership";
 import AdminFestivals from "./pages/admin/AdminFestivals";
 import LoadingScreen from "./components/LoadingScreen";
 import ScrollToTopOnMount from "./components/ScrollToTopOnMount";
@@ -165,6 +166,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminFestivals />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/membership"
+              element={
+                <ProtectedRoute>
+                  <AdminMembership />
                 </ProtectedRoute>
               }
             />

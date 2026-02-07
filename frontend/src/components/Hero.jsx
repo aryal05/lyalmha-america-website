@@ -5,6 +5,7 @@ import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
 import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
+import MembershipRegistrationModal from "./MembershipRegistrationModal";
 
 const Hero = () => {
   const [currentBg, setCurrentBg] = useState(0);
@@ -12,6 +13,7 @@ const Hero = () => {
   const [loading, setLoading] = useState(true);
   // Removed textContent and featuredProjects related state
   const [showDonateModal, setShowDonateModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   // Filter banners with images and get their URLs
   const validBanners = banners.filter((banner) => banner.image);
@@ -208,8 +210,8 @@ const Hero = () => {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Link
-              to="/contact"
+            <button
+              onClick={() => setShowRegisterModal(true)}
               className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-gold-accent via-yellow-500 to-gold-accent text-charcoal-black font-bold rounded-xl shadow-2xl hover:shadow-gold-accent/50 transition-all duration-300 border-2 border-gold-accent hover:border-newari-red flex items-center justify-center gap-3 text-base w-full sm:w-auto min-w-[200px]"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-newari-red/0 via-newari-red/20 to-newari-red/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -221,7 +223,7 @@ const Hero = () => {
                 <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
               </svg>
               <span className="relative z-10">Register Here</span>
-            </Link>
+            </button>
           </motion.div>
 
           {/* Explore Stories - Tertiary CTA */}
@@ -297,8 +299,13 @@ const Hero = () => {
           ))}
         </motion.div>
       )}
+      {/* Membership Registration Modal */}
+      <MembershipRegistrationModal
+        isOpen={showRegisterModal}
+        onClose={() => setShowRegisterModal(false)}
+      />
     </section>
   );
-};;
+};
 
 export default Hero

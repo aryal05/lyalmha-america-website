@@ -21,6 +21,7 @@ import adminContactRoutes from './routes/adminContactRoutes.js'
 import adminRsvpRoutes from './routes/adminRsvpRoutes.js'
 import rsvpRoutes from './routes/rsvpRoutes.js'
 import adminProjectsRoutes from './routes/adminProjectsRoutes.js'
+import adminMembershipRoutes from './routes/adminMembershipRoutes.js'
 import { fixAllSequences } from './utils/fixSequences.js'
 
 dotenv.config()
@@ -82,6 +83,8 @@ app.use('/api/admin/contact', adminContactRoutes)
 app.use('/api/admin/rsvps', adminRsvpRoutes)
 app.use('/api/rsvp', rsvpRoutes)
 app.use('/api/admin/projects', adminProjectsRoutes)
+app.use('/api/membership', adminMembershipRoutes)
+app.use('/api/admin/membership', adminMembershipRoutes)
 
 app.use((err, req, res, next) => {
   console.error(err.stack)
