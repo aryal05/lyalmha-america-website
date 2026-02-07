@@ -143,7 +143,7 @@ router.get('/:id', async (req, res) => {
 // PUT update full registration
 router.put('/:id', async (req, res) => {
   try {
-    const { first_name, last_name, email, phone, address, city, state, zip_code, membership_type, family_size, notes } = req.body
+    const { first_name, last_name, email, contact_no, full_address, city, zipcode, family_id, referred_by, referral_name, referral_contact, membership_type, status } = req.body
 
     // Check if registration exists
     const existing = await QueryHelper.get(
@@ -158,12 +158,13 @@ router.put('/:id', async (req, res) => {
     // Update the registration
     await QueryHelper.run(
       `UPDATE membership_registrations SET 
-        first_name = ?, last_name = ?, email = ?, phone = ?, 
-        address = ?, city = ?, state = ?, zip_code = ?, 
-        membership_type = ?, family_size = ?, notes = ?,
+        first_name = ?, last_name = ?, email = ?, contact_no = ?, 
+        full_address = ?, city = ?, zipcode = ?, family_id = ?,
+        referred_by = ?, referral_name = ?, referral_contact = ?,
+        membership_type = ?, status = ?,
         updated_at = CURRENT_TIMESTAMP 
       WHERE id = ?`,
-      [first_name, last_name, email, phone, address, city, state, zip_code, membership_type, family_size || null, notes || null, req.params.id]
+      [first_name, last_name, email, contact_no, full_address, city, zipcode, family_id || null, referred_by || null, referral_name || null, referral_contact || null, membership_type, status, req.params.id]
     )
 
     const updated = await QueryHelper.get(
