@@ -449,7 +449,10 @@ const AdminGallery = () => {
                         {event.event_type}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {new Date(event.event_date).toLocaleDateString()}
+                        {new Date(event.event_date).toLocaleDateString(
+                          "en-US",
+                          { timeZone: "America/New_York" },
+                        )}
                       </span>
                     </div>
                     <h3 className="text-gray-900 font-bold text-lg mb-2 line-clamp-1">

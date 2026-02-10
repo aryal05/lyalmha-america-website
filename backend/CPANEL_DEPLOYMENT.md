@@ -62,3 +62,8 @@ SQLite database will be stored at:
 /home/username/public_html/api/database.sqlite
 
 This persists between restarts!
+
+.\deploy-to-cpanel.ps1
+
+.\upload-ftp.ps1
+

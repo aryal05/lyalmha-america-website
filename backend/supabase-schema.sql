@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS events (
   title TEXT NOT NULL,
   description TEXT,
   event_date TEXT NOT NULL,
+  event_time TEXT,
   location TEXT,
   event_type TEXT DEFAULT 'event',
   image TEXT,

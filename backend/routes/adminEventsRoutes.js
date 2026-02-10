@@ -90,7 +90,7 @@ router.use(authenticateToken)
 // POST create event
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, location, event_type } = req.body
+    const { title, description, event_date, event_time, location, event_type } = req.body
     
     if (!title || !event_date) {
       return res.status(400).json({ 
@@ -103,9 +103,9 @@ router.post('/', upload.single('image'), async (req, res) => {
     const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
     
     const result = await QueryHelper.run(`
-      INSERT INTO events (title, description, event_date, location, event_type, image)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `, [title, description, event_date, location, event_type, image])
+      INSERT INTO events (title, description, event_date, event_time, location, event_type, image)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `, [title, description, event_date, event_time || null, location, event_type, image])
     
     const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [result.lastID])
     
@@ -118,7 +118,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update event
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, location, event_type } = req.body
+    const { title, description, event_date, event_time, location, event_type } = req.body
     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
@@ -130,13 +130,14 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     
     await QueryHelper.run(`
       UPDATE events 
-      SET title = ?, description = ?, event_date = ?, 
+      SET title = ?, description = ?, event_date = ?, event_time = ?,
           location = ?, event_type = ?, image = ?
       WHERE id = ?
     `, [
       title || event.title,
       description || event.description,
       event_date || event.event_date,
+      event_time !== undefined ? event_time : event.event_time,
       location || event.location,
       event_type || event.event_type,
       image,

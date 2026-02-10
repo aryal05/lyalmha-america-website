@@ -9,89 +9,95 @@ const AdminEvents = () => {
   const [showForm, setShowForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    event_date: '',
-    location: '',
-    event_type: 'upcoming',
-    image: null
-  })
+    title: "",
+    description: "",
+    event_date: "",
+    event_time: "",
+    location: "",
+    event_type: "upcoming",
+    image: null,
+  });
 
   useEffect(() => {
-    fetchEvents()
-  }, [])
+    fetchEvents();
+  }, []);
 
   const fetchEvents = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.EVENTS.GET_ALL)
-      setEvents(response.data.data)
+      const response = await apiClient.get(API_ENDPOINTS.EVENTS.GET_ALL);
+      setEvents(response.data.data);
     } catch (error) {
-      console.error('Error fetching events:', error)
+      console.error("Error fetching events:", error);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const data = new FormData()
-      data.append('title', formData.title)
-      data.append('description', formData.description)
-      data.append('event_date', formData.event_date)
-      data.append('location', formData.location)
-      data.append('event_type', formData.event_type)
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("event_date", formData.event_date);
+      data.append("event_time", formData.event_time);
+      data.append("location", formData.location);
+      data.append("event_type", formData.event_type);
       if (formData.image) {
-        data.append('image', formData.image)
+        data.append("image", formData.image);
       }
 
       if (editingEvent) {
-        await apiClient.put(API_ENDPOINTS.EVENTS.UPDATE(editingEvent.id), data)
+        await apiClient.put(API_ENDPOINTS.EVENTS.UPDATE(editingEvent.id), data);
       } else {
-        await apiClient.post(API_ENDPOINTS.EVENTS.CREATE, data)
+        await apiClient.post(API_ENDPOINTS.EVENTS.CREATE, data);
       }
-      fetchEvents()
-      resetForm()
+      fetchEvents();
+      resetForm();
     } catch (error) {
-      console.error('Error saving event:', error)
-      alert('Error saving event: ' + (error.response?.data?.error || error.message))
+      console.error("Error saving event:", error);
+      alert(
+        "Error saving event: " + (error.response?.data?.error || error.message),
+      );
     }
-  }
+  };
 
   const handleEdit = (event) => {
-    setEditingEvent(event)
+    setEditingEvent(event);
     setFormData({
       title: event.title,
       description: event.description,
-      event_date: event.event_date?.split('T')[0] || '',
+      event_date: event.event_date?.split("T")[0] || "",
+      event_time: event.event_time || "",
       location: event.location,
       event_type: event.event_type,
-      image: null
-    })
-    setShowForm(true)
-  }
+      image: null,
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    if (window.confirm("Are you sure you want to delete this event?")) {
       try {
-        await apiClient.delete(API_ENDPOINTS.EVENTS.DELETE(id))
-        fetchEvents()
+        await apiClient.delete(API_ENDPOINTS.EVENTS.DELETE(id));
+        fetchEvents();
       } catch (error) {
-        console.error('Error deleting event:', error)
+        console.error("Error deleting event:", error);
       }
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      event_date: '',
-      location: '',
-      event_type: 'upcoming',
-      image: null
-    })
-    setEditingEvent(null)
-    setShowForm(false)
-  }
+      title: "",
+      description: "",
+      event_date: "",
+      event_time: "",
+      location: "",
+      event_type: "upcoming",
+      image: null,
+    });
+    setEditingEvent(null);
+    setShowForm(false);
+  };
 
   return (
     <AdminLayout>
@@ -200,6 +206,25 @@ const AdminEvents = () => {
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Event Time (Eastern Time)
+                    </label>
+                    <input
+                      type="time"
+                      value={formData.event_time}
+                      onChange={(e) =>
+                        setFormData({ ...formData, event_time: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      All times are in US Eastern Time (ET)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
                       Type <span className="text-newari-red">*</span>
@@ -359,7 +384,10 @@ const AdminEvents = () => {
                 <div className="space-y-1 mb-4">
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📅</span>
-                    {new Date(event.event_date).toLocaleDateString()}
+                    {new Date(event.event_date).toLocaleDateString("en-US", {
+                      timeZone: "America/New_York",
+                    })}
+                    {event.event_time && ` at ${event.event_time} ET`}
                   </p>
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📍</span>

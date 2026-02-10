@@ -143,213 +143,219 @@ const Culture = () => {
 
       {/* Content Section - White Background */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        {/* Premium Major Festivals */}
+        <div className="mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
+          >
+            <span className="text-royal-blue">Major</span>{" "}
+            <span className="text-gold-accent">Festivals</span>
+          </motion.h2>
+          {loading ? (
+            <p className="text-muted-text text-center animate-pulse">
+              Loading festivals...
+            </p>
+          ) : (
+            <div className="space-y-8">
+              {festivals.map((festival, index) => {
+                const highlights = festival.highlights
+                  ? JSON.parse(festival.highlights)
+                  : [];
+                const isExpanded = expandedFestivals[festival.id];
+                const shouldTruncate = festival.description.length > 300;
 
-          {/* Premium Major Festivals */}
-          <div className="mb-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
-            >
-              <span className="text-royal-blue">Major</span>{" "}
-              <span className="text-gold-accent">Festivals</span>
-            </motion.h2>
-            {loading ? (
-              <p className="text-muted-text text-center animate-pulse">
-                Loading festivals...
-              </p>
-            ) : (
-              <div className="space-y-8">
-                {festivals.map((festival, index) => {
-                  const highlights = festival.highlights
-                    ? JSON.parse(festival.highlights)
-                    : [];
-                  const isExpanded = expandedFestivals[festival.id];
-                  const shouldTruncate = festival.description.length > 300;
-                  
-                  return (
-                    <motion.div
-                      key={festival.id}
-                      id={festival.title.toLowerCase().includes('biskaa') ? 'biskaa-jatraa' : festival.title.toLowerCase().includes('mha') ? 'mha-puja' : festival.title.toLowerCase().includes('yomari') ? 'yomari-punhi' : ''}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.15, duration: 0.6 }}
-                      className="card-premium group hover:border-gold-accent/50 hover:shadow-gold transition-all duration-500 temple-corner overflow-hidden"
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                        {/* Content Section - 50% LEFT */}
-                        <div className="p-6 flex flex-col order-2 md:order-1">
-                          <h3 className="heading-md mb-3 group-hover:text-gold-accent transition-colors">
-                            {festival.title}
-                          </h3>
-                          <div className="mb-4 flex-1">
-                            <p className="text-paragraph-text leading-relaxed">
-                              {isExpanded || !shouldTruncate
-                                ? festival.description
-                                : `${festival.description.slice(0, 300)}...`}
-                            </p>
-                            {shouldTruncate && (
-                              <button
-                                onClick={() =>
-                                  setExpandedFestivals((prev) => ({
-                                    ...prev,
-                                    [festival.id]: !prev[festival.id],
-                                  }))
-                                }
-                                className="mt-2 text-sm font-semibold text-gold-accent hover:text-newari-red transition-colors duration-300 flex items-center gap-1"
+                return (
+                  <motion.div
+                    key={festival.id}
+                    id={
+                      festival.title.toLowerCase().includes("biskaa")
+                        ? "biskaa-jatraa"
+                        : festival.title.toLowerCase().includes("mha")
+                          ? "mha-puja"
+                          : festival.title.toLowerCase().includes("yomari")
+                            ? "yomari-punhi"
+                            : ""
+                    }
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.15, duration: 0.6 }}
+                    className="card-premium group hover:border-gold-accent/50 hover:shadow-gold transition-all duration-500 temple-corner overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                      {/* Content Section - 50% LEFT */}
+                      <div className="p-6 flex flex-col order-2 md:order-1">
+                        <h3 className="heading-md mb-3 group-hover:text-gold-accent transition-colors">
+                          {festival.title}
+                        </h3>
+                        <div className="mb-4 flex-1">
+                          <p className="text-paragraph-text leading-relaxed">
+                            {isExpanded || !shouldTruncate
+                              ? festival.description
+                              : `${festival.description.slice(0, 300)}...`}
+                          </p>
+                          {shouldTruncate && (
+                            <button
+                              onClick={() =>
+                                setExpandedFestivals((prev) => ({
+                                  ...prev,
+                                  [festival.id]: !prev[festival.id],
+                                }))
+                              }
+                              className="mt-2 text-sm font-semibold text-gold-accent hover:text-newari-red transition-colors duration-300 flex items-center gap-1"
+                            >
+                              {isExpanded ? "Read Less" : "Read More"}
+                              <svg
+                                className={`w-4 h-4 transform transition-transform duration-300 ${
+                                  isExpanded ? "rotate-180" : ""
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                               >
-                                {isExpanded ? 'Read Less' : 'Read More'}
-                                <svg
-                                  className={`w-4 h-4 transform transition-transform duration-300 ${
-                                    isExpanded ? 'rotate-180' : ''
-                                  }`}
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 9l-7 7-7-7"
-                                  />
-                                </svg>
-                              </button>
-                            )}
-                          </div>
-                          {highlights.length > 0 && (
-                            <div className="space-y-2 pt-4 border-t border-border-line">
-                              {highlights.map((highlight, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center text-sm text-muted-text group-hover:text-paragraph-text transition-colors"
-                                >
-                                  <svg
-                                    className="w-4 h-4 mr-2 text-gold-accent flex-shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                  {highlight}
-                                </div>
-                              ))}
-                            </div>
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </button>
                           )}
                         </div>
-                        
-                        {/* Image Section - 50% RIGHT */}
-                        {festival.image && (
-                          <div className="relative h-80 overflow-hidden order-1 md:order-2">
-                            <div className="absolute inset-0 mandala-pattern opacity-20 z-10"></div>
-                            <img
-                              src={getImageUrl(festival.image)}
-                              alt={festival.title}
-                              className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent z-20"></div>
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-gold-accent/30 to-transparent rounded-bl-3xl z-30">
-                              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-newari-red"></div>
-                            </div>
+                        {highlights.length > 0 && (
+                          <div className="space-y-2 pt-4 border-t border-border-line">
+                            {highlights.map((highlight, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center text-sm text-muted-text group-hover:text-paragraph-text transition-colors"
+                              >
+                                <svg
+                                  className="w-4 h-4 mr-2 text-gold-accent flex-shrink-0"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                {highlight}
+                              </div>
+                            ))}
                           </div>
                         )}
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
 
-          {/* Premium Cultural Traditions */}
-          <div className="mb-20">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
-            >
-              <span className="text-royal-blue">Our</span>{" "}
-              <span className="text-gold-accent">Traditions</span>
-            </motion.h2>
-            {loading ? (
-              <p className="text-muted-text text-center animate-pulse">
-                Loading traditions...
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {staticTraditions.map((tradition, index) => (
-                  <motion.div
-                    key={tradition.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    className="card-premium group hover:border-newari-red/50 hover:shadow-premium transition-all duration-500 text-center"
-                  >
-                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                      {tradition.icon}
+                      {/* Image Section - 50% RIGHT */}
+                      {festival.image && (
+                        <div className="relative h-80 overflow-hidden order-1 md:order-2">
+                          <div className="absolute inset-0 mandala-pattern opacity-20 z-10"></div>
+                          <img
+                            src={getImageUrl(festival.image)}
+                            alt={festival.title}
+                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent z-20"></div>
+                          <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-gold-accent/30 to-transparent rounded-bl-3xl z-30">
+                            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-newari-red"></div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <h3 className="heading-md mb-3 group-hover:text-newari-red transition-colors duration-300">
-                      {tradition.title}
-                    </h3>
-                    <p className="text-paragraph-text text-sm leading-relaxed">
-                      {tradition.description}
-                    </p>
                   </motion.div>
-                ))}
-              </div>
-            )}
-          </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
-          {/* Premium About Newari Civilization */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+        {/* Premium Cultural Traditions */}
+        <div className="mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-20 card-premium border-gold-accent/30 bg-gradient-to-br from-dark-navy/50 to-charcoal-black/50"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-12"
           >
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-accent"></div>
-              <h2 className="heading-lg text-center">
-                The{" "}
-                <span className="text-gold-accent">Newari Civilization</span>
-              </h2>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-accent"></div>
+            <span className="text-royal-blue">Our</span>{" "}
+            <span className="text-gold-accent">Traditions</span>
+          </motion.h2>
+          {loading ? (
+            <p className="text-muted-text text-center animate-pulse">
+              Loading traditions...
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {staticTraditions.map((tradition, index) => (
+                <motion.div
+                  key={tradition.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="card-premium group hover:border-newari-red/50 hover:shadow-premium transition-all duration-500 text-center"
+                >
+                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    {tradition.icon}
+                  </div>
+                  <h3 className="heading-md mb-3 group-hover:text-newari-red transition-colors duration-300">
+                    {tradition.title}
+                  </h3>
+                  <p className="text-paragraph-text text-sm leading-relaxed">
+                    {tradition.description}
+                  </p>
+                </motion.div>
+              ))}
             </div>
-            <div className="space-y-4 text-paragraph-text leading-relaxed">
-              <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-gold-accent first-letter:mr-2 first-letter:float-left">
-                The Newari people are the indigenous inhabitants of the
-                Kathmandu Valley in Nepal, with a rich cultural heritage
-                spanning over two millennia. Our civilization has contributed
-                significantly to art, architecture, trade, and culture in the
-                Himalayan region.
-              </p>
-              <p>
-                The Dyou-Kha (chariot) symbolizes our civilization prior to the
-                invention of wheels in human history, carried on human shoulders
-                as a testament to our ancestors' ingenuity and community spirit.
-              </p>
-              <p>
-                In America, we continue to preserve and celebrate these
-                traditions, ensuring that future generations remain connected to
-                their roots while embracing their new homeland.
-              </p>
-            </div>
+          )}
+        </div>
 
-            {/* Decorative Border */}
-            <div className="mt-8 pt-8 border-t border-gold-accent/20 text-center">
-              <p className="text-sm text-muted-text italic">
-                "Preserving our heritage for generations to come"
-              </p>
-            </div>
-          </motion.div>
+        {/* Premium About Newari Civilization */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-20 card-premium border-gold-accent/30 bg-gradient-to-br from-dark-navy/50 to-charcoal-black/50"
+        >
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-accent"></div>
+            <h2 className="heading-lg text-center">
+              Grooming{" "}
+              <span className="text-gold-accent">The Next Generation</span>
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-accent"></div>
+          </div>
+          <div className="space-y-4 text-paragraph-text leading-relaxed">
+            <p className="first-letter:text-4xl first-letter:font-bold first-letter:text-gold-accent first-letter:mr-2 first-letter:float-left">
+              Preserve our culture, language, arts, and music, inspiring the
+              community to foster intercultural understanding and appreciation
+              through high-quality, meaningful, and accessible musical and
+              cultural collaborations.
+            </p>
+            <p>
+              The Dyou-Kha (chariot) symbolizes our civilization prior to the
+              invention of wheels in human history, carried on human shoulders
+              as a testament to our ancestors' ingenuity and community spirit.
+            </p>
+            <p>
+              In America, we continue to preserve and celebrate these
+              traditions, ensuring that future generations remain connected to
+              their roots while embracing their new homeland.
+            </p>
+          </div>
+
+          {/* Decorative Border */}
+          <div className="mt-8 pt-8 border-t border-gold-accent/20 text-center">
+            <p className="text-sm text-muted-text italic">
+              "Preserving our heritage for generations to come"
+            </p>
+          </div>
+        </motion.div>
       </section>
 
       <Footer />

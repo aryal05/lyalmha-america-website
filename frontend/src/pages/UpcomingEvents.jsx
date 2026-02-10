@@ -57,11 +57,22 @@ const UpcomingEvents = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
+  };
+
+  const formatTime = (timeString) => {
+    if (!timeString) return null;
+    // Convert 24h time to 12h format
+    const [hours, minutes] = timeString.split(":");
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm} ET`;
   };
 
   return (
@@ -152,6 +163,8 @@ const UpcomingEvents = () => {
                           />
                         </svg>
                         {formatDate(event.event_date)}
+                        {event.event_time &&
+                          ` at ${formatTime(event.event_time)}`}
                       </div>
                       {event.location && (
                         <div className="flex items-center gap-2 text-sm text-paragraph-text">

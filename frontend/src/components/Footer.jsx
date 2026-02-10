@@ -41,14 +41,15 @@ const Footer = () => {
                     Lyaymha America Guthi
                   </h3>
                   <p className="text-gold-accent font-semibold text-sm">
-                    Newari Culture & Heritage
+                    Newah Culture & Heritage
                   </p>
                 </div>
               </div>
               <p className="text-cream-white/90 mb-6 max-w-md leading-relaxed">
-                Connecting and celebrating Newari heritage across America. Join
-                us in preserving our rich cultural traditions, vibrant
-                festivals, and timeless values for future generations.
+                Lyaymha America Guthi (LAG) is a registered U.S.-based
+                non-profit organization devoted to nurturing the next generation
+                through Newah art, culture, and language, helping U.S.-born
+                children take pride in their heritage and identity.
               </p>
 
               {/* Premium Social Media Links */}
@@ -232,7 +233,7 @@ const Footer = () => {
                       Location
                     </p>
                     <p className="text-cream-white/90">
-                      Virginia City, VA, United States
+                      Virginia, VA, United States
                     </p>
                   </div>
                 </li>
