@@ -2,8 +2,32 @@ import express from 'express';
 import { QueryHelper } from '../utils/queryHelper.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { upload, uploadToCloudinary } from '../utils/uploadHelper.js';
+import cloudinary from '../config/cloudinary.js';
 
 const router = express.Router();
+
+// Get Cloudinary signature for direct browser uploads (protected)
+router.get('/cloudinary-signature', authenticateToken, (req, res) => {
+  try {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const folder = 'lyalmha/event_images';
+    const signature = cloudinary.utils.api_sign_request(
+      { timestamp, folder },
+      process.env.CLOUDINARY_API_SECRET
+    );
+    res.json({
+      success: true,
+      signature,
+      timestamp,
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      folder
+    });
+  } catch (error) {
+    console.error('Error generating Cloudinary signature:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // Get all images for an event
 router.get('/:event_id', async (req, res) => {
@@ -72,6 +96,32 @@ router.post('/:event_id', (req, res, next) => {
     res.status(201).json({ success: true, data: uploadedImages });
   } catch (error) {
     console.error('Error uploading event images:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Save image URLs uploaded directly from browser to Cloudinary
+router.post('/:event_id/save-urls', async (req, res) => {
+  try {
+    const { urls, thumbnailIndex } = req.body;
+    if (!urls || !Array.isArray(urls) || urls.length === 0) {
+      return res.status(400).json({ success: false, error: 'No image URLs provided' });
+    }
+
+    console.log(`Saving ${urls.length} image URLs for event ${req.params.event_id}`);
+
+    const insertPromises = urls.map((url, i) =>
+      QueryHelper.run(
+        'INSERT INTO event_images (event_id, image_url, is_thumbnail) VALUES (?, ?, ?)',
+        [req.params.event_id, url, i === (parseInt(thumbnailIndex) || 0) ? 1 : 0]
+      )
+    );
+
+    await Promise.all(insertPromises);
+    console.log(`Successfully saved ${urls.length} image URLs`);
+    res.status(201).json({ success: true, data: urls });
+  } catch (error) {
+    console.error('Error saving image URLs:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

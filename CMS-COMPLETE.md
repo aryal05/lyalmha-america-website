@@ -64,8 +64,8 @@
 
 1. **Login to Admin Panel:**
    - URL: `http://localhost:3000/admin/login`
-   - Email: `admin@lyalmha.com`
-   - Password: `admin123`
+   - Username: `lag2020`
+   - Password: `LAG@am3rica2020!`
    - ⚠️ **IMPORTANT:** Change this password immediately in production!
 
 2. **Admin Dashboard:**

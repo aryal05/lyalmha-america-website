@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import axios from "axios";
+import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS, API_URL } from "../../config/api";
 import AdminLayout from "../../components/admin/AdminLayout";
 
@@ -80,18 +81,41 @@ const AdminGallery = () => {
         eventId = response.data.data.id;
       }
 
-      // Step 2: Upload other images in background (don't wait)
+      // Step 2: Upload other images directly to Cloudinary (bypasses Vercel size limit)
       if (otherImageFiles.length > 0) {
-        const imagesFormData = new FormData();
-        otherImageFiles.forEach((file) =>
-          imagesFormData.append("images", file),
+        // Get Cloudinary signature from backend
+        const sigResponse = await apiClient.get(
+          API_ENDPOINTS.EVENT_IMAGES.CLOUDINARY_SIGNATURE,
         );
-        imagesFormData.append("thumbnailIndex", 0);
+        const { signature, timestamp, cloud_name, api_key, folder } =
+          sigResponse.data;
 
-        // Upload in background, don't await
-        apiClient
-          .post(API_ENDPOINTS.EVENT_IMAGES.UPLOAD(eventId), imagesFormData)
-          .then(() => console.log("Images uploaded successfully"))
+        // Upload each image directly to Cloudinary from the browser
+        const uploadPromises = otherImageFiles.map(async (file) => {
+          const cloudFormData = new FormData();
+          cloudFormData.append("file", file);
+          cloudFormData.append("api_key", api_key);
+          cloudFormData.append("timestamp", timestamp);
+          cloudFormData.append("signature", signature);
+          cloudFormData.append("folder", folder);
+
+          const cloudRes = await axios.post(
+            `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+            cloudFormData,
+          );
+          return cloudRes.data.secure_url;
+        });
+
+        // Upload all to Cloudinary, then save URLs to backend
+        Promise.all(uploadPromises)
+          .then(async (urls) => {
+            await apiClient.post(
+              API_ENDPOINTS.EVENT_IMAGES.SAVE_URLS(eventId),
+              { urls, thumbnailIndex: 0 },
+            );
+            console.log("Images uploaded and saved successfully");
+            fetchEvents();
+          })
           .catch((err) => console.error("Error uploading images:", err));
       }
 

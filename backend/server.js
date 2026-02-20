@@ -71,6 +71,18 @@ const allowedOrigins = [
   'http://localhost:5173',
 ]
 
+// Handle OPTIONS preflight explicitly (before any other middleware)
+app.options('*', (req, res) => {
+  res.set({
+    'Access-Control-Allow-Origin': req.headers.origin || '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+  })
+  res.sendStatus(204)
+})
+
 app.use(cors({
   origin: function(origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -88,8 +100,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -188,8 +200,7 @@ if (!process.env.VERCEL) {
     console.log(`🚀 Server is running on port ${PORT}`)
     console.log(`📍 API URL: http://localhost:${PORT}`)
     console.log(`🔐 Admin credentials:`)
-    console.log(`   Username: admin`)
-    console.log(`   Password: admin123`)
-    console.log(`   ⚠️  CHANGE THIS PASSWORD IMMEDIATELY!`)
+    console.log(`   Username: lag2020`)
+    console.log(`   ⚠️  Password is secured`)
   })
 }

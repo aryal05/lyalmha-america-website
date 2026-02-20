@@ -7,21 +7,20 @@ async function seed() {
   const db = getDatabase()
 
   // Check if admin user exists (by username)
-  const existingAdmin = await db.get('SELECT * FROM users WHERE username = ?', ['admin'])
+  const existingAdmin = await db.get('SELECT * FROM users WHERE username = ?', ['lag2020'])
 
   if (!existingAdmin) {
     // Create default admin user
-    const hashedPassword = await bcrypt.hash('admin123', 10)
+    const hashedPassword = await bcrypt.hash('LAG@am3rica2020!', 10)
     
     try {
       await db.run(`
         INSERT INTO users (username, email, password, role)
         VALUES (?, ?, ?, ?)
-      `, ['admin', 'admin@lyalmha.com', hashedPassword, 'super_admin'])
+      `, ['lag2020', 'admin@lyaymhaamerica.org', hashedPassword, 'super_admin'])
       
       console.log('✅ Default admin user created')
-      console.log('   Username: admin')
-      console.log('   Password: admin123')
+      console.log('   Username: lag2020')
       
     } catch (error) {
       console.log('ℹ  Admin user setup - checking existing user...')

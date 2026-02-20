@@ -118,6 +118,8 @@ export const API_ENDPOINTS = {
   EVENT_IMAGES: {
     GET_BY_EVENT: (eventId) => `/api/admin/event-images/${eventId}`,
     UPLOAD: (eventId) => `/api/admin/event-images/${eventId}`,
+    SAVE_URLS: (eventId) => `/api/admin/event-images/${eventId}/save-urls`,
+    CLOUDINARY_SIGNATURE: '/api/admin/event-images/cloudinary-signature',
     DELETE: (imageId) => `/api/admin/event-images/${imageId}`,
   },
   CONTACT: {

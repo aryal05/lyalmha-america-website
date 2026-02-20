@@ -268,7 +268,7 @@ git push
 - **Frontend:** https://lyalmha-america-website.vercel.app
 - **Backend API:** https://api.yourdomain.com
 - **Admin Panel:** https://lyalmha-america-website.vercel.app/admin
-- **Admin Credentials:** username: `admin`, password: `admin123`
+- **Admin Credentials:** username: `lag2020`, password: `LAG@am3rica2020!`
 
 **⚠️ IMPORTANT: Change admin password immediately after first login!**
 
