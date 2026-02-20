@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -10,6 +10,9 @@ import { getImageUrl } from "../utils/imageHelper";
 const GalleryEventDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const fromTab = searchParams.get("from") || "";
+  const backUrl = fromTab ? `/gallery?tab=${fromTab}` : "/gallery";
   const [images, setImages] = useState([]);
   const [event, setEvent] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
@@ -95,7 +98,7 @@ const GalleryEventDetail = () => {
             Event not found
           </h2>
           <button
-            onClick={() => navigate("/gallery")}
+            onClick={() => navigate(backUrl)}
             className="px-6 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold"
           >
             ← Back to Gallery
@@ -123,7 +126,7 @@ const GalleryEventDetail = () => {
             className="text-center"
           >
             <button
-              onClick={() => navigate("/gallery")}
+              onClick={() => navigate(backUrl)}
               className="inline-flex items-center gap-2 text-cream-white hover:text-gold-accent transition-colors mb-6"
             >
               <svg

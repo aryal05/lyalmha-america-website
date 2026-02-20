@@ -4,16 +4,17 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import ScrollToTop from '../components/ScrollToTop'
 import { apiClient, API_ENDPOINTS } from '../config/api'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getImageUrl } from "../utils/imageHelper";
 
 const Gallery = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [allEvents, setAllEvents] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState(searchParams.get("tab") || "all");
 
   useEffect(() => {
     fetchEvents();
@@ -31,8 +32,8 @@ const Gallery = () => {
       ];
       setEventTypes(types);
 
-      // Set initial filter to first available type or 'all'
-      if (types.length > 0) {
+      // Set initial filter to first available type or 'all' (only if no tab in URL)
+      if (!searchParams.get("tab") && types.length > 0) {
         setFilter(types[0]);
       }
     } catch (error) {
@@ -162,7 +163,9 @@ const Gallery = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   className="group relative overflow-hidden rounded-xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
-                  onClick={() => navigate(`/gallery/event/${event.id}`)}
+                  onClick={() =>
+                    navigate(`/gallery/event/${event.id}?from=${filter}`)
+                  }
                 >
                   {/* Image Section */}
                   <div className="aspect-square overflow-hidden">
