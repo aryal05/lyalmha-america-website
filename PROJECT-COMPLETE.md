@@ -48,7 +48,7 @@ Project-Culture/
 ✅ Professional landing page with hero section
 ✅ Animated logo display (Framer Motion)
 ✅ Responsive navigation bar
-✅ Blog grid with 6 dummy Newari culture posts
+✅ Blog grid with 6 dummy newari culture posts
 ✅ Smooth scroll animations
 ✅ Hover effects on blog cards
 ✅ Mobile-responsive design
@@ -134,9 +134,9 @@ Edit dummy blog posts in:
    - Animated scroll indicator
 
 2. **Blog Grid**:
-   - 6 blog posts about Newari culture:
+   - 6 blog posts about newari culture:
      * Indra Jatra festival
-     * Newari cuisine
+     * newari cuisine
      * Architecture & temples
      * Language & literature
      * Music & dance
@@ -249,7 +249,7 @@ npm start         # Start production server
 
 ## 🎊 You're All Set!
 
-Your professional Newari culture blog is ready to impress clients!
+Your professional newari culture blog is ready to impress clients!
 
 **Don't forget to add your logo to `frontend/public/logo.png`**
 

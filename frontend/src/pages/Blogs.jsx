@@ -100,9 +100,9 @@ const Blogs = () => {
               <div className="pagoda-divider w-64"></div>
             </div>
 
-            <p className="text-xl text-paragraph-text max-w-3xl mx-auto">
+            <p className="text-xl text-paragraph-text  text-white max-w-3xl mx-auto">
               Stories, insights, and updates from our community's journey in
-              preserving and celebrating Newari culture
+              preserving and celebrating newari culture
             </p>
           </motion.div>
 

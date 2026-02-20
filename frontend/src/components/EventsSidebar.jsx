@@ -226,7 +226,7 @@ const EventsSidebar = () => {
             </div>
           ) : upcomingEvents.length > 0 ? (
             <div className="space-y-6">
-              {upcomingEvents.map((event, index) => {
+              {upcomingEvents.slice(0, 2).map((event, index) => {
                 const countdown = countdowns[event.id];
                 return (
                   <motion.div
@@ -392,7 +392,9 @@ const EventsSidebar = () => {
               whileTap={{ scale: 0.98 }}
               className="mt-6 w-full px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-charcoal-black font-bold rounded-lg hover:from-gold-accent hover:to-newari-red transition-all duration-300 shadow-lg"
             >
-              View All Events
+              View All Events{" "}
+              {upcomingEvents.length > 2 &&
+                `(${upcomingEvents.length - 2} more)`}
             </motion.button>
           </Link>
         </div>
@@ -547,7 +549,7 @@ const EventsSidebar = () => {
           <div className="pagoda-divider w-32 mx-auto mb-4"></div>
 
           <p className="text-paragraph-text text-sm mb-6 leading-relaxed">
-            Join our community of dedicated supporters and help preserve Newari
+            Join our community of dedicated supporters and help preserve newari
             culture for future generations.
           </p>
 

@@ -43,7 +43,7 @@ const Projects = () => {
     >
       <div className="mb-12 text-center">
         <h2 className="heading-lg mb-6 relative inline-block">
-          Our{' '}
+          Our{" "}
           <span className="bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
             Projects
           </span>
@@ -92,9 +92,9 @@ const Projects = () => {
                       className="inline-block px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full mb-6 w-fit shadow-lg"
                       animate={{
                         boxShadow: [
-                          '0 0 20px rgba(242, 201, 76, 0.5)',
-                          '0 0 30px rgba(196, 22, 28, 0.5)',
-                          '0 0 20px rgba(242, 201, 76, 0.5)',
+                          "0 0 20px rgba(242, 201, 76, 0.5)",
+                          "0 0 30px rgba(196, 22, 28, 0.5)",
+                          "0 0 20px rgba(242, 201, 76, 0.5)",
                         ],
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
@@ -133,7 +133,9 @@ const Projects = () => {
                           </svg>
                         </div>
                         <div>
-                          <span className="font-semibold text-gold-accent">Started: {project.start_date}</span>
+                          <span className="font-semibold text-gold-accent">
+                            Started: {project.start_date}
+                          </span>
                           {project.end_date && (
                             <>
                               <span className="mx-2">|</span>
@@ -164,7 +166,9 @@ const Projects = () => {
                           </svg>
                         </div>
                         <div>
-                          <span className="font-semibold text-gold-accent">Location:</span>
+                          <span className="font-semibold text-gold-accent">
+                            Location:
+                          </span>
                           <span className="ml-2">{project.location}</span>
                         </div>
                       </motion.div>
@@ -173,12 +177,18 @@ const Projects = () => {
 
                   {project.full_description && (
                     <motion.button
-                      onClick={() => setExpandedProject(expandedProject === project.id ? null : project.id)}
+                      onClick={() =>
+                        setExpandedProject(
+                          expandedProject === project.id ? null : project.id,
+                        )
+                      }
                       className="px-8 py-4 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-bold rounded-lg hover:from-newari-red hover:to-gold-accent transform hover:scale-105 transition-all duration-300 w-fit shadow-lg hover:shadow-xl"
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      {expandedProject === project.id ? '🔼 Show Less' : '🔽 View Full Details'}
+                      {expandedProject === project.id
+                        ? "🔼 Show Less"
+                        : "🔽 View Full Details"}
                     </motion.button>
                   )}
                 </div>
@@ -190,7 +200,7 @@ const Projects = () => {
               {expandedProject === project.id && project.full_description && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
+                  animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.5 }}
                   className="overflow-hidden border-t border-gold-accent/20"
@@ -199,7 +209,9 @@ const Projects = () => {
                     <div className="absolute inset-0 mandala-pattern opacity-5"></div>
                     <div
                       className="text-paragraph-text leading-relaxed text-lg relative z-10"
-                      dangerouslySetInnerHTML={{ __html: project.full_description }}
+                      dangerouslySetInnerHTML={{
+                        __html: project.full_description,
+                      }}
                     />
                   </div>
                 </motion.div>

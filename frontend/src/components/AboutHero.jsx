@@ -83,8 +83,10 @@ const AboutHero = () => {
           </p>
           <div className="pagoda-divider w-64 mx-auto mb-6"></div>
           <p className="text-xl text-pure-white/90 max-w-3xl mx-auto">
-            Nurturing the next generation through Newari art, culture, and
-            language
+            Our focus is on the younger generation, as they are the future
+            bearers of our legacy and identity. We strive to educate and raise
+            awareness among our children about our culture, language, and
+            festivals.
           </p>
         </motion.div>
       </div>

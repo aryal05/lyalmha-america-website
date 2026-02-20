@@ -102,7 +102,7 @@ async function addTeamMembers() {
         name: 'Bigyan Shrestha',
         role: 'Woodwork Team Member',
         category: 'Life Members',
-        bio: 'Contributing to the construction and preservation of traditional Newari cultural artifacts.',
+        bio: 'Contributing to the construction and preservation of traditional newari cultural artifacts.',
         order_index: 5
       },
       {

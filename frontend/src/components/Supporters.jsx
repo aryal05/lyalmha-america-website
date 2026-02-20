@@ -195,7 +195,7 @@ const Supporters = () => {
             <p className="text-paragraph-text text-lg max-w-3xl mx-auto leading-relaxed">
               Your generous support has made the Biskaa Jatra celebration
               possible in the DMV region. Together, we are preserving our rich
-              Newari heritage and passing it on to future generations. This
+              newari heritage and passing it on to future generations. This
               project stands as a testament to our community's unity and
               dedication to cultural preservation.
             </p>

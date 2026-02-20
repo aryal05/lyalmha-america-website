@@ -23,10 +23,10 @@ async function updateFestival() {
        WHERE title LIKE '%Indra%'`,
       [
         'Mha Puja',
-        'Mha Puja (Nepal Sambat New Year) is one of the most sacred festivals in Newari culture, celebrated on the fourth day of Tihar. It is a unique self-worship ritual where individuals honor their own body and soul, symbolizing self-respect, self-care, and the importance of one\'s life force. The ceremony involves creating a sacred mandala with oil lamps, flowers, and offerings, representing purification and blessing of one\'s existence. This festival marks the beginning of Nepal Sambat, the Newari New Year.',
+        'Mha Puja (Nepal Sambat New Year) is one of the most sacred festivals in newari culture, celebrated on the fourth day of Tihar. It is a unique self-worship ritual where individuals honor their own body and soul, symbolizing self-respect, self-care, and the importance of one\'s life force. The ceremony involves creating a sacred mandala with oil lamps, flowers, and offerings, representing purification and blessing of one\'s existence. This festival marks the beginning of Nepal Sambat, the newari New Year.',
         JSON.stringify([
           'Self-worship ritual celebrating body and soul',
-          'Marks Nepal Sambat (Newari New Year)',
+          'Marks Nepal Sambat (newari New Year)',
           'Sacred mandala creation with oil lamps',
           'Family gatherings and traditional feasts',
           'Symbolic purification ceremonies'

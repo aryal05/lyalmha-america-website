@@ -119,7 +119,7 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       quote:
-        "Lyaymha America Guthi has been instrumental in keeping our Newari traditions alive for our children. The cultural events are amazing!",
+        "Lyaymha America Guthi has been instrumental in keeping our newari traditions alive for our children. The cultural events are amazing!",
       author: "Sunita Shrestha",
       role: "Community Member",
       location: "Boston, MA",
@@ -266,9 +266,10 @@ const CTABanner = () => {
             <div className="pagoda-divider w-48 mx-auto mb-6"></div>
 
             <p className="text-xl text-paragraph-text mb-10 max-w-2xl mx-auto">
-              Be part of preserving and celebrating Newari heritage in America.
-              Connect with your roots, make lasting friendships, and create
-              memories.
+              Lyaymha America Guthi (LAG) is a registered U.S.-based non-profit
+              organization devoted to nurturing the next generation through
+              newari art, culture, and language, helping U.S.-born children take
+              pride in their heritage and identity.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

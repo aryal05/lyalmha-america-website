@@ -47,9 +47,9 @@ const KidsActivitiesPage = () => {
             </div>
 
             <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed">
-              Nurturing the next generation through cultural education,
-              traditional arts, and engaging activities that celebrate our
-              Newari heritage.
+              Facilitate children's workshops to educate and raise awareness
+              about our culture, language, arts, and music through various
+              activities.
             </p>
           </motion.div>
         </div>

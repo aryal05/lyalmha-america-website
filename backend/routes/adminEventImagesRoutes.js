@@ -22,13 +22,31 @@ router.get('/:event_id', async (req, res) => {
 // Protected routes - require authentication
 router.use(authenticateToken);
 
-// Upload multiple images for an event
-router.post('/:event_id', upload.array('images', 10), async (req, res) => {
+// Upload multiple images for an event (max 50 images, 15MB each)
+router.post('/:event_id', (req, res, next) => {
+  const uploadMiddleware = upload.array('images', 50);
+  uploadMiddleware(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err.message, err.code);
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ success: false, error: 'File too large. Maximum size is 15MB per image.' });
+      }
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        return res.status(400).json({ success: false, error: 'Too many files or unexpected field name. Maximum 50 images allowed.' });
+      }
+      return res.status(400).json({ success: false, error: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     const { thumbnailIndex } = req.body;
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, error: 'No images uploaded' });
     }
+
+    console.log(`Uploading ${req.files.length} images for event ${req.params.event_id}`);
+
     // Upload all images to Cloudinary in parallel (faster)
     const uploadPromises = req.files.map((file, i) => 
       uploadToCloudinary(file.buffer, 'event_images')
@@ -50,6 +68,7 @@ router.post('/:event_id', upload.array('images', 10), async (req, res) => {
     
     await Promise.all(insertPromises);
     
+    console.log(`Successfully uploaded ${uploadedImages.length} images`);
     res.status(201).json({ success: true, data: uploadedImages });
   } catch (error) {
     console.error('Error uploading event images:', error);

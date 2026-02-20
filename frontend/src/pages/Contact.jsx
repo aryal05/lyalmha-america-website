@@ -302,7 +302,7 @@ const Contact = () => {
                     </div>
                   </a>
 
-                  <a
+                  {/* <a
                     href="tel:+15551234567"
                     className="flex items-start gap-3 p-4 rounded-lg bg-gradient-to-br from-blue-50 to-slate-50 border-2 border-gray-300 hover:border-gold-accent hover:shadow-md transition-all duration-300 group"
                   >
@@ -327,7 +327,7 @@ const Contact = () => {
                         +1 (555) 123-4567
                       </p>
                     </div>
-                  </a>
+                  </a> */}
 
                   <div className="flex items-start gap-3 p-4 rounded-lg bg-gradient-to-br from-blue-50 to-slate-50 border-2 border-gray-300">
                     <div className="p-2 bg-gold-accent/10 rounded-lg">
@@ -423,7 +423,7 @@ const Contact = () => {
                   Join Our Community
                 </h3>
                 <p className="text-paragraph-text text-sm mb-6">
-                  Become a part of our mission to preserve and celebrate Newari
+                  Become a part of our mission to preserve and celebrate newah
                   culture
                 </p>
                 <Link

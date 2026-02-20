@@ -9,13 +9,13 @@ const __dirname = path.dirname(__filename);
 const activities = [
   {
     title: 'Macha Kyaba',
-    description: 'Traditional Newari cultural activity where children learn about our heritage through interactive storytelling and hands-on experiences.',
+    description: 'Traditional newari cultural activity where children learn about our heritage through interactive storytelling and hands-on experiences.',
     icon: '🎭',
     order_index: 1
   },
   {
     title: 'Kids Culture Workshop',
-    description: 'Engaging workshops designed for children to explore Newari traditions, festivals, and customs in a fun and interactive environment.',
+    description: 'Engaging workshops designed for children to explore newari traditions, festivals, and customs in a fun and interactive environment.',
     icon: '👶',
     order_index: 2
   },
@@ -27,13 +27,13 @@ const activities = [
   },
   {
     title: 'Madal and Dhimay Workshop',
-    description: 'Hands-on training in traditional Newari percussion instruments, teaching children the rhythmic heartbeat of our culture.',
+    description: 'Hands-on training in traditional newari percussion instruments, teaching children the rhythmic heartbeat of our culture.',
     icon: '🥁',
     order_index: 4
   },
   {
     title: 'Cultural Dhimay Dances',
-    description: 'Traditional Newari dance classes where children learn authentic cultural dances including Wapiza (Rice Planting Dance) and other ceremonial performances.',
+    description: 'Traditional newari dance classes where children learn authentic cultural dances including Wapiza (Rice Planting Dance) and other ceremonial performances.',
     icon: '💃',
     order_index: 5
   }

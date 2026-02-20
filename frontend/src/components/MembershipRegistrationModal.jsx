@@ -140,7 +140,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
               <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
                 Lyaymha America Guthi is a non-profit community organization
                 based in the DMV area, with the aim of preserving and advancing
-                a deeper understanding of the Newah rich music, language, arts,
+                a deeper understanding of the newari rich music, language, arts,
                 and cultural heritage of Nepal. Our focus is on the younger
                 generation, as they are the future bearers of our legacy and
                 identity. We strive to educate and raise awareness among our

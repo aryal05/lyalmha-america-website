@@ -63,8 +63,8 @@ async function addSampleBlogs() {
       },
       {
         title: 'Cultural Workshops: Connecting Children with Their Roots',
-        excerpt: 'Our interactive workshops teach the next generation about Newari traditions, language, and arts through engaging activities.',
-        content: 'Our interactive workshops teach the next generation about Newari traditions, language, and arts through engaging activities. These sessions help children connect with their heritage while growing up in America.',
+        excerpt: 'Our interactive workshops teach the next generation about newari traditions, language, and arts through engaging activities.',
+        content: 'Our interactive workshops teach the next generation about newari traditions, language, and arts through engaging activities. These sessions help children connect with their heritage while growing up in America.',
         category: 'Education',
         author: 'Education Committee',
         status: 'published',
@@ -72,7 +72,7 @@ async function addSampleBlogs() {
         banner: '/uploads/blogs/cultural-workshops.jpg'
       },
       {
-        title: 'The Significance of Biskaa Jatra in Newari Culture',
+        title: 'The Significance of Biskaa Jatra in newari Culture',
         excerpt: 'Exploring the deep cultural and spiritual meaning behind this weeklong Spring celebration that brings together people and deities.',
         content: 'Exploring the deep cultural and spiritual meaning behind this weeklong Spring celebration that brings together people and deities. Biskaa Jatra represents the eternal cycle of life and the renewal of community bonds.',
         category: 'Culture',
@@ -84,7 +84,7 @@ async function addSampleBlogs() {
       {
         title: 'Community Spotlight: Our Generous Supporters',
         excerpt: 'Recognizing the individuals and businesses who make our cultural preservation efforts possible.',
-        content: 'Recognizing the individuals and businesses who make our cultural preservation efforts possible. Our community thrives thanks to the dedication and generosity of our supporters who believe in preserving Newari culture.',
+        content: 'Recognizing the individuals and businesses who make our cultural preservation efforts possible. Our community thrives thanks to the dedication and generosity of our supporters who believe in preserving newari culture.',
         category: 'Community',
         author: 'Lyalmha America',
         status: 'published',

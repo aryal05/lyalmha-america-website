@@ -16,13 +16,13 @@ const traditions = [
   {
     icon: '🎵',
     title: 'Music and Cultural Dance',
-    description: 'Traditional Newari music and dance performances celebrating our rich artistic heritage through classical and folk expressions.',
+    description: 'Traditional newari music and dance performances celebrating our rich artistic heritage through classical and folk expressions.',
     order_index: 2
   },
   {
     icon: '👶',
     title: 'Kids Cultural Workshop',
-    description: 'Engaging workshops for children to learn about Newari traditions, festivals, and customs in a fun and interactive environment.',
+    description: 'Engaging workshops for children to learn about newari traditions, festivals, and customs in a fun and interactive environment.',
     order_index: 3
   },
   {
@@ -34,7 +34,7 @@ const traditions = [
   {
     icon: '🥁',
     title: 'Madal and Dhimay Workshop',
-    description: 'Hands-on training in traditional Newari percussion instruments, keeping alive the rhythmic heartbeat of our culture.',
+    description: 'Hands-on training in traditional newari percussion instruments, keeping alive the rhythmic heartbeat of our culture.',
     order_index: 5
   }
 ];

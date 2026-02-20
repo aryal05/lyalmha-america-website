@@ -65,7 +65,7 @@ export const sendMembershipConfirmationEmail = async (memberData) => {
         <p style="font-size: 12px; color: #666;">Please include your membership token (${membership_token}) in the payment memo.</p>
       </div>
 
-      <p>We are thrilled to have you as part of our community dedicated to preserving and promoting Newari culture and heritage in America.</p>
+      <p>We are thrilled to have you as part of our community dedicated to preserving and promoting newari culture and heritage in America.</p>
       
       <p>If you have any questions, please don't hesitate to contact us.</p>
       
@@ -73,7 +73,7 @@ export const sendMembershipConfirmationEmail = async (memberData) => {
       <strong>Lyaymha America Guthi (LAG) Team</strong></p>
     </div>
     <div class="footer">
-      <p>Lyaymha America Guthi | Preserving Newari Culture & Heritage</p>
+      <p>Lyaymha America Guthi | Preserving newari Culture & Heritage</p>
       <p>This is an automated email. Please do not reply directly to this message.</p>
     </div>
   </div>

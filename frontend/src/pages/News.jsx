@@ -176,56 +176,56 @@ const News = () => {
                     transition={{ delay: index * 0.05 }}
                     className="card-premium group hover:border-gold-accent/50 transition-all duration-300 cursor-pointer h-full"
                   >
-                  {item.image && (
-                    <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute top-3 right-3">
-                        <span className="px-3 py-1 bg-gold-accent text-charcoal-black text-xs font-semibold rounded-full">
-                          {item.category.split("-").join(" ")}
-                        </span>
+                    {item.image && (
+                      <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
+                        <img
+                          src={getImageUrl(item.image)}
+                          alt={item.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute top-3 right-3">
+                          <span className="px-3 py-1 bg-gold-accent text-charcoal-black text-xs font-semibold rounded-full">
+                            {item.category.split("-").join(" ")}
+                          </span>
+                        </div>
                       </div>
+                    )}
+
+                    <div className="flex items-center gap-2 text-sm text-paragraph-text mb-3">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <span>{formatDate(item.published_date)}</span>
                     </div>
-                  )}
 
-                  <div className="flex items-center gap-2 text-sm text-paragraph-text mb-3">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>{formatDate(item.published_date)}</span>
-                  </div>
+                    <h3 className="text-xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors">
+                      {item.title}
+                    </h3>
 
-                  <h3 className="text-xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors">
-                    {item.title}
-                  </h3>
+                    <p className="text-paragraph-text mb-4 line-clamp-3">
+                      {item.excerpt}
+                    </p>
 
-                  <p className="text-paragraph-text mb-4 line-clamp-3">
-                    {item.excerpt}
-                  </p>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-border-line">
-                    <span className="text-sm text-paragraph-text">
-                      {formatDate(item.published_date)}
-                    </span>
-                    <span className="text-gold-accent hover:text-gold-accent/80 transition-colors font-medium text-sm">
-                      Read More →
-                    </span>
-                  </div>
-                </motion.article>
-              </Link>
+                    <div className="flex items-center justify-between pt-4 border-t border-border-line">
+                      <span className="text-sm text-paragraph-text">
+                        {formatDate(item.published_date)}
+                      </span>
+                      <span className="text-gold-accent hover:text-gold-accent/80 transition-colors font-medium text-sm">
+                        Read More →
+                      </span>
+                    </div>
+                  </motion.article>
+                </Link>
               ))}
             </motion.div>
           </AnimatePresence>

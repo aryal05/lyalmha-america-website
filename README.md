@@ -1,6 +1,6 @@
-# Lyalmha America - Newari Culture Blog
+# Lyalmha America - newari Culture Blog
 
-A professional full-stack blog website celebrating Newari culture in America, built with React (frontend) and Node.js (backend).
+A professional full-stack blog website celebrating newari culture in America, built with React (frontend) and Node.js (backend).
 
 ## 🎨 Features
 
@@ -181,4 +181,4 @@ For support and queries, contact the development team.
 
 ---
 
-**Built with ❤️ for the Newari community in America**
+**Built with ❤️ for the newari community in America**

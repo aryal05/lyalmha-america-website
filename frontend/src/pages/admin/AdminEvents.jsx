@@ -5,9 +5,9 @@ import { getImageUrl } from '../../utils/imageHelper'
 import AdminLayout from '../../components/admin/AdminLayout'
 
 const AdminEvents = () => {
-  const [events, setEvents] = useState([])
-  const [showForm, setShowForm] = useState(false)
-  const [editingEvent, setEditingEvent] = useState(null)
+  const [events, setEvents] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,6 +17,28 @@ const AdminEvents = () => {
     event_type: "upcoming",
     image: null,
   });
+
+  // Format 24h time to 12h AM/PM
+  const formatTime12h = (time) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":");
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return `${h12}:${minutes} ${ampm}`;
+  };
+
+  // Format date for Eastern US display
+  const formatDateET = (dateStr) => {
+    if (!dateStr) return "";
+    return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   useEffect(() => {
     fetchEvents();
@@ -204,11 +226,16 @@ const AdminEvents = () => {
                       }
                       className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     />
+                    {formData.event_date && (
+                      <p className="text-sm text-green-600 mt-2 font-medium">
+                        ✅ {formatDateET(formData.event_date)}
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
-                      Event Time (Eastern Time)
+                      Event Start Time
                     </label>
                     <input
                       type="time"
@@ -218,11 +245,55 @@ const AdminEvents = () => {
                       }
                       className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                      All times are in US Eastern Time (ET)
-                    </p>
+                    {formData.event_time && (
+                      <p className="text-sm text-green-600 mt-2 font-medium">
+                        ✅ Starts at {formatTime12h(formData.event_time)}{" "}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {[
+                        { l: "9 AM", v: "09:00" },
+                        { l: "10 AM", v: "10:00" },
+                        { l: "12 PM", v: "12:00" },
+                        { l: "2 PM", v: "14:00" },
+                        { l: "5 PM", v: "17:00" },
+                        { l: "6 PM", v: "18:00" },
+                      ].map((t) => (
+                        <button
+                          key={t.v}
+                          type="button"
+                          onClick={() =>
+                            setFormData({ ...formData, event_time: t.v })
+                          }
+                          className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+                            formData.event_time === t.v
+                              ? "bg-royal-blue text-white border-royal-blue"
+                              : "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
+                          }`}
+                        >
+                          {t.l}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+
+                {/* Live Date/Time Preview */}
+                {(formData.event_date || formData.event_time) && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm font-semibold text-royal-blue mb-1">
+                      Event will be scheduled for:
+                    </p>
+                    <p className="text-base text-gray-800">
+                      {formData.event_date
+                        ? formatDateET(formData.event_date)
+                        : ""}
+                      {formData.event_time
+                        ? ` At ${formatTime12h(formData.event_time)} ET`
+                        : ""}
+                    </p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
@@ -384,10 +455,22 @@ const AdminEvents = () => {
                 <div className="space-y-1 mb-4">
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📅</span>
-                    {new Date(event.event_date).toLocaleDateString("en-US", {
+                    {new Date(
+                      event.event_date + "T00:00:00",
+                    ).toLocaleDateString("en-US", {
                       timeZone: "America/New_York",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
                     })}
-                    {event.event_time && ` at ${event.event_time} ET`}
+                    {event.event_time &&
+                      (() => {
+                        const [h, m] = event.event_time.split(":");
+                        const hr = parseInt(h, 10);
+                        const ampm = hr >= 12 ? "PM" : "AM";
+                        const h12 = hr % 12 || 12;
+                        return ` at ${h12}:${m} ${ampm} ET`;
+                      })()}
                   </p>
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📍</span>
@@ -436,6 +519,6 @@ const AdminEvents = () => {
       </div>
     </AdminLayout>
   );
-}
+};
 
 export default AdminEvents

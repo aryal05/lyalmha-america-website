@@ -123,7 +123,7 @@ const Teams = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {teamCategories.map((team, index) => {
           const membersCount = teamMembers.filter(
-            (m) => m.category === team.category
+            (m) => m.category === team.category,
           ).length;
           const isExpanded = expandedCategory === team.category;
           return (
@@ -213,7 +213,7 @@ const Teams = () => {
                   <h3 className="text-2xl font-bold text-primary-text">
                     {
                       teamCategories.find(
-                        (t) => t.category === expandedCategory
+                        (t) => t.category === expandedCategory,
                       )?.title
                     }
                     <span className="text-gold-accent"> Members</span>

@@ -25,21 +25,21 @@ async function addEvents() {
     const upcomingEvents = [
       {
         title: 'Annual Cultural Festival 2026',
-        description: 'Join us for our annual celebration of Newari culture featuring traditional music, dance, and cuisine.',
+        description: 'Join us for our annual celebration of newari culture featuring traditional music, dance, and cuisine.',
         event_date: '2026-03-15',
         location: 'Community Center',
         event_type: 'Festival'
       },
       {
         title: "Children's Language Workshop",
-        description: 'Interactive online workshop teaching Newari language basics to children and beginners.',
+        description: 'Interactive online workshop teaching newari language basics to children and beginners.',
         event_date: '2026-02-20',
         location: 'Online',
         event_type: 'Workshop'
       },
       {
         title: 'Traditional Music Concert',
-        description: 'Experience the melodious sounds of traditional Newari instruments and vocals.',
+        description: 'Experience the melodious sounds of traditional newari instruments and vocals.',
         event_date: '2026-04-10',
         location: 'Main Hall',
         event_type: 'Concert'
@@ -66,7 +66,7 @@ async function addEvents() {
       },
       {
         title: 'Cultural Dance Workshop',
-        description: 'Workshop on traditional Newari dance forms and their cultural significance.',
+        description: 'Workshop on traditional newari dance forms and their cultural significance.',
         event_date: '2024-11-15',
         location: 'Community Center',
         event_type: 'Workshop'

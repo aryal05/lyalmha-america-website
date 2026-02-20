@@ -22,11 +22,11 @@ async function setup() {
 
   // Seed activities
   const activities = [
-    { title: 'Macha Kyaba', description: 'Traditional Newari cultural activity where children learn about our heritage through interactive storytelling and hands-on experiences.', icon: '🎭', order_index: 1 },
-    { title: 'Kids Culture Workshop', description: 'Engaging workshops designed for children to explore Newari traditions, festivals, and customs in a fun and interactive environment.', icon: '👶', order_index: 2 },
+    { title: 'Macha Kyaba', description: 'Traditional newari cultural activity where children learn about our heritage through interactive storytelling and hands-on experiences.', icon: '🎭', order_index: 1 },
+    { title: 'Kids Culture Workshop', description: 'Engaging workshops designed for children to explore newari traditions, festivals, and customs in a fun and interactive environment.', icon: '👶', order_index: 2 },
     { title: 'Nepal Bhasa Class', description: 'Language classes teaching children to read, write, and speak Nepal Bhasa, preserving our mother tongue for future generations.', icon: '📚', order_index: 3 },
-    { title: 'Madal and Dhimay Workshop', description: 'Hands-on training in traditional Newari percussion instruments, teaching children the rhythmic heartbeat of our culture.', icon: '🥁', order_index: 4 },
-    { title: 'Cultural Dhimay Dances', description: 'Traditional Newari dance classes where children learn authentic cultural dances including Wapiza (Rice Planting Dance) and other ceremonial performances.', icon: '💃', order_index: 5 }
+    { title: 'Madal and Dhimay Workshop', description: 'Hands-on training in traditional newari percussion instruments, teaching children the rhythmic heartbeat of our culture.', icon: '🥁', order_index: 4 },
+    { title: 'Cultural Dhimay Dances', description: 'Traditional newari dance classes where children learn authentic cultural dances including Wapiza (Rice Planting Dance) and other ceremonial performances.', icon: '💃', order_index: 5 }
   ];
 
   await db.run('DELETE FROM activities WHERE category = "kids"');

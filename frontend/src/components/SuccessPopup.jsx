@@ -66,25 +66,25 @@ const SuccessPopup = ({ show, onClose, title, message, type = 'success', autoClo
             initial={{ scale: 0.5, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.5, opacity: 0, y: 50 }}
-            transition={{ type: 'spring', damping: 15, stiffness: 300 }}
+            transition={{ type: "spring", damping: 15, stiffness: 300 }}
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top gradient bar */}
             <div className={`h-2 bg-gradient-to-r ${config.bg}`}></div>
-            
+
             <div className="p-8 text-center">
               {/* Animated icon container */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 className={`w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br ${config.bg} flex items-center justify-center shadow-lg`}
               >
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: 0.4, type: 'spring' }}
+                  transition={{ delay: 0.4, type: "spring" }}
                 >
                   {config.icon}
                 </motion.div>

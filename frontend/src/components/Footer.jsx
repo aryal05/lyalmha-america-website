@@ -41,14 +41,14 @@ const Footer = () => {
                     Lyaymha America Guthi
                   </h3>
                   <p className="text-gold-accent font-semibold text-sm">
-                    Newah Culture & Heritage
+                    newari Culture & Heritage
                   </p>
                 </div>
               </div>
               <p className="text-cream-white/90 mb-6 max-w-md leading-relaxed">
                 Lyaymha America Guthi (LAG) is a registered U.S.-based
                 non-profit organization devoted to nurturing the next generation
-                through Newah art, culture, and language, helping U.S.-born
+                through newari art, culture, and language, helping U.S.-born
                 children take pride in their heritage and identity.
               </p>
 

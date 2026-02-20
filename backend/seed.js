@@ -39,7 +39,7 @@ async function seed() {
   // Seed initial site settings
   const settings = [
     { key: 'site_name', value: 'Lyalmha America', description: 'Website name' },
-    { key: 'site_tagline', value: 'Newari Culture Blog', description: 'Website tagline' },
+    { key: 'site_tagline', value: 'newari Culture Blog', description: 'Website tagline' },
     { key: 'contact_email', value: 'info@lyalmha-america.org', description: 'Contact email' },
     { key: 'contact_phone', value: '+1 (555) 123-4567', description: 'Contact phone' },
     { key: 'facebook_url', value: '#', description: 'Facebook page URL' },

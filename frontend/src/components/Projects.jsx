@@ -351,8 +351,8 @@ const Projects = () => {
                           </span>{" "}
                           (an auspicious chariot of the Gods and Goddesses) and
                           a Chhatra. The Biskaa Jatra Dyou-Kha symbolizes the
-                          Newah Civilization prior to the invention of wheels in
-                          human history. This Dyou-Kha is carried on human
+                          newari Civilization prior to the invention of wheels
+                          in human history. This Dyou-Kha is carried on human
                           shoulders.
                         </p>
                         <div className="bg-gradient-to-r from-gold-accent/10 to-newari-red/10 p-6 rounded-lg border-l-4 border-gold-accent">

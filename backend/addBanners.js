@@ -54,7 +54,7 @@ async function addBanners() {
     const banners = [
       {
         title: 'Biskaa Jatra Celebration 2024',
-        description: 'Join us in celebrating the traditional Newari festival with cultural performances, music, and community gathering',
+        description: 'Join us in celebrating the traditional newari festival with cultural performances, music, and community gathering',
         image: `/uploads/banners/${bannerFiles[0]}`,
         link: '/about',
         position: 'hero',
@@ -62,8 +62,8 @@ async function addBanners() {
         active: 1
       },
       {
-        title: 'Preserving Newari Heritage',
-        description: 'Discover the rich cultural heritage and traditions of the Newari community in America',
+        title: 'Preserving newari Heritage',
+        description: 'Discover the rich cultural heritage and traditions of the newari community in America',
         image: `/uploads/banners/${bannerFiles[1]}`,
         link: '/culture',
         position: 'hero',

@@ -474,8 +474,8 @@ const AdminBanners = () => {
                           banner.order_index === 2
                             ? "second"
                             : banner.order_index === 3
-                            ? "third"
-                            : `${banner.order_index}th`
+                              ? "third"
+                              : `${banner.order_index}th`
                         })`}
                   </span>
                 </div>

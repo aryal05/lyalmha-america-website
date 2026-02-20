@@ -83,16 +83,19 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-xl mb-4">
+          <h2 className="heading-xl mb-4 text-white">
             Latest{" "}
             <span className="bg-gradient-to-r from-newari-red to-gold-accent bg-clip-text text-transparent">
               Stories
             </span>
           </h2>
           <p className="text-cream-white/90 text-lg max-w-2xl mx-auto leading-relaxed">
-            Dive into the rich tapestry of Newari culture through our curated
-            collection of articles, stories, and insights from our vibrant
-            community.
+            Our focus is on the younger generation, as they are the future
+            bearers of our legacy and identity. We strive to educate and raise
+            awareness among our children about our culture, language, and
+            festivals. Lyaymha America Guthi has consistently demonstrated its
+            concern for and commitment to preserving our identity through
+            various programs.
           </p>
         </motion.div>
 

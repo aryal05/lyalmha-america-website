@@ -45,7 +45,7 @@ Successfully transformed the AdminBlogs page into a professional WordPress-style
 Custom CSS applied to ReactQuill:
 - Dark navy toolbar background (#1E2430)
 - Gold-accent borders and icons (#D4A574)
-- Newari-red active states (#C4161C)
+- newari-red active states (#C4161C)
 - White text on dark background
 - Custom scrollbar styling
 - Smooth hover transitions
@@ -106,10 +106,10 @@ Custom CSS applied to ReactQuill:
 - **Mobile**: Sidebar stacks below editor
 
 ## Premium Theme Integration
-All styling matches the luxury Newari cultural theme:
+All styling matches the luxury newari cultural theme:
 - Gold accents on borders and icons
 - Dark navy backgrounds
-- Newari red for primary actions
+- newari red for primary actions
 - Smooth animations and transitions
 
 ## Technical Details

@@ -19,34 +19,39 @@ const Culture = () => {
   const staticTraditions = [
     {
       id: 1,
-      icon: '📚',
-      title: 'Nepal Bhasa Class',
-      description: 'Preserving our mother tongue through structured language classes for all ages, teaching reading, writing, and speaking Nepal Bhasa.'
+      icon: "📚",
+      title: "Nepal Bhasa Class",
+      description:
+        "Preserving our mother tongue through structured language classes for all ages, teaching reading, writing, and speaking Nepal Bhasa.",
     },
     {
       id: 2,
-      icon: '🎵',
-      title: 'Music and Cultural Dance',
-      description: 'Traditional Newari music and dance performances celebrating our rich artistic heritage through classical and folk expressions.'
+      icon: "🎵",
+      title: "Music and Cultural Dance",
+      description:
+        "Traditional newari music and dance performances celebrating our rich artistic heritage through classical and folk expressions.",
     },
     {
       id: 3,
-      icon: '👶',
-      title: 'Kids Cultural Workshop',
-      description: 'Engaging workshops for children to learn about Newari traditions, festivals, and customs in a fun and interactive environment.'
+      icon: "👧",
+      title: "Kids Cultural Workshop",
+      description:
+        "Engaging workshops for children to learn about newari traditions, festivals, and customs in a fun and interactive environment.",
     },
     {
       id: 4,
-      icon: '🤝',
-      title: 'Community Reach',
-      description: 'Building bridges within and beyond our community through cultural exchange programs and collaborative initiatives.'
+      icon: "🤝",
+      title: "Community Reach",
+      description:
+        "Building bridges within and beyond our community through cultural exchange programs and collaborative initiatives.",
     },
     {
       id: 5,
-      icon: '🥁',
-      title: 'Madal and Dhimay Workshop',
-      description: 'Hands-on training in traditional Newari percussion instruments, keeping alive the rhythmic heartbeat of our culture.'
-    }
+      icon: "🥁",
+      title: "Madal and Dhimay Workshop",
+      description:
+        "Hands-on training in traditional newari percussion instruments, keeping alive the rhythmic heartbeat of our culture.",
+    },
   ];
 
   useEffect(() => {
@@ -118,7 +123,7 @@ const Culture = () => {
               <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-gold-accent/40 rounded-tr-lg"></div>
 
               <h1 className="text-5xl md:text-7xl font-bold text-white px-8">
-                Newari{" "}
+                newari{" "}
                 <span className="bg-gradient-to-r from-newari-red to-gold-accent bg-clip-text text-transparent">
                   Culture
                 </span>
@@ -135,7 +140,7 @@ const Culture = () => {
 
             <p className="text-xl text-cream-white/90 max-w-3xl mx-auto leading-relaxed">
               Discover the rich heritage, traditions, and festivals that define
-              the Newari civilization
+              the newah civilization
             </p>
           </motion.div>
         </div>
@@ -315,7 +320,7 @@ const Culture = () => {
           )}
         </div>
 
-        {/* Premium About Newari Civilization */}
+        {/* Premium About newari Civilization */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

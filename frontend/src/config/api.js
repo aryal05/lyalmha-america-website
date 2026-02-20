@@ -115,6 +115,11 @@ export const API_ENDPOINTS = {
     UPDATE: (id) => `/api/admin/gallery/${id}`,
     DELETE: (id) => `/api/admin/gallery/${id}`,
   },
+  EVENT_IMAGES: {
+    GET_BY_EVENT: (eventId) => `/api/admin/event-images/${eventId}`,
+    UPLOAD: (eventId) => `/api/admin/event-images/${eventId}`,
+    DELETE: (imageId) => `/api/admin/event-images/${imageId}`,
+  },
   CONTACT: {
     SUBMIT: '/api/contact/submit',
     GET_ALL: '/api/admin/contact',

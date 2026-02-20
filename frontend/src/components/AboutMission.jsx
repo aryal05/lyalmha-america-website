@@ -39,7 +39,7 @@ const AboutMission = () => {
                 ल्याय्म्ह अमेरिका गुथि: Lyaymha America Guthi (LAG)
               </strong>{" "}
               is a registered U.S.-based non-profit organization devoted to
-              nurturing the next generation through Newah art, culture, and
+              nurturing the next generation through newari art, culture, and
               language, helping U.S.-born children take pride in their heritage
               and identity.
             </motion.p>

@@ -104,8 +104,12 @@ const AdminStories = () => {
       <div className="relative max-w-6xl mx-auto py-8">
         <div className="flex justify-between items-center mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-royal-blue mb-2">Homepage Stories</h1>
-            <p className="text-paragraph-text">Add, edit, or remove stories for the homepage section below.</p>
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
+              Homepage Stories
+            </h1>
+            <p className="text-paragraph-text">
+              Add, edit, or remove stories for the homepage section below.
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -129,22 +133,30 @@ const AdminStories = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Title *</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Title *
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                     placeholder="Story title"
                   />
                 </div>
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Category</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Category
+                  </label>
                   <input
                     type="text"
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                     placeholder="Category"
                   />
@@ -152,59 +164,81 @@ const AdminStories = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Location</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Location
+                  </label>
                   <input
                     type="text"
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                     placeholder="Location"
                   />
                 </div>
                 <div>
-                  <label className="block text-royal-blue font-semibold mb-2">Author</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Author
+                  </label>
                   <input
                     type="text"
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, author: e.target.value })
+                    }
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                     placeholder="Author"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-royal-blue font-semibold mb-2">Excerpt *</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Excerpt *
+                </label>
                 <textarea
                   required
                   rows="2"
                   value={formData.excerpt}
-                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, excerpt: e.target.value })
+                  }
                   className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                   placeholder="Short excerpt"
                 />
               </div>
               <div>
-                <label className="block text-royal-blue font-semibold mb-2">Content *</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Content *
+                </label>
                 <textarea
                   required
                   rows="5"
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
                   className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
                   placeholder="Full content"
                 />
               </div>
               <div>
-                <label className="block text-royal-blue font-semibold mb-2">Banner Image</label>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Banner Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setFormData({ ...formData, banner: e.target.files[0] })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, banner: e.target.files[0] })
+                  }
                   className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
                 />
                 {editingStory?.banner && !formData.banner && (
                   <div className="mt-4">
-                    <p className="text-paragraph-text text-sm mb-2">Current banner:</p>
+                    <p className="text-paragraph-text text-sm mb-2">
+                      Current banner:
+                    </p>
                     <img
                       src={getImageUrl(editingStory.banner)}
                       alt="Current banner"
@@ -214,7 +248,9 @@ const AdminStories = () => {
                 )}
                 {formData.banner && (
                   <div className="mt-4">
-                    <p className="text-paragraph-text text-sm mb-2">New banner preview:</p>
+                    <p className="text-paragraph-text text-sm mb-2">
+                      New banner preview:
+                    </p>
                     <img
                       src={URL.createObjectURL(formData.banner)}
                       alt="New banner preview"
@@ -230,7 +266,7 @@ const AdminStories = () => {
                   type="submit"
                   className="px-8 py-3 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold shadow hover:shadow-lg transition-all duration-300"
                 >
-                  {editingStory ? 'Update Story' : 'Create Story'}
+                  {editingStory ? "Update Story" : "Create Story"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -267,7 +303,7 @@ const AdminStories = () => {
                     src={getImageUrl(story.banner)}
                     alt={story.title}
                     className="w-full h-full object-cover min-h-56 flex-1"
-                    style={{ height: '100%' }}
+                    style={{ height: "100%" }}
                   />
                 ) : (
                   <div className="w-full h-full min-h-56 flex-1 bg-gray-100" />
@@ -277,7 +313,7 @@ const AdminStories = () => {
               {/* Right: Content */}
               <div className="md:w-1/2 w-full p-8 md:p-10 flex flex-col justify-between h-full">
                 <span className="inline-block px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-semibold rounded-full shadow-sm mb-4">
-                  {story.category || 'Featured'}
+                  {story.category || "Featured"}
                 </span>
                 <h3 className="text-2xl md:text-3xl font-bold text-charcoal-black mb-4">
                   {story.title}
@@ -305,7 +341,7 @@ const AdminStories = () => {
                     <div>
                       <div className="text-xs text-muted-text">Started</div>
                       <div className="font-medium text-charcoal-black">
-                        {new Date(story.created_at).getFullYear() || '—'}
+                        {new Date(story.created_at).getFullYear() || "—"}
                       </div>
                     </div>
                   </div>
@@ -327,7 +363,7 @@ const AdminStories = () => {
                     <div>
                       <div className="text-xs text-muted-text">Location</div>
                       <div className="font-medium text-charcoal-black">
-                        {story.location || 'Online'}
+                        {story.location || "Online"}
                       </div>
                     </div>
                   </div>

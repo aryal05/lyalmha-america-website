@@ -50,7 +50,7 @@ async function addPageBanners() {
     const pageBanners = [
       {
         title: 'About Lyalmha America',
-        description: 'Learn about our mission, values, and the Newari community in America',
+        description: 'Learn about our mission, values, and the newari community in America',
         image: `/uploads/banners/${pageImages.about}`,
         link: '/about',
         position: 'about',
@@ -67,8 +67,8 @@ async function addPageBanners() {
         active: 1
       },
       {
-        title: 'Newari Culture',
-        description: 'Discover the rich heritage, traditions, and festivals of the Newari civilization',
+        title: 'newari Culture',
+        description: 'Discover the rich heritage, traditions, and festivals of the newari civilization',
         image: `/uploads/banners/${pageImages.culture}`,
         link: '/culture',
         position: 'culture',

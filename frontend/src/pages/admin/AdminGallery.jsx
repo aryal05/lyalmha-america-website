@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { apiClient, API_ENDPOINTS, API_URL } from '../../config/api'
-import AdminLayout from '../../components/admin/AdminLayout'
+import { apiClient, API_ENDPOINTS, API_URL } from "../../config/api";
+import AdminLayout from "../../components/admin/AdminLayout";
 
 const AdminGallery = () => {
   const [events, setEvents] = useState([]);
@@ -12,9 +12,20 @@ const AdminGallery = () => {
     title: "",
     description: "",
     event_date: "",
+    event_time: "",
     location: "",
     event_type: "event",
   });
+
+  // Format 24h time (HH:mm) to 12h format (h:mm AM/PM ET)
+  const formatEventTime = (time) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":");
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return `${h12}:${minutes} ${ampm} ET`;
+  };
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [otherImageFiles, setOtherImageFiles] = useState([]);
@@ -49,34 +60,49 @@ const AdminGallery = () => {
 
       // Step 1: Update event details (fast)
       const eventFormData = new FormData();
-      Object.keys(formData).forEach((key) => eventFormData.append(key, formData[key]));
+      Object.keys(formData).forEach((key) =>
+        eventFormData.append(key, formData[key]),
+      );
       if (thumbnailFile) {
         eventFormData.append("image", thumbnailFile);
       }
 
       if (editingEvent) {
-        await apiClient.put(API_ENDPOINTS.EVENTS.UPDATE(editingEvent.id), eventFormData);
+        await apiClient.put(
+          API_ENDPOINTS.EVENTS.UPDATE(editingEvent.id),
+          eventFormData,
+        );
       } else {
-        const response = await apiClient.post(API_ENDPOINTS.EVENTS.CREATE, eventFormData);
+        const response = await apiClient.post(
+          API_ENDPOINTS.EVENTS.CREATE,
+          eventFormData,
+        );
         eventId = response.data.data.id;
       }
 
       // Step 2: Upload other images in background (don't wait)
       if (otherImageFiles.length > 0) {
         const imagesFormData = new FormData();
-        otherImageFiles.forEach((file) => imagesFormData.append("images", file));
+        otherImageFiles.forEach((file) =>
+          imagesFormData.append("images", file),
+        );
         imagesFormData.append("thumbnailIndex", 0);
 
         // Upload in background, don't await
-        apiClient.post(`${API_URL}/api/admin/event-images/${eventId}`, imagesFormData)
+        apiClient
+          .post(API_ENDPOINTS.EVENT_IMAGES.UPLOAD(eventId), imagesFormData)
           .then(() => console.log("Images uploaded successfully"))
-          .catch(err => console.error("Error uploading images:", err));
+          .catch((err) => console.error("Error uploading images:", err));
       }
 
       // Immediately refresh and close form
       fetchEvents();
       resetForm();
-      alert(editingEvent ? "Event updated! Images uploading in background..." : "Event created! Images uploading in background...");
+      alert(
+        editingEvent
+          ? "Event updated! Images uploading in background..."
+          : "Event created! Images uploading in background...",
+      );
     } catch (error) {
       console.error("Error saving event:", error);
       alert("Error: " + (error.response?.data?.error || "Unknown error"));
@@ -88,23 +114,26 @@ const AdminGallery = () => {
     setFormData({
       title: event.title,
       description: event.description || "",
-      event_date: event.event_date,
+      event_date: event.event_date?.split("T")[0] || event.event_date,
+      event_time: event.event_time || "",
       location: event.location || "",
       event_type: event.event_type || "event",
     });
     if (event.image) {
       setThumbnailPreview(event.image);
     }
-    
+
     // Fetch existing other images
     try {
-      const response = await apiClient.get(`${API_URL}/api/admin/event-images/${event.id}`);
+      const response = await apiClient.get(
+        API_ENDPOINTS.EVENT_IMAGES.GET_BY_EVENT(event.id),
+      );
       setExistingOtherImages(response.data.data || []);
     } catch (error) {
       console.error("Error fetching event images:", error);
       setExistingOtherImages([]);
     }
-    
+
     setShowForm(true);
   };
 
@@ -126,6 +155,7 @@ const AdminGallery = () => {
       title: "",
       description: "",
       event_date: "",
+      event_time: "",
       location: "",
       event_type: "event",
     });
@@ -151,11 +181,11 @@ const AdminGallery = () => {
   const handleOtherImagesChange = (e) => {
     const files = Array.from(e.target.files);
     setOtherImageFiles([...otherImageFiles, ...files]);
-    
+
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setOtherImagePreviews(prev => [...prev, reader.result]);
+        setOtherImagePreviews((prev) => [...prev, reader.result]);
       };
       reader.readAsDataURL(file);
     });
@@ -168,10 +198,12 @@ const AdminGallery = () => {
 
   const removeExistingImage = async (imageId) => {
     if (!confirm("Delete this image?")) return;
-    
+
     try {
-      await apiClient.delete(`${API_URL}/api/admin/event-images/${imageId}`);
-      setExistingOtherImages(existingOtherImages.filter(img => img.id !== imageId));
+      await apiClient.delete(API_ENDPOINTS.EVENT_IMAGES.DELETE(imageId));
+      setExistingOtherImages(
+        existingOtherImages.filter((img) => img.id !== imageId),
+      );
       alert("Image deleted!");
     } catch (error) {
       console.error("Error deleting image:", error);
@@ -232,7 +264,7 @@ const AdminGallery = () => {
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Event Date *
+                    📅 Event Date (Eastern US) *
                   </label>
                   <input
                     type="date"
@@ -243,8 +275,90 @@ const AdminGallery = () => {
                     className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                     required
                   />
+                  {formData.event_date && (
+                    <p className="text-sm text-green-600 mt-1 font-medium">
+                      ✅{" "}
+                      {new Date(
+                        formData.event_date + "T00:00:00",
+                      ).toLocaleDateString("en-US", {
+                        timeZone: "America/New_York",
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    ⏰ Event Start Time (Eastern US)
+                  </label>
+                  <input
+                    type="time"
+                    value={formData.event_time}
+                    onChange={(e) =>
+                      setFormData({ ...formData, event_time: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
+                  />
+                  {formData.event_time && (
+                    <p className="text-sm text-green-600 mt-1 font-medium">
+                      ✅ Starts at {formatEventTime(formData.event_time)}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {[
+                      { l: "9 AM", v: "09:00" },
+                      { l: "10 AM", v: "10:00" },
+                      { l: "12 PM", v: "12:00" },
+                      { l: "2 PM", v: "14:00" },
+                      { l: "5 PM", v: "17:00" },
+                      { l: "6 PM", v: "18:00" },
+                    ].map((t) => (
+                      <button
+                        key={t.v}
+                        type="button"
+                        onClick={() =>
+                          setFormData({ ...formData, event_time: t.v })
+                        }
+                        className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+                          formData.event_time === t.v
+                            ? "bg-royal-blue text-white border-royal-blue"
+                            : "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
+                        }`}
+                      >
+                        {t.l}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* Live Date/Time Preview */}
+              {(formData.event_date || formData.event_time) && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm font-semibold text-royal-blue mb-1">
+                    🇺🇸 Event in Eastern US Time:
+                  </p>
+                  <p className="text-base text-gray-800">
+                    {formData.event_date
+                      ? new Date(
+                          formData.event_date + "T00:00:00",
+                        ).toLocaleDateString("en-US", {
+                          timeZone: "America/New_York",
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "(select date)"}
+                    {formData.event_time
+                      ? ` at ${formatEventTime(formData.event_time)}`
+                      : ""}
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -449,9 +563,18 @@ const AdminGallery = () => {
                         {event.event_type}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {new Date(event.event_date).toLocaleDateString(
-                          "en-US",
-                          { timeZone: "America/New_York" },
+                        {new Date(
+                          event.event_date + "T00:00:00",
+                        ).toLocaleDateString("en-US", {
+                          timeZone: "America/New_York",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                        {event.event_time && (
+                          <span className="ml-1">
+                            ⏰ {formatEventTime(event.event_time)}
+                          </span>
                         )}
                       </span>
                     </div>

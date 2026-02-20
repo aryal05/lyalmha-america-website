@@ -129,7 +129,11 @@ const KidsActivities = () => {
                 <div className="absolute top-4 left-4">
                   <span className="px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black text-sm font-bold rounded-full shadow-lg flex items-center gap-2">
                     {activity.icon_image ? (
-                      <img src={activity.icon_image} alt="icon" className="w-6 h-6 object-contain" />
+                      <img
+                        src={activity.icon_image}
+                        alt="icon"
+                        className="w-6 h-6 object-contain"
+                      />
                     ) : (
                       <span>{activity.icon}</span>
                     )}
@@ -206,7 +210,11 @@ const KidsActivities = () => {
               <div className="p-8">
                 <div className="flex items-center gap-3 mb-4">
                   {selectedActivity.icon_image ? (
-                    <img src={selectedActivity.icon_image} alt="icon" className="w-12 h-12 object-contain" />
+                    <img
+                      src={selectedActivity.icon_image}
+                      alt="icon"
+                      className="w-12 h-12 object-contain"
+                    />
                   ) : (
                     <span className="text-5xl">{selectedActivity.icon}</span>
                   )}
@@ -364,7 +372,7 @@ const KidsActivities = () => {
               These programs are designed to engage children of all ages in
               learning about their heritage through fun and interactive methods
               including dance, music, language lessons, and cultural literature.
-              Join us in preserving and celebrating our beautiful Newari
+              Join us in preserving and celebrating our beautiful newari
               traditions!
             </p>
 

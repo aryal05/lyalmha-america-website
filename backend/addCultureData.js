@@ -64,13 +64,13 @@ async function addCultureData() {
       {
         icon: '🎵',
         title: 'Music & Dance',
-        description: 'Dhime, Khin, and Bhusyaa create the rhythmic heartbeat of Newari celebrations',
+        description: 'Dhime, Khin, and Bhusyaa create the rhythmic heartbeat of newari celebrations',
         order_index: 2
       },
       {
         icon: '🏛️',
         title: 'Architecture',
-        description: 'Pagoda-style temples and intricate wooden structures defining Newari craftsmanship',
+        description: 'Pagoda-style temples and intricate wooden structures defining newari craftsmanship',
         order_index: 3
       },
       {

@@ -46,7 +46,7 @@ Create a `start.ps1` file in the root directory and run both servers simultaneou
 ## 🎨 What You'll See
 
 - **Hero Section**: Animated logo with brand colors
-- **Blog Grid**: 6 dummy blog posts about Newari culture
+- **Blog Grid**: 6 dummy blog posts about newari culture
 - **Smooth Animations**: Framer Motion animations throughout
 - **Responsive Design**: Works on all devices
 - **Professional UI**: Clean design with your color scheme

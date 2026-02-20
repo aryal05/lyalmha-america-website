@@ -350,8 +350,8 @@ const AdminBlogs = () => {
                           {imageFile
                             ? "Change Image"
                             : editingBlog
-                            ? "Replace Image"
-                            : "Upload Image"}
+                              ? "Replace Image"
+                              : "Upload Image"}
                         </span>
                       </label>
                     </div>
@@ -455,7 +455,8 @@ const AdminBlogs = () => {
                     {blog.excerpt}
                   </p>
                   <div className="text-xs text-paragraph-text mb-4">
-                    {new Date(blog.created_at).toLocaleDateString()} • {blog.author}
+                    {new Date(blog.created_at).toLocaleDateString()} •{" "}
+                    {blog.author}
                   </div>
                   <div className="flex gap-2">
                     <motion.button
@@ -483,9 +484,7 @@ const AdminBlogs = () => {
 
         {!showForm && blogs.length === 0 && (
           <div className="text-center py-12 text-royal-blue font-semibold">
-            <p className="text-xl">
-              No blogs found. Create your first one!
-            </p>
+            <p className="text-xl">No blogs found. Create your first one!</p>
           </div>
         )}
       </div>
