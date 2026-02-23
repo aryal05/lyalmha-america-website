@@ -21,7 +21,10 @@ const UpcomingEvents = () => {
     const timer = setInterval(() => {
       const newCountdowns = {};
       events.forEach((event) => {
-        newCountdowns[event.id] = calculateCountdown(event.event_date);
+        newCountdowns[event.id] = calculateCountdown(
+          event.event_date,
+          event.event_time,
+        );
       });
       setCountdowns(newCountdowns);
     }, 1000);
@@ -40,10 +43,15 @@ const UpcomingEvents = () => {
     }
   };
 
-  const calculateCountdown = (eventDate) => {
-    const now = new Date().getTime();
-    const eventTime = new Date(eventDate).getTime();
-    const distance = eventTime - now;
+  const calculateCountdown = (eventDate, eventTimeStr) => {
+    // Get current time in Eastern Time
+    const nowET = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
+    );
+    // Build event datetime in Eastern Time (event_time is stored as ET)
+    const timeStr = eventTimeStr || "00:00";
+    const eventDT = new Date(`${eventDate.split("T")[0]}T${timeStr}:00`);
+    const distance = eventDT.getTime() - nowET.getTime();
 
     if (distance < 0) return null;
 

@@ -28,9 +28,29 @@ const uploadToCloudinary = (buffer) => {
   })
 }
 
+// Helper: get current Eastern Time as ISO date string (YYYY-MM-DD) and time (HH:MM)
+const getNowET = () => {
+  const now = new Date();
+  const etDate = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // YYYY-MM-DD
+  const etTime = now.toLocaleTimeString('en-GB', { timeZone: 'America/New_York', hour12: false, hour: '2-digit', minute: '2-digit' }); // HH:MM
+  return { etDate, etTime };
+};
+
+// Helper: auto-move passed upcoming events to past (based on Eastern Time)
+const autoMovePastEvents = async () => {
+  const { etDate, etTime } = getNowET();
+  await QueryHelper.run(
+    `UPDATE events SET event_type = 'past'
+     WHERE event_type = 'upcoming'
+     AND (LEFT(event_date, 10) < ? OR (LEFT(event_date, 10) = ? AND COALESCE(event_time, '23:59') <= ?))`,
+    [etDate, etDate, etTime]
+  );
+};
+
 // GET all events (public - no auth)
 router.get('/', async (req, res) => {
   try {
+    await autoMovePastEvents();
     const events = await QueryHelper.all('SELECT * FROM events ORDER BY event_date DESC')
     res.json({ success: true, data: events })
   } catch (error) {
@@ -38,9 +58,10 @@ router.get('/', async (req, res) => {
   }
 })
 
-// GET upcoming events
+// GET upcoming events (only events whose date+time is still in the future in ET)
 router.get('/upcoming', async (req, res) => {
   try {
+    await autoMovePastEvents();
     const events = await QueryHelper.all(
       'SELECT * FROM events WHERE event_type = ? ORDER BY event_date ASC',
       ['upcoming']
@@ -51,9 +72,10 @@ router.get('/upcoming', async (req, res) => {
   }
 });
 
-// GET past events
+// GET past events (includes auto-moved events whose date has passed)
 router.get('/past', async (req, res) => {
   try {
+    await autoMovePastEvents();
     const events = await QueryHelper.all(
       'SELECT * FROM events WHERE event_type = ? ORDER BY event_date DESC',
       ['past']

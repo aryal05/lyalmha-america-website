@@ -235,7 +235,7 @@ const AdminEvents = () => {
 
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
-                      Event Start Time
+                      Event Start Time (Eastern Time)
                     </label>
                     <input
                       type="time"
@@ -248,6 +248,7 @@ const AdminEvents = () => {
                     {formData.event_time && (
                       <p className="text-sm text-green-600 mt-2 font-medium">
                         ✅ Starts at {formatTime12h(formData.event_time)}{" "}
+                        ET{" "}
                       </p>
                     )}
                     <div className="flex flex-wrap gap-2 mt-2">

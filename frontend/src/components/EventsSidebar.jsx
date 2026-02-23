@@ -45,7 +45,10 @@ const EventsSidebar = () => {
     const timer = setInterval(() => {
       const newCountdowns = {};
       upcomingEvents.forEach((event) => {
-        newCountdowns[event.id] = calculateCountdown(event.event_date);
+        newCountdowns[event.id] = calculateCountdown(
+          event.event_date,
+          event.event_time,
+        );
       });
       setCountdowns(newCountdowns);
     }, 1000);
@@ -83,10 +86,15 @@ const EventsSidebar = () => {
     }
   };
 
-  const calculateCountdown = (eventDate) => {
-    const now = new Date().getTime();
-    const eventTime = new Date(eventDate).getTime();
-    const distance = eventTime - now;
+  const calculateCountdown = (eventDate, eventTimeStr) => {
+    // Get current time in Eastern Time
+    const nowET = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
+    );
+    // Build event datetime in Eastern Time (event_time is stored as ET)
+    const timeStr = eventTimeStr || "00:00";
+    const eventDT = new Date(`${eventDate.split("T")[0]}T${timeStr}:00`);
+    const distance = eventDT.getTime() - nowET.getTime();
 
     if (distance < 0) return null;
 
@@ -98,13 +106,22 @@ const EventsSidebar = () => {
     };
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
+  const formatDate = (dateString, timeString) => {
+    const date = new Date(dateString + "T00:00:00");
+    const formatted = date.toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
       year: "numeric",
       month: "long",
       day: "numeric",
     });
+    if (timeString) {
+      const [h, m] = timeString.split(":");
+      const hr = parseInt(h, 10);
+      const ampm = hr >= 12 ? "PM" : "AM";
+      const h12 = hr % 12 || 12;
+      return `${formatted} at ${h12}:${m} ${ampm} ET`;
+    }
+    return formatted;
   };
 
   const formatPastDate = (dateString) => {
@@ -265,7 +282,7 @@ const EventsSidebar = () => {
                         >
                           <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        {formatDate(event.event_date)}
+                        {formatDate(event.event_date, event.event_time)}
                       </p>
 
                       <p className="text-xs text-paragraph-text mb-4 flex items-center">
@@ -616,7 +633,10 @@ const EventsSidebar = () => {
                       {selectedEvent.title}
                     </h4>
                     <p className="text-sm text-gray-700">
-                      {formatDate(selectedEvent.event_date)}
+                      {formatDate(
+                        selectedEvent.event_date,
+                        selectedEvent.event_time,
+                      )}
                     </p>
                     <p className="text-xs text-gray-600">
                       {selectedEvent.location}
