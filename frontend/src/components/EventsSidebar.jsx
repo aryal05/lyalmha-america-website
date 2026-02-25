@@ -32,6 +32,7 @@ const EventsSidebar = () => {
     attendees: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [copiedEventId, setCopiedEventId] = useState(null);
 
   // Fallback images for past events
   const fallbackImages = [event1, event2, event3];
@@ -142,20 +143,23 @@ const EventsSidebar = () => {
   };
 
   const shareEvent = (event, platform) => {
-    const url = window.location.href;
+    const eventUrl = `${window.location.origin}/gallery/event/${event.id}`;
     const text = `Check out ${event.title} on ${formatDate(event.event_date)}`;
 
     const shareUrls = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url,
-      )}`,
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        text,
-      )}&url=${encodeURIComponent(url)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(eventUrl)}`,
     };
 
-    window.open(shareUrls[platform], "_blank", "width=600,height=400");
+    if (platform === "copylink") {
+      navigator.clipboard.writeText(eventUrl).then(() => {
+        setCopiedEventId(event.id);
+        setTimeout(() => setCopiedEventId(null), 2000);
+      });
+      return;
+    }
+
+    window.open(shareUrls[platform], "_blank");
   };
 
   const handleRSVP = (event) => {
@@ -374,33 +378,77 @@ const EventsSidebar = () => {
                             </svg>
                           </button>
 
-                          <div className="absolute right-0 mt-2 w-44 bg-white border-2 border-gold-accent/50 rounded-xl shadow-2xl opacity-0 invisible group-hover/share:opacity-100 group-hover/share:visible transition-all z-50 overflow-hidden">
+                          <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gold-accent/50 rounded-xl shadow-2xl opacity-0 invisible group-hover/share:opacity-100 group-hover/share:visible transition-all z-50 overflow-hidden">
+                            {/* Facebook - real logo */}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 shareEvent(event, "facebook");
                               }}
-                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium"
+                              className="w-full px-4 py-2.5 text-left hover:bg-blue-50 transition-all flex items-center gap-3 font-medium"
                             >
-                              <span className="text-lg">📘</span> Facebook
+                              <div className="w-7 h-7 rounded-full bg-[#1877F2] flex items-center justify-center flex-shrink-0">
+                                <svg
+                                  className="w-4 h-4 text-white"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                </svg>
+                              </div>
+                              <span className="text-sm text-gray-700">
+                                Facebook
+                              </span>
                             </button>
+                            {/* X (Twitter) - real logo */}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 shareEvent(event, "twitter");
                               }}
-                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
+                              className="w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-all flex items-center gap-3 font-medium border-t border-gray-100"
                             >
-                              <span className="text-lg">🐦</span> Twitter
+                              <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                                <svg
+                                  className="w-3.5 h-3.5 text-white"
+                                  fill="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                              </div>
+                              <span className="text-sm text-gray-700">
+                                X (Twitter)
+                              </span>
                             </button>
+                            {/* Copy Link */}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                shareEvent(event, "whatsapp");
+                                shareEvent(event, "copylink");
                               }}
-                              className="w-full px-4 py-2.5 text-left text-royal-blue hover:text-white hover:bg-gradient-to-r hover:from-royal-blue hover:to-blue-600 transition-all flex items-center gap-2 font-medium border-t border-gray-200"
+                              className="w-full px-4 py-2.5 text-left hover:bg-green-50 transition-all flex items-center gap-3 font-medium border-t border-gray-100"
                             >
-                              <span className="text-lg">💬</span> WhatsApp
+                              <div className="w-7 h-7 rounded-full bg-gray-500 flex items-center justify-center flex-shrink-0">
+                                <svg
+                                  className="w-3.5 h-3.5 text-white"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                                  />
+                                </svg>
+                              </div>
+                              <span className="text-sm text-gray-700">
+                                {copiedEventId === event.id
+                                  ? "✓ Copied!"
+                                  : "Copy Link"}
+                              </span>
                             </button>
                           </div>
                         </div>
