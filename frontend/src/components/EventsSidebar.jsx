@@ -106,10 +106,10 @@ const EventsSidebar = () => {
     };
   };
 
-  const formatDate = (dateString, timeString) => {
-    const date = new Date(dateString + "T00:00:00");
+  const formatDate = (dateString, timeString, endTimeString) => {
+    const date = new Date(dateString + "T00:00:00Z");
     const formatted = date.toLocaleDateString("en-US", {
-      timeZone: "America/New_York",
+      timeZone: "UTC",
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -119,14 +119,23 @@ const EventsSidebar = () => {
       const hr = parseInt(h, 10);
       const ampm = hr >= 12 ? "PM" : "AM";
       const h12 = hr % 12 || 12;
-      return `${formatted} at ${h12}:${m} ${ampm} ET`;
+      let timeStr = `${formatted} at ${h12}:${m} ${ampm}`;
+      if (endTimeString) {
+        const [eh, em] = endTimeString.split(":");
+        const ehr = parseInt(eh, 10);
+        const eampm = ehr >= 12 ? "PM" : "AM";
+        const eh12 = ehr % 12 || 12;
+        timeStr += ` - ${eh12}:${em} ${eampm}`;
+      }
+      return timeStr + " ET";
     }
     return formatted;
   };
 
   const formatPastDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + "T00:00:00Z");
     return date.toLocaleDateString("en-US", {
+      timeZone: "UTC",
       year: "numeric",
       month: "long",
     });
@@ -282,7 +291,11 @@ const EventsSidebar = () => {
                         >
                           <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        {formatDate(event.event_date, event.event_time)}
+                        {formatDate(
+                          event.event_date,
+                          event.event_time,
+                          event.event_end_time,
+                        )}
                       </p>
 
                       <p className="text-xs text-paragraph-text mb-4 flex items-center">
@@ -636,6 +649,7 @@ const EventsSidebar = () => {
                       {formatDate(
                         selectedEvent.event_date,
                         selectedEvent.event_time,
+                        selectedEvent.event_end_time,
                       )}
                     </p>
                     <p className="text-xs text-gray-600">
@@ -686,7 +700,13 @@ const EventsSidebar = () => {
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
-                      <option value="4+">4+</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10+">10+</option>
                     </select>
 
                     <motion.button

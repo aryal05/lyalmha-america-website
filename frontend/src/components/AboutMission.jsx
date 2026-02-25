@@ -27,7 +27,7 @@ const AboutMission = () => {
             <div className="pagoda-divider w-48"></div>
           </div>
 
-          <div className="space-y-6 text-paragraph-text leading-relaxed">
+          <div className="space-y-6 text-paragraph-text leading-relaxed text-justify">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ const AboutMission = () => {
               className="text-lg"
             >
               <strong className="text-primary-text bg-gradient-to-r from-gold-accent/20 to-transparent px-2 py-1 rounded">
-                ल्याय्म्ह अमेरिका गुथि: Lyaymha America Guthi (LAG)
+                ल्याय्​म्ह अमेरिका गुथी: Lyaymha America Guthi (LAG)
               </strong>{" "}
               is a registered U.S.-based non-profit organization devoted to
               nurturing the next generation through newari art, culture, and

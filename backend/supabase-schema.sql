@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS blogs (
   date TEXT NOT NULL,
   read_time INTEGER DEFAULT 5,
   status TEXT DEFAULT 'published',
+  link TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -50,9 +51,12 @@ CREATE TABLE IF NOT EXISTS events (
   description TEXT,
   event_date TEXT NOT NULL,
   event_time TEXT,
+  event_end_time TEXT,
   location TEXT,
   event_type TEXT DEFAULT 'event',
   image TEXT,
+  more_images_link TEXT,
+  event_link TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -170,6 +174,7 @@ CREATE TABLE IF NOT EXISTS news (
   published_date DATE NOT NULL,
   order_index INTEGER DEFAULT 0,
   active INTEGER DEFAULT 1,
+  link TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -7,7 +7,6 @@ import ScrollToTop from "../components/ScrollToTop";
 import SuccessPopup from "../components/SuccessPopup";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
-import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const Contact = () => {
   const [banners, setBanners] = useState([]);
@@ -31,11 +30,10 @@ const Contact = () => {
         const response = await apiClient.get(
           API_ENDPOINTS.BANNERS.GET_BY_LOCATION("contact"),
         );
-        console.log("Contact banner response:", response.data.data);
         const bannersData = response.data.data || [];
         setBanners(bannersData.length > 0 ? bannersData : []);
       } catch (error) {
-        console.error("Error fetching banner:", error);
+        // silently handle
       }
     };
     fetchBanner();
@@ -72,7 +70,6 @@ const Contact = () => {
         setFormData({ name: "", email: "", subject: "", message: "" });
       }
     } catch (error) {
-      console.error("Error submitting contact form:", error);
       setPopupConfig({
         title: "Oops!",
         message:
@@ -100,12 +97,9 @@ const Contact = () => {
         {/* Background Image with Mandala */}
         <div className="absolute inset-0 z-0">
           <img
-            src={
-              activeBanner?.image
-                ? getImageUrl(activeBanner.image)
-                : fallbackBanner
-            }
+            src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Contact Background"
+            style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>

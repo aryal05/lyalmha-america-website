@@ -12,57 +12,61 @@ const AdminNews = () => {
   const [showForm, setShowForm] = useState(false)
   const [editingNews, setEditingNews] = useState(null)
   const [formData, setFormData] = useState({
-    title: '',
-    excerpt: '',
-    content: '',
-    category: 'announcement',
-    author: 'Admin',
-    published_date: new Date().toISOString().split('T')[0],
+    title: "",
+    excerpt: "",
+    content: "",
+    category: "announcement",
+    author: "Admin",
+    published_date: new Date().toISOString().split("T")[0],
     active: 1,
     order_index: 0,
-  })
-  const [imageFile, setImageFile] = useState(null)
-  const [imagePreview, setImagePreview] = useState(null)
+    link: "",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    fetchNews()
-  }, [])
+    fetchNews();
+  }, []);
 
   const fetchNews = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.NEWS.GET_ALL)
-      setNewsItems(response.data.data)
+      const response = await apiClient.get(API_ENDPOINTS.NEWS.GET_ALL);
+      setNewsItems(response.data.data);
     } catch (error) {
-      console.error('Error fetching news:', error)
+      console.error("Error fetching news:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const data = new FormData()
-    Object.keys(formData).forEach((key) => data.append(key, formData[key]))
+    e.preventDefault();
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (imageFile) {
-      data.append('image', imageFile)
+      data.append("image", imageFile);
     }
 
     try {
       if (editingNews) {
-        await apiClient.put(API_ENDPOINTS.NEWS.UPDATE(editingNews.id), data)
+        await apiClient.put(API_ENDPOINTS.NEWS.UPDATE(editingNews.id), data);
       } else {
-        await apiClient.post(API_ENDPOINTS.NEWS.CREATE, data)
+        await apiClient.post(API_ENDPOINTS.NEWS.CREATE, data);
       }
-      fetchNews()
-      resetForm()
+      fetchNews();
+      resetForm();
     } catch (error) {
-      console.error('Error saving news:', error)
-      alert('Error saving news: ' + (error.response?.data?.error || 'Unknown error'))
+      console.error("Error saving news:", error);
+      alert(
+        "Error saving news: " +
+          (error.response?.data?.error || "Unknown error"),
+      );
     }
-  }
+  };
 
   const handleEdit = (news) => {
-    setEditingNews(news)
+    setEditingNews(news);
     setFormData({
       title: news.title,
       excerpt: news.excerpt,
@@ -72,61 +76,63 @@ const AdminNews = () => {
       published_date: news.published_date,
       active: news.active,
       order_index: news.order_index,
-    })
-    setImagePreview(news.image)
-    setImageFile(null)
-    setShowForm(true)
-  }
+      link: news.link || "",
+    });
+    setImagePreview(news.image);
+    setImageFile(null);
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this news item?')) {
+    if (window.confirm("Are you sure you want to delete this news item?")) {
       try {
-        await apiClient.delete(API_ENDPOINTS.NEWS.DELETE(id))
-        fetchNews()
+        await apiClient.delete(API_ENDPOINTS.NEWS.DELETE(id));
+        fetchNews();
       } catch (error) {
-        console.error('Error deleting news:', error)
+        console.error("Error deleting news:", error);
       }
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      excerpt: '',
-      content: '',
-      category: 'announcement',
-      author: 'Admin',
-      published_date: new Date().toISOString().split('T')[0],
+      title: "",
+      excerpt: "",
+      content: "",
+      category: "announcement",
+      author: "Admin",
+      published_date: new Date().toISOString().split("T")[0],
       active: 1,
       order_index: 0,
-    })
-    setImageFile(null)
-    setImagePreview(null)
-    setEditingNews(null)
-    setShowForm(false)
-  }
+      link: "",
+    });
+    setImageFile(null);
+    setImagePreview(null);
+    setEditingNews(null);
+    setShowForm(false);
+  };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      setImageFile(file)
-      const reader = new FileReader()
+      setImageFile(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link'],
-      ['clean'],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
     ],
-  }
+  };
 
   if (loading) {
     return (
@@ -270,6 +276,24 @@ const AdminNews = () => {
 
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
+                  Link (optional)
+                </label>
+                <input
+                  type="url"
+                  value={formData.link}
+                  onChange={(e) =>
+                    setFormData({ ...formData, link: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
+                  placeholder="https://example.com"
+                />
+                <p className="text-xs text-paragraph-text mt-1">
+                  External link for this news item
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-royal-blue font-semibold mb-2">
                   Featured Image
                 </label>
                 <input
@@ -396,9 +420,41 @@ const AdminNews = () => {
                   <p className="text-paragraph-text text-sm mb-2 line-clamp-2">
                     {news.excerpt}
                   </p>
-                  <div className="text-xs text-paragraph-text mb-4">
+                  <div className="text-xs text-paragraph-text mb-2">
                     {news.published_date} • {news.author}
                   </div>
+                  {news.link && (
+                    <div className="flex items-center gap-1.5 mb-2 text-xs text-blue-600">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
+                        />
+                      </svg>
+                      <a
+                        href={news.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline truncate max-w-[180px]"
+                      >
+                        {news.link}
+                      </a>
+                    </div>
+                  )}
                   <div className="flex gap-2">
                     <motion.button
                       whileHover={{ scale: 1.05 }}

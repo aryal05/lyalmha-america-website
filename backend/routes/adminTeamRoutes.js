@@ -24,14 +24,8 @@ const upload = multer({ storage: storage })
 router.get('/', async (req, res) => {
   try {
     const team = await QueryHelper.all('SELECT * FROM team_members ORDER BY category, order_index, name')
-    console.log('GET /team - Fetched team members:', team)
-    console.log('GET /team - Number of members:', team.length)
-    if (team.length > 0) {
-      console.log('GET /team - First member:', team[0])
-    }
     res.json({ success: true, data: team })
   } catch (error) {
-    console.error('GET /team - Error:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -52,13 +46,8 @@ router.use(authenticateToken)
 // POST create team member
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    console.log('POST /team - Request body:', req.body)
-    console.log('POST /team - Request file:', req.file)
-    
     const { name, role, category, bio, order_index } = req.body
     const image = req.file ? req.file.path : null
-    
-    console.log('Image path to save:', image)
     
     if (!name || !category) {
       return res.status(400).json({ 
@@ -70,15 +59,12 @@ router.post('/', upload.single('image'), async (req, res) => {
     const result = await QueryHelper.run(`
       INSERT INTO team_members (name, role, category, bio, image, order_index)
       VALUES (?, ?, ?, ?, ?, ?)
-    `, [name, role, category, bio, image, order_index || 0])
+    `, [name, role, category, bio, image, order_index || 1])
     
     const newMember = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [result.lastID])
     
-    console.log('Created team member:', newMember)
-    
     res.status(201).json({ success: true, data: newMember })
   } catch (error) {
-    console.error('Error creating team member:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -86,9 +72,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update team member
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    console.log('PUT /team/:id - Request body:', req.body)
-    console.log('PUT /team/:id - Request file:', req.file)
-    
     const { name, role, category, bio, order_index } = req.body
     const member = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
     
@@ -100,18 +83,15 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     
     // If new image is uploaded, delete old one from Cloudinary
     if (req.file) {
-      console.log('New image uploaded, deleting old image...')
       if (member.image) {
         try {
           const publicId = member.image.split('/').slice(-2).join('/').split('.')[0]
-          console.log('Deleting old image with publicId:', publicId)
           await cloudinary.uploader.destroy(publicId)
         } catch (err) {
-          console.error('Error deleting old image:', err)
+          // silently handle
         }
       }
       image = req.file.path
-      console.log('New image path:', image)
     }
     
     await QueryHelper.run(`
@@ -130,11 +110,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     
     const updatedMember = await QueryHelper.get('SELECT * FROM team_members WHERE id = ?', [req.params.id])
     
-    console.log('Updated team member:', updatedMember)
-    
     res.json({ success: true, data: updatedMember })
   } catch (error) {
-    console.error('Error updating team member:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -154,7 +131,7 @@ router.delete('/:id', async (req, res) => {
         const publicId = member.image.split('/').slice(-2).join('/').split('.')[0]
         await cloudinary.uploader.destroy(publicId)
       } catch (err) {
-        console.error('Error deleting image:', err)
+        // silently handle
       }
     }
     

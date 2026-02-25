@@ -9,11 +9,14 @@ const AdminTeam = () => {
   const [team, setTeam] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  const [filterCategory, setFilterCategory] = useState("Executive");
+  const [searchName, setSearchName] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     role: "",
-    category: "Advisors",
+    category: "Executive",
     bio: "",
+    order_index: 1,
   });
   const [imageFile, setImageFile] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
@@ -34,17 +37,10 @@ const AdminTeam = () => {
 
   const fetchTeam = async () => {
     try {
-      console.log("Fetching team members...");
       const response = await apiClient.get(API_ENDPOINTS.TEAM.GET_ALL);
-      console.log("Team fetch response:", response.data);
-      console.log("Team data:", response.data.data);
-      if (response.data.data && response.data.data.length > 0) {
-        console.log("First team member:", response.data.data[0]);
-        console.log("First member image:", response.data.data[0].image);
-      }
       setTeam(response.data.data);
     } catch (error) {
-      console.error("Error fetching team:", error);
+      // silently handle
     }
   };
 
@@ -56,27 +52,16 @@ const AdminTeam = () => {
       data.append("role", formData.role);
       data.append("category", formData.category);
       data.append("bio", formData.bio);
+      data.append("order_index", formData.order_index);
 
       // Add cropped image if user selected a new image
       if (imageFile && completedCrop && imgRef.current) {
-        console.log("Creating cropped image...");
-        console.log("Completed crop:", completedCrop);
         const croppedImageBlob = await getCroppedImg(
           imgRef.current,
           completedCrop,
         );
-        console.log("Cropped image blob:", croppedImageBlob);
         data.append("image", croppedImageBlob, "team-member.jpg");
-        console.log("Image appended to FormData");
-      } else {
-        console.log("No image to upload:", {
-          imageFile,
-          completedCrop,
-          imgRef: imgRef.current,
-        });
       }
-
-      console.log("Submitting form data...");
 
       let response;
       if (editingMember) {
@@ -97,12 +82,9 @@ const AdminTeam = () => {
         });
       }
 
-      console.log("Server response:", response.data);
       fetchTeam();
       resetForm();
     } catch (error) {
-      console.error("Error saving team member:", error);
-      console.error("Error details:", error.response?.data);
       alert(
         "Error saving team member: " +
           (error.response?.data?.error || error.message),
@@ -170,6 +152,7 @@ const AdminTeam = () => {
       role: member.role,
       category: member.category,
       bio: member.bio || "",
+      order_index: member.order_index || 1,
     });
     setImageSrc(member.image || null);
     setImageFile(null);
@@ -183,7 +166,10 @@ const AdminTeam = () => {
         await apiClient.delete(API_ENDPOINTS.TEAM.DELETE(id));
         fetchTeam();
       } catch (error) {
-        console.error("Error deleting team member:", error);
+        alert(
+          "Error deleting team member: " +
+            (error.response?.data?.error || error.message),
+        );
       }
     }
   };
@@ -192,8 +178,9 @@ const AdminTeam = () => {
     setFormData({
       name: "",
       role: "",
-      category: "Advisors",
+      category: "Executive",
       bio: "",
+      order_index: 1,
     });
     setImageFile(null);
     setImageSrc(null);
@@ -303,21 +290,57 @@ const AdminTeam = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-royal-blue font-semibold mb-2">
-                    Category <span className="text-newari-red">*</span>
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
-                  >
-                    <option value="Advisors">Advisors</option>
-                    <option value="Executive">Executive</option>
-                    <option value="Life Members">Life Members</option>
-                  </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Category <span className="text-newari-red">*</span>
+                    </label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    >
+                      <option value="Advisors">Advisors</option>
+                      <option value="Executive">Executive</option>
+                      <option value="Life Members">Life Members</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Display Order
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={formData.order_index}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, "");
+                        setFormData({
+                          ...formData,
+                          order_index:
+                            val === "" ? "" : Math.max(1, parseInt(val)),
+                        });
+                      }}
+                      onBlur={() => {
+                        if (
+                          formData.order_index === "" ||
+                          isNaN(formData.order_index) ||
+                          formData.order_index < 1
+                        ) {
+                          setFormData({ ...formData, order_index: 1 });
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      placeholder="1 = shown first"
+                    />
+                    <p className="text-xs text-paragraph-text mt-1">
+                      Lower numbers appear first
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -426,6 +449,63 @@ const AdminTeam = () => {
           </motion.div>
         )}
 
+        {/* Category Filter & Search */}
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
+          <div className="flex flex-wrap gap-2">
+            {["Executive", "Advisors", "Life Members"].map((cat) => (
+              <motion.button
+                key={cat}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  setFilterCategory(filterCategory === cat ? "" : cat)
+                }
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                  filterCategory === cat
+                    ? "bg-gradient-to-r from-newari-red to-gold-accent text-white shadow-lg"
+                    : "bg-white text-royal-blue border-2 border-gray-300 hover:border-royal-blue"
+                }`}
+              >
+                {cat} ({team.filter((m) => m.category === cat).length})
+              </motion.button>
+            ))}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setFilterCategory("")}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                filterCategory === ""
+                  ? "bg-gradient-to-r from-newari-red to-gold-accent text-white shadow-lg"
+                  : "bg-white text-royal-blue border-2 border-gray-300 hover:border-royal-blue"
+              }`}
+            >
+              All ({team.length})
+            </motion.button>
+          </div>
+          <div className="relative flex-1 w-full md:w-auto">
+            <input
+              type="text"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              className="w-full px-4 py-2 pl-10 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
+              placeholder="Search by name..."
+            />
+            <svg
+              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
         {/* Team Table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -452,121 +532,139 @@ const AdminTeam = () => {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Category
                   </th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-royal-blue uppercase tracking-wider">
+                    Order
+                  </th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-royal-blue uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {team.map((member, index) => (
-                  <motion.tr
-                    key={member.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="hover:bg-blue-50/30 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      {member.image ? (
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-gray-300"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                          <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
+                {[...team]
+                  .filter(
+                    (m) =>
+                      (!filterCategory || m.category === filterCategory) &&
+                      (!searchName ||
+                        m.name
+                          .toLowerCase()
+                          .includes(searchName.toLowerCase())),
+                  )
+                  .sort((a, b) => (a.order_index || 1) - (b.order_index || 1))
+                  .map((member, index) => (
+                    <motion.tr
+                      key={member.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="hover:bg-blue-50/30 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        {member.image ? (
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-gray-300"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
+                            </svg>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {member.name}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-gray-900">
-                        {member.name}
-                      </div>
-                      {member.bio && (
-                        <div className="text-sm text-paragraph-text truncate max-w-xs">
-                          {member.bio}
+                        {member.bio && (
+                          <div className="text-sm text-paragraph-text truncate max-w-xs">
+                            {member.bio}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-paragraph-text">
+                          {member.role}
                         </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-paragraph-text">
-                        {member.role}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${
-                          member.category === "Executive"
-                            ? "bg-newari-red/20 text-newari-red border border-newari-red/30"
-                            : member.category === "Advisor"
-                              ? "bg-gold-accent/20 text-gold-accent border border-gold-accent/30"
-                              : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                        }`}
-                      >
-                        {member.category}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleEdit(member)}
-                          className="p-2 text-gold-accent hover:bg-gold-accent/10 rounded-lg transition-colors"
-                          title="Edit"
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${
+                            member.category === "Executive"
+                              ? "bg-newari-red/20 text-newari-red border border-newari-red/30"
+                              : member.category === "Advisor"
+                                ? "bg-gold-accent/20 text-gold-accent border border-gold-accent/30"
+                                : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                          }`}
                         >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                          {member.category}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-royal-blue/10 text-royal-blue font-semibold text-sm">
+                          {member.order_index || 1}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleEdit(member)}
+                            className="p-2 text-gold-accent hover:bg-gold-accent/10 rounded-lg transition-colors"
+                            title="Edit"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDelete(member.id)}
-                          className="p-2 text-newari-red hover:bg-newari-red/10 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleDelete(member.id)}
+                            className="p-2 text-newari-red hover:bg-newari-red/10 rounded-lg transition-colors"
+                            title="Delete"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </motion.button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </motion.button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
               </tbody>
             </table>
             {team.length === 0 && (
@@ -580,6 +678,23 @@ const AdminTeam = () => {
                 </p>
               </div>
             )}
+            {team.length > 0 &&
+              team.filter(
+                (m) =>
+                  (!filterCategory || m.category === filterCategory) &&
+                  (!searchName ||
+                    m.name.toLowerCase().includes(searchName.toLowerCase())),
+              ).length === 0 && (
+                <div className="text-center py-16">
+                  <div className="text-6xl mb-4 opacity-20">🔍</div>
+                  <p className="text-royal-blue font-semibold text-lg">
+                    No matching members
+                  </p>
+                  <p className="text-paragraph-text text-sm mt-2">
+                    Try a different filter or search
+                  </p>
+                </div>
+              )}
           </div>
         </motion.div>
       </div>

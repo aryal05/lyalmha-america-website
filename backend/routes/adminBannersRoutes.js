@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
     const banners = await QueryHelper.all(`
       SELECT * FROM banners 
       WHERE active = 1 
-      ORDER BY order_index
+      ORDER BY order_index ASC
     `)
     res.json({ success: true, data: banners })
   } catch (error) {
@@ -44,16 +44,13 @@ router.get('/', async (req, res) => {
 // GET banners by location
 router.get('/location/:location', async (req, res) => {
   try {
-    console.log(`🎯 Fetching banners for location: ${req.params.location}`)
     const banners = await QueryHelper.all(`
       SELECT * FROM banners 
       WHERE position = $1 AND active = 1 
-      ORDER BY order_index
+      ORDER BY order_index ASC
     `, [req.params.location])
-    console.log(`✅ Found ${banners.length} banners for ${req.params.location}`)
     res.json({ success: true, data: banners })
   } catch (error) {
-    console.error(`❌ Error fetching banners for ${req.params.location}:`, error.message)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -64,11 +61,9 @@ router.use(authenticateToken)
 // GET all banners (admin - includes inactive)
 router.get('/admin/all', async (req, res) => {
   try {
-    const banners = await QueryHelper.all('SELECT * FROM banners ORDER BY position, order_index')
-    console.log('📋 Fetched', banners.length, 'banners for admin')
+    const banners = await QueryHelper.all('SELECT * FROM banners ORDER BY position, order_index ASC')
     res.json({ success: true, data: banners })
   } catch (error) {
-    console.error('❌ Error fetching banners:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -77,8 +72,7 @@ router.get('/admin/all', async (req, res) => {
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const { title, description, position, active } = req.body
-    
-    console.log('📝 Creating banner for position:', position)
+    const order_index_raw = req.body.order_index
     
     if (!req.file) {
       return res.status(400).json({ 
@@ -88,37 +82,42 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
     
     // Upload to Cloudinary
-    console.log('☁️  Uploading to Cloudinary...')
     const imageUrl = await uploadToCloudinary(req.file.buffer)
-    console.log('✅ Image uploaded:', imageUrl)
     
-    // Auto-calculate order_index (get max for this position and add 1)
-    const maxOrder = await QueryHelper.get(
-      'SELECT MAX(order_index) as max FROM banners WHERE position = ?', 
-      [position || 'home']
+    // Use provided order_index or auto-calculate
+    let nextOrder
+    if (order_index_raw !== undefined && order_index_raw !== '' && order_index_raw !== null) {
+      nextOrder = Math.max(1, parseInt(order_index_raw) || 1)
+    } else {
+      const maxOrder = await QueryHelper.get(
+        'SELECT MAX(order_index) as max FROM banners WHERE position = ?', 
+        [position || 'home']
+      )
+      nextOrder = (maxOrder?.max || 0) + 1
+    }
+    
+    // Resolve order conflicts: bump existing banners with same or higher order
+    await QueryHelper.run(
+      'UPDATE banners SET order_index = order_index + 1 WHERE position = ? AND order_index >= ?',
+      [position || 'home', nextOrder]
     )
-    const nextOrder = (maxOrder?.max || 0) + 1
-    
-    console.log('📊 Auto-assigned order:', nextOrder)
     
     const result = await QueryHelper.run(`
       INSERT INTO banners (title, description, image, position, order_index, active)
       VALUES (?, ?, ?, ?, ?, ?)
-    `,
-      title,
-      description,
+    `, [
+      title || '',
+      description || '',
       imageUrl,
       position || 'home',
       nextOrder,
-      active === 'true' || active === true || active === 1 ? 1 : 0
-    )
+      (active === undefined || active === 'true' || active === '1' || active === true || active === 1) ? 1 : 0
+    ])
     
     const newBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [result.lastID])
-    console.log('✅ Banner created successfully')
     
     res.status(201).json({ success: true, data: newBanner })
   } catch (error) {
-    console.error('❌ Error creating banner:', error)
     res.status(500).json({ success: false, error: error.message })
   }
 })
@@ -126,38 +125,20 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update banner
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    console.log('='.repeat(60))
-    console.log('📝 BANNER UPDATE RECEIVED')
-    console.log('Banner ID:', req.params.id)
-    console.log('Request body keys:', Object.keys(req.body))
-    console.log('Request body:', JSON.stringify(req.body, null, 2))
-    console.log('Has file:', !!req.file)
-    
     const { title, description, position, active } = req.body
-    console.log('Extracted fields:')
-    console.log('  - title:', title, '(type:', typeof title, ')')
-    console.log('  - description:', description, '(type:', typeof description, ')')
-    console.log('  - position:', position, '(type:', typeof position, ')')
-    console.log('  - active:', active, '(type:', typeof active, ')')
     
     const banner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [req.params.id])
     
     if (!banner) {
-      console.log('❌ Banner not found:', req.params.id)
       return res.status(404).json({ success: false, error: 'Banner not found' })
     }
-    
-    console.log('📋 Current banner in DB:', JSON.stringify(banner, null, 2))
     
     // Upload to Cloudinary if new image provided
     let imageUrl = banner.image
     if (req.file) {
       try {
-        console.log('☁️  Uploading to Cloudinary...')
         imageUrl = await uploadToCloudinary(req.file.buffer)
-        console.log('✅ Image uploaded:', imageUrl)
       } catch (uploadError) {
-        console.error('❌ Cloudinary upload error:', uploadError)
         return res.status(500).json({ 
           success: false, 
           error: 'Image upload failed: ' + uploadError.message 
@@ -166,14 +147,19 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     }
     
     // If position changed, recalculate order_index
-    let order_index = banner.order_index
-    if (position && position !== banner.position) {
+    // Use provided order_index, or recalculate if position changed, or keep existing
+    const order_index_raw = req.body.order_index
+    let order_index
+    if (order_index_raw !== undefined && order_index_raw !== '' && order_index_raw !== null) {
+      order_index = Math.max(1, parseInt(order_index_raw) || 1)
+    } else if (position && position !== banner.position) {
       const maxOrder = await QueryHelper.get(
         'SELECT MAX(order_index) as max FROM banners WHERE position = ?', 
         [position]
       )
       order_index = (maxOrder?.max || 0) + 1
-      console.log('📊 Position changed, new order:', order_index)
+    } else {
+      order_index = banner.order_index
     }
     
     // Determine final values - use provided or keep existing
@@ -182,28 +168,20 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     const finalPosition = position || banner.position
     const finalActive = active !== undefined ? (active === 'true' || active === '1' || active === true || active === 1 ? 1 : 0) : banner.active
     
-    console.log('🎯 Computing final values:')
-    console.log('  - finalTitle:', finalTitle)
-    console.log('  - finalDescription:', finalDescription)
-    console.log('  - finalPosition:', finalPosition)
-    console.log('  - finalActive:', finalActive, '(computed from active:', active, ')')
-    
-    console.log('💾 Executing UPDATE query with:', {
-      title: finalTitle,
-      description: finalDescription,
-      image: imageUrl,
-      position: finalPosition,
-      order_index: order_index,
-      active: finalActive,
-      id: req.params.id
-    })
+    // Resolve order conflicts: bump other banners with same or higher order (exclude current banner)
+    if (order_index !== banner.order_index || finalPosition !== banner.position) {
+      await QueryHelper.run(
+        'UPDATE banners SET order_index = order_index + 1 WHERE position = ? AND order_index >= ? AND id != ?',
+        [finalPosition, order_index, req.params.id]
+      )
+    }
     
     const result = await QueryHelper.run(`
       UPDATE banners 
       SET title = ?, description = ?, image = ?, 
           position = ?, order_index = ?, active = ?
       WHERE id = ?
-    `,
+    `, [
       finalTitle,
       finalDescription,
       imageUrl,
@@ -211,23 +189,12 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       order_index,
       finalActive,
       req.params.id
-    )
-    
-    console.log('📊 UPDATE result:', result)
-    console.log('  - changes:', result.changes)
-    console.log('  - lastID:', result.lastID)
+    ])
     
     const updatedBanner = await QueryHelper.get('SELECT * FROM banners WHERE id = ?', [req.params.id])
     
-    console.log('✅ Banner after UPDATE:', JSON.stringify(updatedBanner, null, 2))
-    console.log('='.repeat(60))
     res.json({ success: true, data: updatedBanner })
   } catch (error) {
-    console.error('='.repeat(60))
-    console.error('❌ ERROR UPDATING BANNER')
-    console.error('Error message:', error.message)
-    console.error('Error stack:', error.stack)
-    console.error('='.repeat(60))
     res.status(500).json({ success: false, error: error.message })
   }
 })

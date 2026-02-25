@@ -9,14 +9,15 @@ const AdminStories = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingStory, setEditingStory] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    excerpt: '',
-    content: '',
+    title: "",
+    excerpt: "",
+    content: "",
     banner: null,
-    category: '',
-    location: '',
-    created_at: '',
-    author: ''
+    category: "",
+    location: "",
+    created_at: "",
+    author: "",
+    link: "",
   });
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const AdminStories = () => {
       const response = await apiClient.get(API_ENDPOINTS.STORIES.GET_ALL);
       setStories(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching stories:', error);
+      console.error("Error fetching stories:", error);
     }
   };
 
@@ -36,25 +37,31 @@ const AdminStories = () => {
     e.preventDefault();
     try {
       const data = new FormData();
-      data.append('title', formData.title);
-      data.append('excerpt', formData.excerpt);
-      data.append('content', formData.content);
-      data.append('category', formData.category);
-      data.append('location', formData.location);
-      data.append('author', formData.author);
+      data.append("title", formData.title);
+      data.append("excerpt", formData.excerpt);
+      data.append("content", formData.content);
+      data.append("category", formData.category);
+      data.append("location", formData.location);
+      data.append("author", formData.author);
+      data.append("link", formData.link);
       if (formData.banner) {
-        data.append('banner', formData.banner);
+        data.append("banner", formData.banner);
       }
       if (editingStory) {
-        await apiClient.put(API_ENDPOINTS.STORIES.UPDATE(editingStory.id), data);
+        await apiClient.put(
+          API_ENDPOINTS.STORIES.UPDATE(editingStory.id),
+          data,
+        );
       } else {
         await apiClient.post(API_ENDPOINTS.STORIES.CREATE, data);
       }
       fetchStories();
       resetForm();
     } catch (error) {
-      console.error('Error saving story:', error);
-      alert('Error saving story: ' + (error.response?.data?.error || error.message));
+      console.error("Error saving story:", error);
+      alert(
+        "Error saving story: " + (error.response?.data?.error || error.message),
+      );
     }
   };
 
@@ -68,32 +75,34 @@ const AdminStories = () => {
       category: story.category,
       location: story.location,
       created_at: story.created_at,
-      author: story.author
+      author: story.author,
+      link: story.link || "",
     });
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this story?')) {
+    if (window.confirm("Are you sure you want to delete this story?")) {
       try {
         await apiClient.delete(API_ENDPOINTS.STORIES.DELETE(id));
         fetchStories();
       } catch (error) {
-        console.error('Error deleting story:', error);
+        console.error("Error deleting story:", error);
       }
     }
   };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      excerpt: '',
-      content: '',
+      title: "",
+      excerpt: "",
+      content: "",
       banner: null,
-      category: '',
-      location: '',
-      created_at: '',
-      author: ''
+      category: "",
+      location: "",
+      created_at: "",
+      author: "",
+      link: "",
     });
     setEditingStory(null);
     setShowForm(false);
@@ -191,6 +200,23 @@ const AdminStories = () => {
                     placeholder="Author"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  Link (optional)
+                </label>
+                <input
+                  type="url"
+                  value={formData.link}
+                  onChange={(e) =>
+                    setFormData({ ...formData, link: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
+                  placeholder="https://example.com"
+                />
+                <p className="text-xs text-paragraph-text mt-1">
+                  External link for this story
+                </p>
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
@@ -322,6 +348,38 @@ const AdminStories = () => {
                 <p className="text-paragraph-text mb-6 max-w-xl">
                   {story.excerpt}
                 </p>
+                {story.link && (
+                  <div className="flex items-center gap-2 mb-4 text-sm text-blue-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
+                      />
+                    </svg>
+                    <a
+                      href={story.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline truncate max-w-[200px]"
+                    >
+                      {story.link}
+                    </a>
+                  </div>
+                )}
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-sm text-muted-text">
                     <svg

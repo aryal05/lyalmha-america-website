@@ -6,7 +6,6 @@ import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
-import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 
 const Blogs = () => {
   const navigate = useNavigate();
@@ -26,11 +25,9 @@ const Blogs = () => {
         const blogsData = blogsRes.data.data || blogsRes.data;
         setBlogPosts(Array.isArray(blogsData) ? blogsData : []);
 
-        console.log("Blogs banner response:", bannerRes.data.data);
         const bannersData = bannerRes.data.data || [];
         setBanners(bannersData.length > 0 ? bannersData : []);
       } catch (error) {
-        console.error("Error fetching data:", error);
         setBlogPosts([]);
       } finally {
         setLoading(false);
@@ -60,12 +57,9 @@ const Blogs = () => {
         {/* Background Image with Mandala Pattern */}
         <div className="absolute inset-0 z-0">
           <img
-            src={
-              activeBanner?.image
-                ? getImageUrl(activeBanner.image)
-                : fallbackBanner
-            }
+            src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Blog Background"
+            style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>

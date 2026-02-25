@@ -13,9 +13,11 @@ const AdminEvents = () => {
     description: "",
     event_date: "",
     event_time: "",
+    event_end_time: "",
     location: "",
     event_type: "upcoming",
     image: null,
+    event_link: "",
   });
 
   // Format 24h time to 12h AM/PM
@@ -28,11 +30,11 @@ const AdminEvents = () => {
     return `${h12}:${minutes} ${ampm}`;
   };
 
-  // Format date for Eastern US display
+  // Format date for display (timezone-safe)
   const formatDateET = (dateStr) => {
     if (!dateStr) return "";
-    return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
-      timeZone: "America/New_York",
+    return new Date(dateStr + "T00:00:00Z").toLocaleDateString("en-US", {
+      timeZone: "UTC",
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -61,8 +63,10 @@ const AdminEvents = () => {
       data.append("description", formData.description);
       data.append("event_date", formData.event_date);
       data.append("event_time", formData.event_time);
+      data.append("event_end_time", formData.event_end_time);
       data.append("location", formData.location);
       data.append("event_type", formData.event_type);
+      data.append("event_link", formData.event_link);
       if (formData.image) {
         data.append("image", formData.image);
       }
@@ -89,9 +93,11 @@ const AdminEvents = () => {
       description: event.description,
       event_date: event.event_date?.split("T")[0] || "",
       event_time: event.event_time || "",
+      event_end_time: event.event_end_time || "",
       location: event.location,
       event_type: event.event_type,
       image: null,
+      event_link: event.event_link || "",
     });
     setShowForm(true);
   };
@@ -113,9 +119,11 @@ const AdminEvents = () => {
       description: "",
       event_date: "",
       event_time: "",
+      event_end_time: "",
       location: "",
       event_type: "upcoming",
       image: null,
+      event_link: "",
     });
     setEditingEvent(null);
     setShowForm(false);
@@ -212,7 +220,7 @@ const AdminEvents = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-3 gap-6">
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
                       Event Date <span className="text-newari-red">*</span>
@@ -235,7 +243,7 @@ const AdminEvents = () => {
 
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
-                      Event Start Time (Eastern Time)
+                      Start Time (ET)
                     </label>
                     <input
                       type="time"
@@ -277,6 +285,54 @@ const AdminEvents = () => {
                       ))}
                     </div>
                   </div>
+
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      End Time (ET)
+                    </label>
+                    <input
+                      type="time"
+                      value={formData.event_end_time}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          event_end_time: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    />
+                    {formData.event_end_time && (
+                      <p className="text-sm text-green-600 mt-2 font-medium">
+                        ✅ Ends at {formatTime12h(formData.event_end_time)}{" "}
+                        ET{" "}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {[
+                        { l: "12 PM", v: "12:00" },
+                        { l: "2 PM", v: "14:00" },
+                        { l: "5 PM", v: "17:00" },
+                        { l: "6 PM", v: "18:00" },
+                        { l: "8 PM", v: "20:00" },
+                        { l: "9 PM", v: "21:00" },
+                      ].map((t) => (
+                        <button
+                          key={t.v}
+                          type="button"
+                          onClick={() =>
+                            setFormData({ ...formData, event_end_time: t.v })
+                          }
+                          className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+                            formData.event_end_time === t.v
+                              ? "bg-royal-blue text-white border-royal-blue"
+                              : "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
+                          }`}
+                        >
+                          {t.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Live Date/Time Preview */}
@@ -291,6 +347,9 @@ const AdminEvents = () => {
                         : ""}
                       {formData.event_time
                         ? ` At ${formatTime12h(formData.event_time)} ET`
+                        : ""}
+                      {formData.event_end_time
+                        ? ` - ${formatTime12h(formData.event_end_time)} ET`
                         : ""}
                     </p>
                   </div>
@@ -328,6 +387,28 @@ const AdminEvents = () => {
                     className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
                     placeholder="Event location"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Event Link (optional)
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.event_link}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        event_link: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    placeholder="https://example.com/event-details"
+                  />
+                  <p className="text-xs text-paragraph-text mt-1">
+                    Optional link for the event (e.g., registration page, event
+                    details page).
+                  </p>
                 </div>
 
                 <div>
@@ -457,9 +538,9 @@ const AdminEvents = () => {
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
                     <span>📅</span>
                     {new Date(
-                      event.event_date + "T00:00:00",
+                      event.event_date + "T00:00:00Z",
                     ).toLocaleDateString("en-US", {
-                      timeZone: "America/New_York",
+                      timeZone: "UTC",
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -470,7 +551,15 @@ const AdminEvents = () => {
                         const hr = parseInt(h, 10);
                         const ampm = hr >= 12 ? "PM" : "AM";
                         const h12 = hr % 12 || 12;
-                        return ` at ${h12}:${m} ${ampm} ET`;
+                        let timeStr = ` at ${h12}:${m} ${ampm}`;
+                        if (event.event_end_time) {
+                          const [eh, em] = event.event_end_time.split(":");
+                          const ehr = parseInt(eh, 10);
+                          const eampm = ehr >= 12 ? "PM" : "AM";
+                          const eh12 = ehr % 12 || 12;
+                          timeStr += ` - ${eh12}:${em} ${eampm}`;
+                        }
+                        return timeStr + " ET";
                       })()}
                   </p>
                   <p className="text-sm text-paragraph-text flex items-center gap-2">
@@ -478,6 +567,38 @@ const AdminEvents = () => {
                     {event.location}
                   </p>
                 </div>
+                {event.event_link && (
+                  <div className="flex items-center gap-1.5 mt-2 text-xs text-blue-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
+                      />
+                    </svg>
+                    <a
+                      href={event.event_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline truncate max-w-[180px]"
+                    >
+                      Event Link
+                    </a>
+                  </div>
+                )}
                 <div className="pagoda-divider opacity-20 my-4"></div>
                 <div className="flex gap-2">
                   <motion.button

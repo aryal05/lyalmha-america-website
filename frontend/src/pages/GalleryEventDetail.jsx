@@ -7,6 +7,20 @@ import ScrollToTop from "../components/ScrollToTop";
 import { API_URL } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 
+// Helper to extract a clean URL from a possibly PostgreSQL-array-formatted string
+// e.g. '{"https://example.com","https://example.com"}' → 'https://example.com'
+const cleanLink = (raw) => {
+  if (!raw) return null;
+  const s = raw.trim();
+  if (s.startsWith("{") && s.endsWith("}")) {
+    // Strip the outer braces, split on comma, take the first entry, remove surrounding quotes
+    const inner = s.slice(1, -1);
+    const first = inner.split(",")[0].replace(/^"|"$/g, "").trim();
+    return first || null;
+  }
+  return s;
+};
+
 const GalleryEventDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -204,19 +218,30 @@ const GalleryEventDetail = () => {
                   />
                 </svg>
                 <span>
-                  {new Date(event.event_date).toLocaleDateString("en-US", {
-                    timeZone: "America/New_York",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {new Date(event.event_date + "T00:00:00Z").toLocaleDateString(
+                    "en-US",
+                    {
+                      timeZone: "UTC",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    },
+                  )}
                   {event.event_time &&
                     (() => {
                       const [hours, minutes] = event.event_time.split(":");
                       const hour = parseInt(hours, 10);
                       const ampm = hour >= 12 ? "PM" : "AM";
                       const hour12 = hour % 12 || 12;
-                      return ` at ${hour12}:${minutes} ${ampm} ET`;
+                      let timeStr = ` at ${hour12}:${minutes} ${ampm}`;
+                      if (event.event_end_time) {
+                        const [eh, em] = event.event_end_time.split(":");
+                        const ehr = parseInt(eh, 10);
+                        const eampm = ehr >= 12 ? "PM" : "AM";
+                        const eh12 = ehr % 12 || 12;
+                        timeStr += ` - ${eh12}:${em} ${eampm}`;
+                      }
+                      return timeStr + " ET";
                     })()}
                 </span>
               </div>
@@ -290,6 +315,54 @@ const GalleryEventDetail = () => {
               </motion.div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* More Images Link */}
+      {cleanLink(event?.more_images_link) && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <a
+              href={cleanLink(event.more_images_link)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-blue-500 rounded-xl hover:bg-blue-50 transition-all duration-300 shadow-md hover:shadow-lg group"
+            >
+              <svg
+                className="w-6 h-6 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span className="text-blue-600 underline font-semibold text-lg group-hover:text-blue-800 transition-colors">
+                For More Images
+              </span>
+              <svg
+                className="w-5 h-5 text-blue-600 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </a>
+          </motion.div>
         </section>
       )}
 

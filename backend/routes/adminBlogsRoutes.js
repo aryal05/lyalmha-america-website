@@ -58,7 +58,7 @@ router.post('/', upload.single('banner'), async (req, res) => {
     console.log('Request body:', req.body)
     console.log('Has file:', !!req.file)
     
-    const { title, excerpt, content, category, author, status } = req.body
+    const { title, excerpt, content, category, author, status, link } = req.body
     
     if (!title || !excerpt || !content) {
       console.log('Validation failed - missing required fields')
@@ -88,8 +88,8 @@ router.post('/', upload.single('banner'), async (req, res) => {
     console.log('Inserting blog with status:', finalStatus)
     
     const result = await QueryHelper.run(`
-      INSERT INTO blogs (title, excerpt, content, banner, category, author, date, read_time, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO blogs (title, excerpt, content, banner, category, author, date, read_time, status, link)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       title,
       excerpt,
@@ -99,7 +99,8 @@ router.post('/', upload.single('banner'), async (req, res) => {
       author || 'Admin',
       date,
       readTime,
-      finalStatus
+      finalStatus,
+      link || null
     ])
     
     console.log('Insert result:', result)
@@ -121,7 +122,7 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
     console.log('Request body:', req.body)
     console.log('Has file:', !!req.file)
     
-    const { title, excerpt, content, category, author, status } = req.body
+    const { title, excerpt, content, category, author, status, link } = req.body
     const blog = await QueryHelper.get('SELECT * FROM blogs WHERE id = ?', [req.params.id])
     
     if (!blog) {
@@ -145,7 +146,7 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
     await QueryHelper.run(`
       UPDATE blogs 
       SET title = ?, excerpt = ?, content = ?, banner = ?, 
-          category = ?, author = ?, read_time = ?, status = ?,
+          category = ?, author = ?, read_time = ?, status = ?, link = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
@@ -157,6 +158,7 @@ router.put('/:id', upload.single('banner'), async (req, res) => {
       author || blog.author,
       readTime,
       status || blog.status,
+      link !== undefined ? link : blog.link,
       req.params.id
     ])
     

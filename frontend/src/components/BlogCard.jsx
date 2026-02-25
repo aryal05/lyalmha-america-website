@@ -107,9 +107,35 @@ const BlogCard = ({ blog, index }) => {
           </h3>
 
           {/* Excerpt */}
-          <p className="text-paragraph-text text-sm mb-6 line-clamp-3 flex-1">
+          <p className="text-paragraph-text text-sm mb-4 line-clamp-3 flex-1">
             {blog.excerpt}
           </p>
+
+          {/* Link */}
+          {blog.link && (
+            <a
+              href={blog.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-blue-600 underline hover:text-blue-800 transition-colors font-medium text-sm mb-4"
+            >
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+              {blog.link}
+            </a>
+          )}
 
           {/* Bottom Section */}
           <div className="flex items-center justify-between pt-4 border-t border-border-line">

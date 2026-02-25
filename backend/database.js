@@ -64,6 +64,12 @@ export async function initializeDatabase() {
   // Connect to Supabase PostgreSQL
   const pool = new Pool(poolConfig);
   
+  // Handle pool errors to prevent process crashes
+  pool.on('error', (err) => {
+    console.error('⚠️ Unexpected PostgreSQL pool error:', err.message);
+    // Don't crash - the pool will try to reconnect automatically
+  });
+  
   db = pool;
   
   // Test connection

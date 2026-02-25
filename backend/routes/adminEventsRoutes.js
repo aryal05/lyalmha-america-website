@@ -112,7 +112,7 @@ router.use(authenticateToken)
 // POST create event
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, location, event_type } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link } = req.body
     
     if (!title || !event_date) {
       return res.status(400).json({ 
@@ -125,9 +125,9 @@ router.post('/', upload.single('image'), async (req, res) => {
     const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
     
     const result = await QueryHelper.run(`
-      INSERT INTO events (title, description, event_date, event_time, location, event_type, image)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [title, description, event_date, event_time || null, location, event_type, image])
+      INSERT INTO events (title, description, event_date, event_time, event_end_time, location, event_type, image, more_images_link, event_link)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [title, description, event_date, event_time || null, event_end_time || null, location, event_type, image, more_images_link || null, event_link || null])
     
     const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [result.lastID])
     
@@ -140,7 +140,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update event
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, location, event_type } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link } = req.body
     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
@@ -152,17 +152,20 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     
     await QueryHelper.run(`
       UPDATE events 
-      SET title = ?, description = ?, event_date = ?, event_time = ?,
-          location = ?, event_type = ?, image = ?
+      SET title = ?, description = ?, event_date = ?, event_time = ?, event_end_time = ?,
+          location = ?, event_type = ?, image = ?, more_images_link = ?, event_link = ?
       WHERE id = ?
     `, [
       title || event.title,
       description || event.description,
       event_date || event.event_date,
       event_time !== undefined ? event_time : event.event_time,
+      event_end_time !== undefined ? event_end_time : event.event_end_time,
       location || event.location,
       event_type || event.event_type,
       image,
+      more_images_link !== undefined ? more_images_link : event.more_images_link,
+      event_link !== undefined ? event_link : event.event_link,
       req.params.id
     ])
     

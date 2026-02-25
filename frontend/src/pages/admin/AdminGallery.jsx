@@ -14,8 +14,10 @@ const AdminGallery = () => {
     description: "",
     event_date: "",
     event_time: "",
+    event_end_time: "",
     location: "",
     event_type: "event",
+    more_images_link: "",
   });
 
   // Format 24h time (HH:mm) to 12h format (h:mm AM/PM ET)
@@ -64,6 +66,9 @@ const AdminGallery = () => {
       Object.keys(formData).forEach((key) =>
         eventFormData.append(key, formData[key]),
       );
+      if (formData.more_images_link) {
+        eventFormData.append("more_images_link", formData.more_images_link);
+      }
       if (thumbnailFile) {
         eventFormData.append("image", thumbnailFile);
       }
@@ -140,8 +145,10 @@ const AdminGallery = () => {
       description: event.description || "",
       event_date: event.event_date?.split("T")[0] || event.event_date,
       event_time: event.event_time || "",
+      event_end_time: event.event_end_time || "",
       location: event.location || "",
       event_type: event.event_type || "event",
+      more_images_link: event.more_images_link || "",
     });
     if (event.image) {
       setThumbnailPreview(event.image);
@@ -180,8 +187,10 @@ const AdminGallery = () => {
       description: "",
       event_date: "",
       event_time: "",
+      event_end_time: "",
       location: "",
       event_type: "event",
+      more_images_link: "",
     });
     setThumbnailFile(null);
     setThumbnailPreview("");
@@ -303,9 +312,9 @@ const AdminGallery = () => {
                     <p className="text-sm text-green-600 mt-1 font-medium">
                       ✅{" "}
                       {new Date(
-                        formData.event_date + "T00:00:00",
+                        formData.event_date + "T00:00:00Z",
                       ).toLocaleDateString("en-US", {
-                        timeZone: "America/New_York",
+                        timeZone: "UTC",
                         weekday: "long",
                         year: "numeric",
                         month: "long",
@@ -357,6 +366,52 @@ const AdminGallery = () => {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    ⏰ Event End Time (Eastern US)
+                  </label>
+                  <input
+                    type="time"
+                    value={formData.event_end_time}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        event_end_time: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
+                  />
+                  {formData.event_end_time && (
+                    <p className="text-sm text-green-600 mt-1 font-medium">
+                      ✅ Ends at {formatEventTime(formData.event_end_time)}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {[
+                      { l: "12 PM", v: "12:00" },
+                      { l: "2 PM", v: "14:00" },
+                      { l: "5 PM", v: "17:00" },
+                      { l: "6 PM", v: "18:00" },
+                      { l: "8 PM", v: "20:00" },
+                      { l: "9 PM", v: "21:00" },
+                    ].map((t) => (
+                      <button
+                        key={t.v}
+                        type="button"
+                        onClick={() =>
+                          setFormData({ ...formData, event_end_time: t.v })
+                        }
+                        className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+                          formData.event_end_time === t.v
+                            ? "bg-royal-blue text-white border-royal-blue"
+                            : "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
+                        }`}
+                      >
+                        {t.l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Live Date/Time Preview */}
@@ -368,9 +423,9 @@ const AdminGallery = () => {
                   <p className="text-base text-gray-800">
                     {formData.event_date
                       ? new Date(
-                          formData.event_date + "T00:00:00",
+                          formData.event_date + "T00:00:00Z",
                         ).toLocaleDateString("en-US", {
-                          timeZone: "America/New_York",
+                          timeZone: "UTC",
                           weekday: "long",
                           year: "numeric",
                           month: "long",
@@ -379,6 +434,9 @@ const AdminGallery = () => {
                       : "(select date)"}
                     {formData.event_time
                       ? ` at ${formatEventTime(formData.event_time)}`
+                      : ""}
+                    {formData.event_end_time
+                      ? ` - ${formatEventTime(formData.event_end_time)}`
                       : ""}
                   </p>
                 </div>
@@ -432,6 +490,29 @@ const AdminGallery = () => {
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
                   rows="3"
                 />
+              </div>
+
+              {/* MORE IMAGES LINK */}
+              <div>
+                <label className="block text-royal-blue font-semibold mb-2">
+                  🔗 More Images Link (optional)
+                </label>
+                <input
+                  type="url"
+                  value={formData.more_images_link}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      more_images_link: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
+                  placeholder="https://drive.google.com/... or any external link"
+                />
+                <p className="text-sm text-gray-600 mt-1">
+                  Link to more images (e.g., Google Drive, Flickr). Shown as
+                  "For More Images" button in the gallery page.
+                </p>
               </div>
 
               {/* THUMBNAIL IMAGE SECTION */}
@@ -588,9 +669,9 @@ const AdminGallery = () => {
                       </span>
                       <span className="text-xs text-gray-500">
                         {new Date(
-                          event.event_date + "T00:00:00",
+                          event.event_date + "T00:00:00Z",
                         ).toLocaleDateString("en-US", {
-                          timeZone: "America/New_York",
+                          timeZone: "UTC",
                           year: "numeric",
                           month: "short",
                           day: "numeric",
@@ -598,6 +679,9 @@ const AdminGallery = () => {
                         {event.event_time && (
                           <span className="ml-1">
                             ⏰ {formatEventTime(event.event_time)}
+                            {event.event_end_time && (
+                              <> - {formatEventTime(event.event_end_time)}</>
+                            )}
                           </span>
                         )}
                       </span>
@@ -609,6 +693,38 @@ const AdminGallery = () => {
                       <p className="text-paragraph-text text-sm mb-2">
                         📍 {event.location}
                       </p>
+                    )}
+                    {event.more_images_link && (
+                      <div className="flex items-center gap-1.5 mb-2 text-xs text-blue-600">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
+                          />
+                        </svg>
+                        <a
+                          href={event.more_images_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline truncate max-w-[150px]"
+                        >
+                          More Images
+                        </a>
+                      </div>
                     )}
                     <div className="flex gap-2 mt-4">
                       <motion.button

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
-import fallbackBanner from "../assets/images/banners/f8334069-50ca-4b69-b9a9-480ba09cb41f.jpg";
 
 const AboutHero = () => {
   const [banners, setBanners] = useState([]);
@@ -15,13 +14,11 @@ const AboutHero = () => {
   const fetchBanners = async () => {
     try {
       const response = await apiClient.get(
-        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("about")
+        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("about"),
       );
-      console.log("About banner response:", response.data.data);
       const bannersData = response.data.data || [];
       setBanners(bannersData.length > 0 ? bannersData : []);
     } catch (error) {
-      console.error("Error fetching about banner:", error);
       setBanners([]);
     }
   };
@@ -42,12 +39,9 @@ const AboutHero = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src={
-            activeBanner?.image
-              ? getImageUrl(activeBanner.image)
-              : fallbackBanner
-          }
+          src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
           alt="About Lyaymha America Guthi"
+          style={{ display: activeBanner?.image ? "block" : "none" }}
           className="w-full h-full object-cover"
         />
         {/* Dark Overlay */}
@@ -79,7 +73,7 @@ const AboutHero = () => {
             <span className="text-gold-accent"> America</span>
           </h1>
           <p className="text-2xl md:text-3xl text-cream-white mb-6">
-            ल्याय्म्ह अमेरिका गुथि
+            ल्याय्​म्ह अमेरिका गुथी
           </p>
           <div className="pagoda-divider w-64 mx-auto mb-6"></div>
           <p className="text-xl text-pure-white/90 max-w-3xl mx-auto">

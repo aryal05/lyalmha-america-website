@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient, API_ENDPOINTS } from "../config/api";
+import MembershipRegistrationModal from "./MembershipRegistrationModal";
 
 const Teams = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [showMembershipModal, setShowMembershipModal] = useState(false);
 
   useEffect(() => {
     fetchTeamMembers();
@@ -23,6 +25,10 @@ const Teams = () => {
   };
 
   const toggleCategory = (category) => {
+    if (category === "Life Members") {
+      setShowMembershipModal(true);
+      return;
+    }
     setExpandedCategory(expandedCategory === category ? null : category);
   };
 
@@ -153,7 +159,7 @@ const Teams = () => {
                 <p className="text-paragraph-text text-sm mb-2 leading-relaxed">
                   {team.description}
                 </p>
-                {membersCount > 0 && (
+                {membersCount > 0 && team.category !== "Life Members" && (
                   <div className="flex items-center gap-2 text-muted-text text-xs mb-4">
                     <div className="w-6 h-6 bg-gold-accent/20 rounded-full flex items-center justify-center">
                       <span className="text-gold-accent font-bold text-xs">
@@ -164,7 +170,11 @@ const Teams = () => {
                   </div>
                 )}
                 <button className="text-gold-accent font-semibold hover:text-newari-red transition-colors duration-300 inline-flex items-center">
-                  {isExpanded ? "Show Less" : "Learn More"}
+                  {team.category === "Life Members"
+                    ? "Register Now"
+                    : isExpanded
+                      ? "Show Less"
+                      : "Learn More"}
                   <svg
                     className={`w-4 h-4 ml-2 transition-transform duration-300 ${
                       isExpanded ? "rotate-180" : "group-hover:translate-x-2"
@@ -239,6 +249,7 @@ const Teams = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {teamMembers
                     .filter((member) => member.category === expandedCategory)
+                    .sort((a, b) => (a.order_index || 1) - (b.order_index || 1))
                     .map((member, idx) => (
                       <motion.div
                         key={member.id}
@@ -303,6 +314,12 @@ const Teams = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Membership Registration Modal for Life Members */}
+      <MembershipRegistrationModal
+        isOpen={showMembershipModal}
+        onClose={() => setShowMembershipModal(false)}
+      />
     </motion.section>
   );
 };

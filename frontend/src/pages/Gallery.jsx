@@ -150,35 +150,68 @@ const Gallery = () => {
             <div className="inline-block w-12 h-12 border-4 border-gold-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <motion.div
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            <AnimatePresence>
-              {displayEvents.map((event) => (
-                <motion.div
-                  key={event.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="group relative overflow-hidden rounded-xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
-                  onClick={() =>
-                    navigate(`/gallery/event/${event.id}?from=${filter}`)
-                  }
-                >
-                  {/* Image Section */}
-                  <div className="aspect-square overflow-hidden">
-                    {event.image ? (
-                      <img
-                        src={getImageUrl(event.image)}
-                        alt={event.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-royal-blue to-newari-red flex items-center justify-center">
+          <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={filter}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 col-span-full"
+              >
+                {displayEvents.map((event, index) => (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className="group relative overflow-hidden rounded-xl cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300"
+                    onClick={() =>
+                      navigate(`/gallery/event/${event.id}?from=${filter}`)
+                    }
+                  >
+                    {/* Image Section */}
+                    <div className="aspect-square overflow-hidden">
+                      {event.image ? (
+                        <img
+                          src={getImageUrl(event.image)}
+                          alt={event.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-royal-blue to-newari-red flex items-center justify-center">
+                          <svg
+                            className="w-20 h-20 text-white/50"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Info Section - Always Visible */}
+                    <div className="bg-white p-4 border-t-2 border-gold-accent group-hover:border-newari-red transition-colors">
+                      <h3 className="text-primary-text font-bold text-lg mb-2 group-hover:text-gold-accent transition-colors">
+                        {event.title}
+                      </h3>
+                      {event.description && (
+                        <p className="text-paragraph-text text-sm line-clamp-2 mb-2">
+                          {event.description}
+                        </p>
+                      )}
+                      <p className="text-gold-accent text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                        View Details
                         <svg
-                          className="w-20 h-20 text-white/50"
+                          className="w-4 h-4"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -187,42 +220,14 @@ const Gallery = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            d="M9 5l7 7-7 7"
                           />
                         </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info Section - Always Visible */}
-                  <div className="bg-white p-4 border-t-2 border-gold-accent group-hover:border-newari-red transition-colors">
-                    <h3 className="text-primary-text font-bold text-lg mb-2 group-hover:text-gold-accent transition-colors">
-                      {event.title}
-                    </h3>
-                    {event.description && (
-                      <p className="text-paragraph-text text-sm line-clamp-2 mb-2">
-                        {event.description}
                       </p>
-                    )}
-                    <p className="text-gold-accent text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                      View Details
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </AnimatePresence>
           </motion.div>
         )}

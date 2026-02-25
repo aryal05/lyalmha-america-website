@@ -156,7 +156,7 @@ const KidsActivities = () => {
                   <h3 className="text-2xl font-bold text-primary-text mb-3 group-hover:text-gold-accent transition-colors duration-300">
                     {activity.title}
                   </h3>
-                  <p className="text-paragraph-text leading-relaxed line-clamp-3">
+                  <p className="text-paragraph-text leading-relaxed line-clamp-3 text-justify">
                     {activity.description}
                   </p>
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-gold-accent/20">

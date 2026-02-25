@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
-import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 import MembershipRegistrationModal from "./MembershipRegistrationModal";
 
 const Hero = () => {
@@ -21,7 +20,7 @@ const Hero = () => {
   const backgroundImages =
     validBanners.length > 0
       ? validBanners.map((banner) => getImageUrl(banner.image)).filter(Boolean)
-      : [fallbackBanner];
+      : [];
 
   // Fetch banners from API
   useEffect(() => {
@@ -35,15 +34,6 @@ const Hero = () => {
       );
       setBanners(response.data.data || []);
     } catch (error) {
-      // Improved error logging for debugging
-      console.error("Error fetching hero banners:", error);
-      if (error.response) {
-        console.error("Response:", error.response);
-      } else if (error.request) {
-        console.error("Request:", error.request);
-      } else {
-        console.error("Message:", error.message);
-      }
       setBanners([]);
     } finally {
       setLoading(false);

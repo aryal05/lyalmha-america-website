@@ -5,7 +5,6 @@ import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 import { apiClient, API_ENDPOINTS } from "../config/api";
 import { getImageUrl } from "../utils/imageHelper";
-import fallbackBanner from "../assets/images/banners/4th Biskaa Jatraa Celebrations flyer (2).jpg";
 
 const Culture = () => {
   const [festivals, setFestivals] = useState([]);
@@ -76,15 +75,13 @@ const Culture = () => {
         apiClient.get(API_ENDPOINTS.BANNERS.GET_BY_LOCATION("culture")),
       ]);
 
-      console.log("Culture banner response:", bannerRes.data.data);
-      console.log("Festivals response:", festivalsRes.data.data);
       setFestivals(festivalsRes.data.data || []);
       setTraditions(staticTraditions);
 
       const banners = bannerRes.data.data || [];
       setBanners(banners.length > 0 ? banners : []);
     } catch (error) {
-      console.error("Error fetching culture data:", error);
+      // silently handle
     } finally {
       setLoading(false);
     }
@@ -99,12 +96,9 @@ const Culture = () => {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src={
-              activeBanner?.image
-                ? getImageUrl(activeBanner.image)
-                : fallbackBanner
-            }
+            src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Culture Background"
+            style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
@@ -197,7 +191,7 @@ const Culture = () => {
                           {festival.title}
                         </h3>
                         <div className="mb-4 flex-1">
-                          <p className="text-paragraph-text leading-relaxed">
+                          <p className="text-paragraph-text leading-relaxed text-justify">
                             {isExpanded || !shouldTruncate
                               ? festival.description
                               : `${festival.description.slice(0, 300)}...`}

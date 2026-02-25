@@ -95,14 +95,15 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto"
+        style={{ zIndex: 99999 }}
         onClick={handleClose}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto my-8"
+          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8 relative"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with Logo */}
@@ -137,7 +138,7 @@ const MembershipRegistrationModal = ({ isOpen, onClose }) => {
               <h2 className="text-2xl md:text-3xl font-bold text-royal-blue mb-4">
                 Life Membership Registration Form
               </h2>
-              <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
+              <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto text-justify">
                 Lyaymha America Guthi is a non-profit community organization
                 based in the DMV area, with the aim of preserving and advancing
                 a deeper understanding of the newari rich music, language, arts,

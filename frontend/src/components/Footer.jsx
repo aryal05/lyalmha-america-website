@@ -41,7 +41,7 @@ const Footer = () => {
                     Lyaymha America Guthi
                   </h3>
                   <p className="text-gold-accent font-semibold text-sm">
-                    newari Culture & Heritage
+                    Grooming The Next Generation
                   </p>
                 </div>
               </div>

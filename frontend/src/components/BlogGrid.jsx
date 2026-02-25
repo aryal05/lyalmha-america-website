@@ -208,6 +208,30 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                             />
                           </svg>
                         </button>
+
+                        {story.link && (
+                          <a
+                            href={story.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-blue-600 underline hover:text-blue-800 transition-colors font-medium text-sm mt-3"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                            {story.link}
+                          </a>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -259,6 +283,31 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                     }}
                   />
                 </div>
+                {activeBlog.link && (
+                  <div className="mt-4">
+                    <a
+                      href={activeBlog.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 underline hover:text-blue-800 transition-colors font-medium"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                      {activeBlog.link}
+                    </a>
+                  </div>
+                )}
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={closeBlog}

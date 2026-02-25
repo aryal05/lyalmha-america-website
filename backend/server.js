@@ -26,6 +26,16 @@ import { fixAllSequences } from './utils/fixSequences.js'
 
 dotenv.config()
 
+// Prevent process crashes from unhandled errors
+process.on('uncaughtException', (err) => {
+  console.error('⚠️ Uncaught Exception:', err.message)
+  console.error(err.stack)
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('⚠️ Unhandled Promise Rejection:', reason)
+})
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
