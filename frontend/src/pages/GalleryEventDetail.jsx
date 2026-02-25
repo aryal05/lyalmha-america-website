@@ -201,6 +201,35 @@ const GalleryEventDetail = () => {
             </p>
           )}
 
+          {/* Event Link - shown after description */}
+          {cleanLink(event?.event_link) && (
+            <div className="mb-6">
+              <a
+                href={cleanLink(event.event_link)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-royal-blue rounded-xl hover:bg-blue-50 transition-all duration-300 shadow-md hover:shadow-lg group"
+              >
+                <svg
+                  className="w-5 h-5 text-royal-blue"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+                <span className="text-royal-blue font-semibold text-lg group-hover:text-blue-800 transition-colors">
+                  Event Link
+                </span>
+              </a>
+            </div>
+          )}
+
           <div className="flex items-center justify-center gap-6 text-paragraph-text">
             {event?.event_date && (
               <div className="flex items-center gap-2">
