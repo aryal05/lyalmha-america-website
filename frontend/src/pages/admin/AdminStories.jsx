@@ -110,14 +110,19 @@ const AdminStories = () => {
 
   return (
     <AdminLayout>
-      <div className="relative max-w-6xl mx-auto py-8">
-        <div className="flex justify-between items-center mb-10">
+      <div className="relative max-w-5xl mx-auto py-8">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-royal-blue mb-2">
-              Homepage Stories
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold text-royal-blue">
+                Homepage Stories
+              </h1>
+              <span className="px-3 py-1 bg-royal-blue/10 text-royal-blue text-sm font-bold rounded-full">
+                {stories.length}
+              </span>
+            </div>
             <p className="text-paragraph-text">
-              Add, edit, or remove stories for the homepage section below.
+              Add, edit, or remove stories for the homepage section.
             </p>
           </div>
           <motion.button
@@ -308,146 +313,211 @@ const AdminStories = () => {
           </motion.div>
         )}
 
-        {/* Stories Card Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10"
-        >
-          {stories.map((story) => (
-            <motion.div
-              key={story.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-3xl overflow-hidden bg-white shadow-lg h-full flex flex-col md:flex-row"
+        {/* Stories List */}
+        {stories.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-2xl border-2 border-gray-200 shadow-sm">
+            <svg
+              className="w-16 h-16 mx-auto text-gray-300 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              {/* Left: Image */}
-              <div className="md:w-1/2 w-full h-56 md:h-auto flex flex-col">
-                {story.banner ? (
-                  <img
-                    src={getImageUrl(story.banner)}
-                    alt={story.title}
-                    className="w-full h-full object-cover min-h-56 flex-1"
-                    style={{ height: "100%" }}
-                  />
-                ) : (
-                  <div className="w-full h-full min-h-56 flex-1 bg-gray-100" />
-                )}
-              </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              />
+            </svg>
+            <h3 className="text-xl font-bold text-gray-400 mb-2">
+              No Stories Yet
+            </h3>
+            <p className="text-paragraph-text mb-6">
+              Click "Add Story" to create your first homepage story.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {stories.map((story, index) => (
+              <motion.div
+                key={story.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-white rounded-xl border-2 border-gray-200 hover:border-gold-accent/50 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+              >
+                <div className="flex flex-col sm:flex-row">
+                  {/* Thumbnail */}
+                  <div className="sm:w-48 w-full h-40 sm:h-auto flex-shrink-0">
+                    {story.banner ? (
+                      <img
+                        src={getImageUrl(story.banner)}
+                        alt={story.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <svg
+                          className="w-10 h-10 text-gray-300"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
 
-              {/* Right: Content */}
-              <div className="md:w-1/2 w-full p-8 md:p-10 flex flex-col justify-between h-full">
-                <span className="inline-block px-4 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-charcoal-black font-semibold rounded-full shadow-sm mb-4">
-                  {story.category || "Featured"}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-charcoal-black mb-4">
-                  {story.title}
-                </h3>
-                <div className="w-14 h-1 bg-gold-accent rounded-full mb-6" />
-                <p className="text-paragraph-text mb-6 max-w-xl">
-                  {story.excerpt}
-                </p>
-                {story.link && (
-                  <div className="flex items-center gap-2 mb-4 text-sm text-blue-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
-                      />
-                    </svg>
-                    <a
-                      href={story.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline truncate max-w-[200px]"
-                    >
-                      {story.link}
-                    </a>
-                  </div>
-                )}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-sm text-muted-text">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6 text-gold-accent"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+                  {/* Content */}
+                  <div className="flex-1 p-5 flex flex-col justify-between min-w-0">
                     <div>
-                      <div className="text-xs text-muted-text">Started</div>
-                      <div className="font-medium text-charcoal-black">
-                        {new Date(story.created_at).getFullYear() || "—"}
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="inline-block px-3 py-1 bg-gradient-to-r from-gold-accent/20 to-newari-red/20 text-newari-red text-xs font-bold rounded-full border border-newari-red/20">
+                            {story.category || "Featured"}
+                          </span>
+                          {story.location && (
+                            <span className="inline-flex items-center gap-1 text-xs text-paragraph-text">
+                              <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                              </svg>
+                              {story.location}
+                            </span>
+                          )}
+                          {story.author && (
+                            <span className="inline-flex items-center gap-1 text-xs text-paragraph-text">
+                              <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                              </svg>
+                              {story.author}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-muted-text whitespace-nowrap">
+                          {story.created_at
+                            ? new Date(story.created_at).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                },
+                              )
+                            : "—"}
+                        </span>
                       </div>
+
+                      <h3 className="text-lg font-bold text-charcoal-black mb-1 truncate">
+                        {story.title}
+                      </h3>
+                      <p className="text-sm text-paragraph-text line-clamp-2 mb-2">
+                        {story.excerpt}
+                      </p>
+
+                      {story.link && (
+                        <a
+                          href={story.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                          <span className="underline truncate max-w-[200px]">
+                            {story.link}
+                          </span>
+                        </a>
+                      )}
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-muted-text">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6 text-newari-red"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 12.414a4 4 0 10-5.657 5.657l4.243 4.243a8 8 0 0011.314-11.314l-4.657 4.657z"
-                      />
-                    </svg>
-                    <div>
-                      <div className="text-xs text-muted-text">Location</div>
-                      <div className="font-medium text-charcoal-black">
-                        {story.location || "Online"}
-                      </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => handleEdit(story)}
+                        className="px-5 py-2 bg-gradient-to-r from-gold-accent/10 to-gold-accent/20 text-gold-accent border border-gold-accent/30 rounded-lg hover:bg-gold-accent hover:text-white transition-all duration-300 font-semibold text-sm flex items-center gap-1.5"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                        Edit
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => handleDelete(story.id)}
+                        className="px-5 py-2 bg-newari-red/10 text-newari-red border border-newari-red/30 rounded-lg hover:bg-newari-red hover:text-white transition-all duration-300 font-semibold text-sm flex items-center gap-1.5"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                        Delete
+                      </motion.button>
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 mt-6">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleEdit(story)}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-gold-accent/20 to-newari-red/20 text-gold-accent border border-gold-accent/30 rounded-lg hover:bg-gold-accent/30 transition-all duration-300 font-semibold"
-                  >
-                    Edit
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleDelete(story.id)}
-                    className="flex-1 px-4 py-2 bg-newari-red/20 text-newari-red border border-newari-red/30 rounded-lg hover:bg-newari-red/30 transition-all duration-300 font-semibold"
-                  >
-                    Delete
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </AdminLayout>
   );
