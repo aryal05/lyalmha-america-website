@@ -112,7 +112,7 @@ router.use(authenticateToken)
 // POST create event
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title } = req.body
     
     if (!title || !event_date) {
       return res.status(400).json({ 
@@ -125,9 +125,9 @@ router.post('/', upload.single('image'), async (req, res) => {
     const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
     
     const result = await QueryHelper.run(`
-      INSERT INTO events (title, description, event_date, event_time, event_end_time, location, event_type, image, more_images_link, event_link)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [title, description, event_date, event_time || null, event_end_time || null, location, event_type, image, more_images_link || null, event_link || null])
+      INSERT INTO events (title, description, event_date, event_time, event_end_time, location, event_type, image, more_images_link, event_link, event_link_title)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [title, description, event_date, event_time || null, event_end_time || null, location, event_type, image, more_images_link || null, event_link || null, event_link_title || null])
     
     const newEvent = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [result.lastID])
     
@@ -140,7 +140,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update event
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title } = req.body
     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
@@ -153,7 +153,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     await QueryHelper.run(`
       UPDATE events 
       SET title = ?, description = ?, event_date = ?, event_time = ?, event_end_time = ?,
-          location = ?, event_type = ?, image = ?, more_images_link = ?, event_link = ?
+          location = ?, event_type = ?, image = ?, more_images_link = ?, event_link = ?, event_link_title = ?
       WHERE id = ?
     `, [
       title || event.title,
@@ -166,6 +166,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       image,
       more_images_link !== undefined ? more_images_link : event.more_images_link,
       event_link !== undefined ? event_link : event.event_link,
+      event_link_title !== undefined ? event_link_title : event.event_link_title,
       req.params.id
     ])
     

@@ -42,7 +42,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.log('📦 Request body:', req.body)
     console.log('📸 Has file:', !!req.file)
     
-    const { title, excerpt, content, category, author, published_date, active, order_index, link } = req.body
+    const { title, excerpt, content, category, author, published_date, active, order_index, link, link_title } = req.body
     
     if (!title || !excerpt || !content) {
       return res.status(400).json({ 
@@ -76,8 +76,8 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.log('Values:', { title, excerpt, content: content.substring(0, 50) + '...', image, author, category, date, active, order_index, link })
 
     const result = await QueryHelper.run(
-      `INSERT INTO news (title, excerpt, content, image, author, category, published_date, active, order_index, link) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO news (title, excerpt, content, image, author, category, published_date, active, order_index, link, link_title) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title,
         excerpt,
@@ -88,7 +88,8 @@ router.post('/', upload.single('image'), async (req, res) => {
         date,
         active !== undefined ? parseInt(active) : 1,
         order_index ? parseInt(order_index) : 0,
-        link || null
+        link || null,
+        link_title || null
       ]
     )
 
@@ -111,7 +112,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     console.log('📦 Request body:', req.body)
     console.log('📸 Has file:', !!req.file)
     
-    const { title, excerpt, content, category, author, published_date, active, order_index, link } = req.body
+    const { title, excerpt, content, category, author, published_date, active, order_index, link, link_title } = req.body
     const newsItem = await QueryHelper.get('SELECT * FROM news WHERE id = ?', [req.params.id])
     if (!newsItem) {
       return res.status(404).json({ success: false, error: 'News not found' })
@@ -136,7 +137,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     await QueryHelper.run(
       `UPDATE news 
        SET title = ?, excerpt = ?, content = ?, image = ?, 
-           category = ?, author = ?, published_date = ?, active = ?, order_index = ?, link = ?,
+           category = ?, author = ?, published_date = ?, active = ?, order_index = ?, link = ?, link_title = ?,
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
       [
@@ -150,6 +151,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         active !== undefined ? active : newsItem.active,
         order_index !== undefined ? order_index : newsItem.order_index,
         link !== undefined ? link : newsItem.link,
+        link_title !== undefined ? link_title : newsItem.link_title,
         req.params.id
       ]
     )

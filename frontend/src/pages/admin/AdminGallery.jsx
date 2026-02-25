@@ -19,6 +19,7 @@ const AdminGallery = () => {
     event_type: "event",
     more_images_link: "",
     event_link: "",
+    event_link_title: "",
   });
 
   // Format 24h time (HH:mm) to 12h format (h:mm AM/PM ET)
@@ -154,6 +155,7 @@ const AdminGallery = () => {
       event_type: event.event_type || "event",
       more_images_link: event.more_images_link || "",
       event_link: event.event_link || "",
+      event_link_title: event.event_link_title || "",
     });
     if (event.image) {
       setThumbnailPreview(event.image);
@@ -197,6 +199,7 @@ const AdminGallery = () => {
       event_type: "event",
       more_images_link: "",
       event_link: "",
+      event_link_title: "",
     });
     setThumbnailFile(null);
     setThumbnailPreview("");
@@ -522,27 +525,47 @@ const AdminGallery = () => {
               </div>
 
               {/* EVENT LINK */}
-              <div>
-                <label className="block text-royal-blue font-semibold mb-2">
-                  🔗 Event Link (optional)
-                </label>
-                <input
-                  type="url"
-                  value={formData.event_link}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      event_link: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
-                  placeholder="https://example.com/event-page"
-                />
-                <p className="text-sm text-gray-600 mt-1">
-                  External link for the event (e.g., Facebook event,
-                  registration page). Shown as "Event Link" button below
-                  description in the gallery page.
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    🔗 Event Link Title (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.event_link_title}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        event_link_title: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
+                    placeholder="e.g. Register Here"
+                  />
+                  <p className="text-sm text-gray-600 mt-1">
+                    Custom label for the link button (defaults to "Event Link")
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    🔗 Event Link URL (optional)
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.event_link}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        event_link: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
+                    placeholder="https://example.com/event-page"
+                  />
+                  <p className="text-sm text-gray-600 mt-1">
+                    URL for the event (e.g., Facebook event, registration page).
+                  </p>
+                </div>
               </div>
 
               {/* THUMBNAIL IMAGE SECTION */}
@@ -746,7 +769,7 @@ const AdminGallery = () => {
                           rel="noopener noreferrer"
                           className="underline truncate max-w-[150px]"
                         >
-                          Event Link
+                          {event.event_link_title || "Event Link"}
                         </a>
                       </div>
                     )}

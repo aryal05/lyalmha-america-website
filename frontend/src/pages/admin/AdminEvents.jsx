@@ -18,6 +18,7 @@ const AdminEvents = () => {
     event_type: "upcoming",
     image: null,
     event_link: "",
+    event_link_title: "",
   });
 
   // Format 24h time to 12h AM/PM
@@ -67,6 +68,7 @@ const AdminEvents = () => {
       data.append("location", formData.location);
       data.append("event_type", formData.event_type);
       data.append("event_link", formData.event_link);
+      data.append("event_link_title", formData.event_link_title);
       if (formData.image) {
         data.append("image", formData.image);
       }
@@ -98,6 +100,7 @@ const AdminEvents = () => {
       event_type: event.event_type,
       image: null,
       event_link: event.event_link || "",
+      event_link_title: event.event_link_title || "",
     });
     setShowForm(true);
   };
@@ -124,6 +127,7 @@ const AdminEvents = () => {
       event_type: "upcoming",
       image: null,
       event_link: "",
+      event_link_title: "",
     });
     setEditingEvent(null);
     setShowForm(false);
@@ -389,26 +393,49 @@ const AdminEvents = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-royal-blue font-semibold mb-2">
-                    Event Link (optional)
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.event_link}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        event_link: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
-                    placeholder="https://example.com/event-details"
-                  />
-                  <p className="text-xs text-paragraph-text mt-1">
-                    Optional link for the event (e.g., registration page, event
-                    details page).
-                  </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Event Link Title (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.event_link_title}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          event_link_title: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      placeholder="e.g. Register Here"
+                    />
+                    <p className="text-xs text-paragraph-text mt-1">
+                      Custom label shown on the link button (defaults to "Event
+                      Link")
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Event Link URL (optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={formData.event_link}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          event_link: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      placeholder="https://example.com/event-details"
+                    />
+                    <p className="text-xs text-paragraph-text mt-1">
+                      URL for the event (e.g., registration page, event
+                      details).
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -595,7 +622,7 @@ const AdminEvents = () => {
                       rel="noopener noreferrer"
                       className="underline truncate max-w-[180px]"
                     >
-                      Event Link
+                      {event.event_link_title || "Event Link"}
                     </a>
                   </div>
                 )}

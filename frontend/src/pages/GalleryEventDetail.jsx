@@ -224,7 +224,7 @@ const GalleryEventDetail = () => {
                   />
                 </svg>
                 <span className="text-royal-blue font-semibold text-lg group-hover:text-blue-800 transition-colors">
-                  Event Link
+                  {event.event_link_title || "Event Link"}
                 </span>
               </a>
             </div>

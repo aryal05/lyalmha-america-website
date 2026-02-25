@@ -21,6 +21,7 @@ const AdminNews = () => {
     active: 1,
     order_index: 0,
     link: "",
+    link_title: "",
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -77,6 +78,7 @@ const AdminNews = () => {
       active: news.active,
       order_index: news.order_index,
       link: news.link || "",
+      link_title: news.link_title || "",
     });
     setImagePreview(news.image);
     setImageFile(null);
@@ -105,6 +107,7 @@ const AdminNews = () => {
       active: 1,
       order_index: 0,
       link: "",
+      link_title: "",
     });
     setImageFile(null);
     setImagePreview(null);
@@ -274,22 +277,41 @@ const AdminNews = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-royal-blue font-semibold mb-2">
-                  Link (optional)
-                </label>
-                <input
-                  type="url"
-                  value={formData.link}
-                  onChange={(e) =>
-                    setFormData({ ...formData, link: e.target.value })
-                  }
-                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
-                  placeholder="https://example.com"
-                />
-                <p className="text-xs text-paragraph-text mt-1">
-                  External link for this news item
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Link Title (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.link_title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, link_title: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
+                    placeholder="e.g. Read Full Article"
+                  />
+                  <p className="text-xs text-paragraph-text mt-1">
+                    Custom label for the link (defaults to showing the URL)
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Link URL (optional)
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.link}
+                    onChange={(e) =>
+                      setFormData({ ...formData, link: e.target.value })
+                    }
+                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
+                    placeholder="https://example.com"
+                  />
+                  <p className="text-xs text-paragraph-text mt-1">
+                    External link for this news item
+                  </p>
+                </div>
               </div>
 
               <div>
@@ -451,7 +473,7 @@ const AdminNews = () => {
                         rel="noopener noreferrer"
                         className="underline truncate max-w-[180px]"
                       >
-                        {news.link}
+                        {news.link_title || news.link}
                       </a>
                     </div>
                   )}
