@@ -1,11 +1,42 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import KidsActivities from '../components/KidsActivities'
-import ScrollToTop from '../components/ScrollToTop'
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import KidsActivities from "../components/KidsActivities";
+import ScrollToTop from "../components/ScrollToTop";
+import { apiClient, API_ENDPOINTS } from "../config/api";
+import { getImageUrl } from "../utils/imageHelper";
 
 const KidsActivitiesPage = () => {
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
+
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  // Auto-cycle through banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [banners]);
+
+  const fetchBanners = async () => {
+    try {
+      const response = await apiClient.get(
+        API_ENDPOINTS.BANNERS.GET_BY_LOCATION("kids-activities"),
+      );
+      setBanners(response.data.data || []);
+    } catch (error) {
+      // silently handle
+    }
+  };
+
+  const activeBanner = banners[currentBanner];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
       <Navbar />
@@ -14,6 +45,15 @@ const KidsActivitiesPage = () => {
       <section className="relative pt-40 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
+          {activeBanner?.image && (
+            <img
+              src={getImageUrl(activeBanner.image)}
+              alt="Kids Activities Banner"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
           <div className="absolute inset-0 mandala-pattern opacity-10"></div>
         </div>
@@ -64,6 +104,6 @@ const KidsActivitiesPage = () => {
       <ScrollToTop />
     </div>
   );
-}
+};
 
-export default KidsActivitiesPage
+export default KidsActivitiesPage;
