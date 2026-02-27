@@ -98,6 +98,8 @@ const Culture = () => {
           <img
             src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Culture Background"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />
@@ -257,6 +259,8 @@ const Culture = () => {
                           <img
                             src={getImageUrl(festival.image)}
                             alt={festival.title}
+                            crossOrigin="anonymous"
+                            referrerPolicy="no-referrer"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent z-20"></div>

@@ -41,6 +41,8 @@ const AboutHero = () => {
         <img
           src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
           alt="About Lyaymha America Guthi"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
           style={{ display: activeBanner?.image ? "block" : "none" }}
           className="w-full h-full object-cover"
         />

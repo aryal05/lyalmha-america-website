@@ -73,6 +73,8 @@ const BlogDetail = () => {
           <img
             src={getImageUrl(blog.banner)}
             alt={blog.title}
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-charcoal-black/80 via-charcoal-black/70 to-cream-white"></div>

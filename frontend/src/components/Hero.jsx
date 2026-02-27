@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { apiClient, API_ENDPOINTS } from "../config/api";
-import { getImageUrl } from "../utils/imageHelper";
+import { getImageUrl, getCrossOriginProps } from "../utils/imageHelper";
 import logo from "../assets/images/logo/lyama (1) (1).png";
 import MembershipRegistrationModal from "./MembershipRegistrationModal";
 
@@ -143,6 +143,8 @@ const Hero = () => {
                 src={backgroundImages[currentBg]}
                 alt="Cultural background"
                 className="w-full h-full object-cover"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
               />
             )}
           </motion.div>

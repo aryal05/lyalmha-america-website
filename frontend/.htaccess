@@ -31,6 +31,8 @@
   Header set X-Content-Type-Options "nosniff"
   Header set X-Frame-Options "SAMEORIGIN"
   Header set X-XSS-Protection "1; mode=block"
+  Header set Permissions-Policy "interest-cohort=()"
+  Header set Content-Security-Policy "img-src 'self' https://res.cloudinary.com data: blob:; default-src 'self' https://lyalmha-america-website-g888.vercel.app https://res.cloudinary.com https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://lyalmha-america-website-g888.vercel.app https://res.cloudinary.com"
 </IfModule>
 
 # Force HTTPS (uncomment after SSL is installed)

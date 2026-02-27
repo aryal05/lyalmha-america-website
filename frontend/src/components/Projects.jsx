@@ -7,6 +7,8 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedProject, setExpandedProject] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [hoveredMember, setHoveredMember] = useState(null);
 
   useEffect(() => {
     fetchProjects();
@@ -17,7 +19,7 @@ const Projects = () => {
       const response = await apiClient.get(API_ENDPOINTS.PROJECTS.GET_ACTIVE);
       setProjects(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error("Error fetching projects:", error);
     } finally {
       setLoading(false);
     }
@@ -114,9 +116,11 @@ const Projects = () => {
               transition={{ duration: 0.5 }}
             >
               <img
-                src={biskaImage}
+                src={projects.length > 0 ? getImageUrl(projects[0].image) : ""}
                 alt="Biskaa Jatra Project"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-charcoal-black/70 to-transparent"></div>
 

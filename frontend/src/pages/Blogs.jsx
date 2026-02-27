@@ -59,6 +59,8 @@ const Blogs = () => {
           <img
             src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Blog Background"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />
@@ -129,6 +131,8 @@ const Blogs = () => {
                     <img
                       src={getImageUrl(post.banner)}
                       alt={post.title}
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
 

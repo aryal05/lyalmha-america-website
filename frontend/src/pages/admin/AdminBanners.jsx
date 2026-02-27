@@ -249,7 +249,6 @@ const AdminBanners = () => {
                       <option value="kids-activities">Kids Activities</option>
                       <option value="contact">Contact</option>
                       <option value="events">Events</option>
-                      <option value="projects">Projects</option>
                     </select>
                   </div>
                   <div>
@@ -402,7 +401,6 @@ const AdminBanners = () => {
             "kids-activities",
             "contact",
             "events",
-            "projects",
           ].map((pos) => (
             <button
               key={pos}

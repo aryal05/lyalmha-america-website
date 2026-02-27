@@ -84,6 +84,8 @@ const News = () => {
             <img
               src={getImageUrl(activeBanner.image)}
               alt="News Background"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-royal-blue/95 via-royal-blue/90 to-cream-white"></div>
@@ -181,6 +183,8 @@ const News = () => {
                         <img
                           src={getImageUrl(item.image)}
                           alt={item.title}
+                          crossOrigin="anonymous"
+                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         <div className="absolute top-3 right-3">

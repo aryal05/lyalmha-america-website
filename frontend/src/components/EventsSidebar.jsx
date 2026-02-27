@@ -538,6 +538,8 @@ const EventsSidebar = () => {
                         fallbackImages[index % fallbackImages.length]
                       }
                       alt={event.title}
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>

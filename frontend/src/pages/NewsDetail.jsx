@@ -170,6 +170,8 @@ const NewsDetail = () => {
               <img
                 src={getImageUrl(newsItem.image)}
                 alt={newsItem.title}
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black/20 to-transparent"></div>

@@ -324,6 +324,8 @@ const GalleryEventDetail = () => {
                 <img
                   src={getImageUrl(img)}
                   alt={`${event.title} - Image ${idx + 1}`}
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center">
@@ -473,6 +475,8 @@ const GalleryEventDetail = () => {
                     ? event.title
                     : `${event.title} - Image ${selectedImageIndex + 1}`
                 }
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
               />
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-lg">

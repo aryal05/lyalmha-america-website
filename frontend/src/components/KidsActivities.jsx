@@ -121,6 +121,8 @@ const KidsActivities = () => {
                   src={activity.image}
                   alt={activity.title}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
                 <div className="absolute inset-0 mandala-pattern opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
@@ -133,6 +135,8 @@ const KidsActivities = () => {
                         src={activity.icon_image}
                         alt="icon"
                         className="w-6 h-6 object-contain"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                       />
                     ) : (
                       <span>{activity.icon}</span>
@@ -202,6 +206,8 @@ const KidsActivities = () => {
                   src={selectedActivity.image}
                   alt={selectedActivity.title}
                   className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal-black via-charcoal-black/50 to-transparent"></div>
               </div>
@@ -214,6 +220,8 @@ const KidsActivities = () => {
                       src={selectedActivity.icon_image}
                       alt="icon"
                       className="w-12 h-12 object-contain"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <span className="text-5xl">{selectedActivity.icon}</span>

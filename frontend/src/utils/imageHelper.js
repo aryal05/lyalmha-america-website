@@ -13,3 +13,16 @@ export const getImageUrl = (imagePath) => {
   // Return the backend URL for local uploads
   return `${API_URL}${imagePath}`;
 };
+
+// Helper to check if an image URL is from Cloudinary (third-party)
+export const isCloudinaryUrl = (url) => {
+  return url && typeof url === 'string' && url.includes('res.cloudinary.com');
+};
+
+// Props to add to <img> tags for Cloudinary URLs to avoid tracking prevention warnings
+export const getCrossOriginProps = (imageUrl) => {
+  if (isCloudinaryUrl(imageUrl)) {
+    return { crossOrigin: 'anonymous', referrerPolicy: 'no-referrer' };
+  }
+  return {};
+};

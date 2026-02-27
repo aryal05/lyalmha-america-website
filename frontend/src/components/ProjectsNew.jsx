@@ -77,6 +77,8 @@ const Projects = () => {
                   <img
                     src={getImageUrl(project.image)}
                     alt={project.title}
+                    crossOrigin="anonymous"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-charcoal-black/70 to-transparent"></div>

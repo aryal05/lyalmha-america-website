@@ -123,6 +123,8 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                           <img
                             src={getImageUrl(story.banner)}
                             alt={story.title}
+                            crossOrigin="anonymous"
+                            referrerPolicy="no-referrer"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                         ) : (
@@ -266,6 +268,8 @@ const BlogGrid = ({ limit = null, showSidebar = true }) => {
                 <img
                   src={getImageUrl(activeBlog.banner)}
                   alt={activeBlog.title}
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
                   className="w-full h-64 object-cover"
                 />
               )}

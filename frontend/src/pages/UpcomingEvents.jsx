@@ -146,6 +146,8 @@ const UpcomingEvents = () => {
                       <img
                         src={getImageUrl(event.image)}
                         alt={event.title}
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-3 right-3">

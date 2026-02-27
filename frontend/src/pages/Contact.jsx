@@ -99,6 +99,8 @@ const Contact = () => {
           <img
             src={activeBanner?.image ? getImageUrl(activeBanner.image) : ""}
             alt="Contact Background"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             style={{ display: activeBanner?.image ? "block" : "none" }}
             className="w-full h-full object-cover"
           />

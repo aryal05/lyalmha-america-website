@@ -177,6 +177,8 @@ const Gallery = () => {
                         <img
                           src={getImageUrl(event.image)}
                           alt={event.title}
+                          crossOrigin="anonymous"
+                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       ) : (
@@ -280,6 +282,8 @@ const Gallery = () => {
               <img
                 src={getImageUrl(selectedImage.image)}
                 alt={selectedImage.title}
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
                 className="w-full h-auto rounded-lg"
               />
               <div className="mt-4 text-center">

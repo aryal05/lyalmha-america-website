@@ -21,6 +21,8 @@ const BlogCard = ({ blog, index }) => {
           <img
             src={getImageUrl(blog.banner)}
             alt={blog.title}
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             onError={(e) => {
               e.target.style.display = "none";
