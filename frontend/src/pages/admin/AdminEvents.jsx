@@ -461,6 +461,8 @@ const AdminEvents = () => {
                         src={getImageUrl(editingEvent.image)}
                         alt="Current event"
                         className="w-48 h-32 object-cover rounded-lg border-2 border-gray-300"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
@@ -536,6 +538,8 @@ const AdminEvents = () => {
                     src={getImageUrl(event.image) || getImageUrl(event.image)}
                     alt={event.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    crossOrigin="anonymous"
+                    referrerPolicy="no-referrer"
                     onError={(e) => {
                       e.target.style.display = "none";
                     }}

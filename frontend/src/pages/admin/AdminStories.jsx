@@ -274,6 +274,8 @@ const AdminStories = () => {
                       src={getImageUrl(editingStory.banner)}
                       alt="Current banner"
                       className="w-48 h-32 object-cover rounded-lg border-2 border-gray-300"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                     />
                   </div>
                 )}
@@ -354,6 +356,8 @@ const AdminStories = () => {
                         src={getImageUrl(story.banner)}
                         alt={story.title}
                         className="w-full h-full object-cover"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">

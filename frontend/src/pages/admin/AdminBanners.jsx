@@ -316,6 +316,8 @@ const AdminBanners = () => {
                         src={getImageUrl(editingBanner.image)}
                         alt="Current banner"
                         className="w-48 h-32 object-cover rounded-lg border-2 border-gray-300"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                         onError={(e) => {
                           e.target.style.display = "none";
                         }}
@@ -454,6 +456,8 @@ const AdminBanners = () => {
                       src={getImageUrl(banner.image)}
                       alt={banner.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         e.target.style.display = "none";
                       }}

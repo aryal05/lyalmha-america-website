@@ -279,6 +279,8 @@ const AdminProjects = () => {
                     src={getImageUrl(editingProject.image)}
                     alt="Current"
                     className="h-20 rounded"
+                    crossOrigin="anonymous"
+                    referrerPolicy="no-referrer"
                   />
                 )}
                 <div className="flex gap-4">
@@ -329,6 +331,8 @@ const AdminProjects = () => {
                           src={getImageUrl(project.image)}
                           alt={project.title}
                           className="w-16 h-16 rounded-lg object-cover"
+                          crossOrigin="anonymous"
+                          referrerPolicy="no-referrer"
                         />
                       )}
                       <div>
