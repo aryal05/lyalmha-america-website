@@ -112,7 +112,7 @@ router.use(authenticateToken)
 // POST create event
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title, image_url } = req.body
     
     if (!title || !event_date) {
       return res.status(400).json({ 
@@ -121,8 +121,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     
-    // Upload to Cloudinary if image provided
-    const image = req.file ? await uploadToCloudinary(req.file.buffer) : null
+    // Upload to Cloudinary if image provided, or use direct URL
+    const image = req.file ? await uploadToCloudinary(req.file.buffer) : (image_url || null)
     
     const result = await QueryHelper.run(`
       INSERT INTO events (title, description, event_date, event_time, event_end_time, location, event_type, image, more_images_link, event_link, event_link_title)
@@ -140,15 +140,15 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT update event
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title } = req.body
+    const { title, description, event_date, event_time, event_end_time, location, event_type, more_images_link, event_link, event_link_title, image_url } = req.body
     const event = await QueryHelper.get('SELECT * FROM events WHERE id = ?', [req.params.id])
     
     if (!event) {
       return res.status(404).json({ success: false, error: 'Event not found' })
     }
     
-    // Upload to Cloudinary if new image provided
-    const image = req.file ? await uploadToCloudinary(req.file.buffer) : event.image
+    // Upload to Cloudinary if new image provided, or use direct URL
+    const image = req.file ? await uploadToCloudinary(req.file.buffer) : (image_url || event.image)
     
     await QueryHelper.run(`
       UPDATE events 

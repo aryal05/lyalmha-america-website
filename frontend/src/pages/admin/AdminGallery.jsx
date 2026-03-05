@@ -63,60 +63,68 @@ const AdminGallery = () => {
     try {
       let eventId = editingEvent?.id;
 
-      // Step 1: Update event details (fast)
-      const eventFormData = new FormData();
-      Object.keys(formData).forEach((key) =>
-        eventFormData.append(key, formData[key]),
-      );
-      if (formData.more_images_link) {
-        eventFormData.append("more_images_link", formData.more_images_link);
+      // Get Cloudinary signature for direct browser uploads (bypasses Vercel 4.5MB limit)
+      let sigData = null;
+      if (thumbnailFile || otherImageFiles.length > 0) {
+        const sigResponse = await apiClient.get(
+          API_ENDPOINTS.EVENT_IMAGES.CLOUDINARY_SIGNATURE,
+        );
+        sigData = sigResponse.data;
       }
-      if (formData.event_link) {
-        eventFormData.append("event_link", formData.event_link);
+
+      // Step 1: Upload thumbnail directly to Cloudinary if provided
+      let thumbnailUrl = null;
+      if (thumbnailFile && sigData) {
+        const thumbFormData = new FormData();
+        thumbFormData.append("file", thumbnailFile);
+        thumbFormData.append("api_key", sigData.api_key);
+        thumbFormData.append("timestamp", sigData.timestamp);
+        thumbFormData.append("signature", sigData.signature);
+        thumbFormData.append("folder", sigData.folder);
+
+        const thumbRes = await axios.post(
+          `https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`,
+          thumbFormData,
+        );
+        thumbnailUrl = thumbRes.data.secure_url;
       }
-      if (thumbnailFile) {
-        eventFormData.append("image", thumbnailFile);
+
+      // Step 2: Save event details with thumbnail URL (no large file sent to backend)
+      const eventPayload = { ...formData };
+      if (thumbnailUrl) {
+        eventPayload.image_url = thumbnailUrl;
       }
 
       if (editingEvent) {
         await apiClient.put(
           API_ENDPOINTS.EVENTS.UPDATE(editingEvent.id),
-          eventFormData,
+          eventPayload,
         );
       } else {
         const response = await apiClient.post(
           API_ENDPOINTS.EVENTS.CREATE,
-          eventFormData,
+          eventPayload,
         );
         eventId = response.data.data.id;
       }
 
-      // Step 2: Upload other images directly to Cloudinary (bypasses Vercel size limit)
-      if (otherImageFiles.length > 0) {
-        // Get Cloudinary signature from backend
-        const sigResponse = await apiClient.get(
-          API_ENDPOINTS.EVENT_IMAGES.CLOUDINARY_SIGNATURE,
-        );
-        const { signature, timestamp, cloud_name, api_key, folder } =
-          sigResponse.data;
-
-        // Upload each image directly to Cloudinary from the browser
+      // Step 3: Upload other images directly to Cloudinary
+      if (otherImageFiles.length > 0 && sigData) {
         const uploadPromises = otherImageFiles.map(async (file) => {
           const cloudFormData = new FormData();
           cloudFormData.append("file", file);
-          cloudFormData.append("api_key", api_key);
-          cloudFormData.append("timestamp", timestamp);
-          cloudFormData.append("signature", signature);
-          cloudFormData.append("folder", folder);
+          cloudFormData.append("api_key", sigData.api_key);
+          cloudFormData.append("timestamp", sigData.timestamp);
+          cloudFormData.append("signature", sigData.signature);
+          cloudFormData.append("folder", sigData.folder);
 
           const cloudRes = await axios.post(
-            `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+            `https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`,
             cloudFormData,
           );
           return cloudRes.data.secure_url;
         });
 
-        // Upload all to Cloudinary, then save URLs to backend
         Promise.all(uploadPromises)
           .then(async (urls) => {
             await apiClient.post(
@@ -129,7 +137,6 @@ const AdminGallery = () => {
           .catch((err) => console.error("Error uploading images:", err));
       }
 
-      // Immediately refresh and close form
       fetchEvents();
       resetForm();
       alert(
