@@ -36,6 +36,8 @@ const AdminGallery = () => {
   const [otherImageFiles, setOtherImageFiles] = useState([]);
   const [otherImagePreviews, setOtherImagePreviews] = useState([]);
   const [existingOtherImages, setExistingOtherImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
 
   useEffect(() => {
     fetchEvents();
@@ -60,12 +62,16 @@ const AdminGallery = () => {
       return;
     }
 
+    setUploading(true);
+    setUploadProgress("Preparing upload...");
+
     try {
       let eventId = editingEvent?.id;
 
-      // Get Cloudinary signature for direct browser uploads (bypasses Vercel 4.5MB limit)
+      // Get Cloudinary signature for direct browser uploads
       let sigData = null;
       if (thumbnailFile || otherImageFiles.length > 0) {
+        setUploadProgress("Getting upload credentials...");
         const sigResponse = await apiClient.get(
           API_ENDPOINTS.EVENT_IMAGES.CLOUDINARY_SIGNATURE,
         );
@@ -75,6 +81,7 @@ const AdminGallery = () => {
       // Step 1: Upload thumbnail directly to Cloudinary if provided
       let thumbnailUrl = null;
       if (thumbnailFile && sigData) {
+        setUploadProgress("Uploading thumbnail...");
         const thumbFormData = new FormData();
         thumbFormData.append("file", thumbnailFile);
         thumbFormData.append("api_key", sigData.api_key);
@@ -89,7 +96,8 @@ const AdminGallery = () => {
         thumbnailUrl = thumbRes.data.secure_url;
       }
 
-      // Step 2: Save event details with thumbnail URL (no large file sent to backend)
+      // Step 2: Save event details with thumbnail URL
+      setUploadProgress("Saving event details...");
       const eventPayload = { ...formData };
       if (thumbnailUrl) {
         eventPayload.image_url = thumbnailUrl;
@@ -108,8 +116,11 @@ const AdminGallery = () => {
         eventId = response.data.data.id;
       }
 
-      // Step 3: Upload other images directly to Cloudinary
+      // Step 3: Upload other images directly to Cloudinary and save ALL URLs
       if (otherImageFiles.length > 0 && sigData) {
+        const totalImages = otherImageFiles.length;
+        let completed = 0;
+
         const uploadPromises = otherImageFiles.map(async (file) => {
           const cloudFormData = new FormData();
           cloudFormData.append("file", file);
@@ -122,31 +133,36 @@ const AdminGallery = () => {
             `https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`,
             cloudFormData,
           );
+          completed++;
+          setUploadProgress(`Uploading images... ${completed}/${totalImages}`);
           return cloudRes.data.secure_url;
         });
 
-        Promise.all(uploadPromises)
-          .then(async (urls) => {
-            await apiClient.post(
-              API_ENDPOINTS.EVENT_IMAGES.SAVE_URLS(eventId),
-              { urls, thumbnailIndex: 0 },
-            );
-            console.log("Images uploaded and saved successfully");
-            fetchEvents();
-          })
-          .catch((err) => console.error("Error uploading images:", err));
+        const urls = await Promise.all(uploadPromises);
+
+        setUploadProgress("Saving image URLs...");
+        await apiClient.post(API_ENDPOINTS.EVENT_IMAGES.SAVE_URLS(eventId), {
+          urls,
+          thumbnailIndex: 0,
+        });
       }
 
       fetchEvents();
       resetForm();
       alert(
         editingEvent
-          ? "Event updated! Images uploading in background..."
-          : "Event created! Images uploading in background...",
+          ? "Event updated successfully!"
+          : "Event created successfully!",
       );
     } catch (error) {
       console.error("Error saving event:", error);
-      alert("Error: " + (error.response?.data?.error || "Unknown error"));
+      alert(
+        "Error: " +
+          (error.response?.data?.error || error.message || "Unknown error"),
+      );
+    } finally {
+      setUploading(false);
+      setUploadProgress("");
     }
   };
 
@@ -672,21 +688,33 @@ const AdminGallery = () => {
                 )}
               </div>
 
+              {uploadProgress && (
+                <p className="text-gold-accent font-semibold animate-pulse">
+                  {uploadProgress}
+                </p>
+              )}
+
               <div className="flex gap-4">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={!uploading ? { scale: 1.05 } : {}}
+                  whileTap={!uploading ? { scale: 0.95 } : {}}
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold"
+                  disabled={uploading}
+                  className={`px-6 py-2 bg-gradient-to-r from-gold-accent to-newari-red text-white rounded-lg font-semibold ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {editingEvent ? "Update Event" : "Create Event"}
+                  {uploading
+                    ? "Uploading..."
+                    : editingEvent
+                      ? "Update Event"
+                      : "Create Event"}
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={!uploading ? { scale: 1.05 } : {}}
+                  whileTap={!uploading ? { scale: 0.95 } : {}}
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-2 bg-white text-royal-blue border-2 border-gray-300 rounded-lg font-semibold"
+                  disabled={uploading}
+                  className={`px-6 py-2 bg-white text-royal-blue border-2 border-gray-300 rounded-lg font-semibold ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   Cancel
                 </motion.button>
