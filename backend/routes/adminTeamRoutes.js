@@ -102,7 +102,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       name || member.name,
       role || member.role,
       category || member.category,
-      bio || member.bio,
+      bio !== undefined ? bio : member.bio,
       image,
       order_index !== undefined ? order_index : member.order_index,
       req.params.id

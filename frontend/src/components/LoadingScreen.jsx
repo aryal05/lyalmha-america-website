@@ -71,7 +71,7 @@ const LoadingScreen = () => {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="text-gold-accent text-sm mb-6"
             >
-              newari Culture & Heritage
+              Grooming the next Generation
             </motion.p>
 
             <motion.div
