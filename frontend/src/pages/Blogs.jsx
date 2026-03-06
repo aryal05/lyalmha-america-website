@@ -194,7 +194,7 @@ const Blogs = () => {
                           {post.author?.charAt(0) || "L"}
                         </div>
                         <span className="text-sm text-muted-text">
-                          {post.author || "Lyalmha"}
+                          {post.author || "Lyaymha"}
                         </span>
                       </div>
                       <button className="text-gold-accent font-semibold hover:text-newari-red transition-colors duration-300 flex items-center gap-1 group/btn">

@@ -52,16 +52,18 @@ const AdminLayout = ({ children }) => {
           className="p-6 border-b border-gold-accent/20 relative"
         >
           <Link to="/" className="flex items-center space-x-3 group">
-            <motion.img
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
-              src={logo}
-              alt="Logo"
-              className="w-12 h-12 object-contain drop-shadow-gold"
-            />
+            <div className="w-12 h-12 rounded-full bg-white/10 p-1 flex items-center justify-center">
+              <motion.img
+                whileHover={{ rotate: 360, scale: 1.1 }}
+                transition={{ duration: 0.6 }}
+                src={logo}
+                alt="Logo"
+                className="w-10 h-10 object-contain brightness-110"
+              />
+            </div>
             <div>
               <h1 className="text-white font-bold text-lg bg-gradient-to-r from-gold-accent to-newari-red bg-clip-text text-transparent">
-                Lyalmha CMS
+                Lyaymha CMS
               </h1>
               <p className="text-gold-accent/60 text-xs font-medium">
                 Admin Panel
