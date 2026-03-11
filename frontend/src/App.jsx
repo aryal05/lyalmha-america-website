@@ -38,7 +38,7 @@ function App() {
     <>
       <LoadingScreen />
       <AuthProvider>
-        <Router>
+        <Router future={{ v7_relativeSplatPath: true }}>
           <ScrollToTopOnMount />
           <Routes>
             {/* Public Routes */}

@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { apiClient, API_ENDPOINTS, API_URL } from '../../config/api'
-import AdminLayout from '../../components/admin/AdminLayout'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import './AdminBlogs.css'
+import AdminLayout from "../../components/admin/AdminLayout";
+import "./AdminBlogs.css";
 
 const AdminNews = () => {
-  const [newsItems, setNewsItems] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [editingNews, setEditingNews] = useState(null)
+  const [newsItems, setNewsItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingNews, setEditingNews] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
-    excerpt: "",
-    content: "",
+    description: "",
     category: "announcement",
     author: "Admin",
     published_date: new Date().toISOString().split("T")[0],
@@ -70,8 +67,7 @@ const AdminNews = () => {
     setEditingNews(news);
     setFormData({
       title: news.title,
-      excerpt: news.excerpt,
-      content: news.content,
+      description: news.description || news.excerpt || "",
       category: news.category,
       author: news.author,
       published_date: news.published_date,
@@ -99,8 +95,7 @@ const AdminNews = () => {
   const resetForm = () => {
     setFormData({
       title: "",
-      excerpt: "",
-      content: "",
+      description: "",
       category: "announcement",
       author: "Admin",
       published_date: new Date().toISOString().split("T")[0],
@@ -125,16 +120,6 @@ const AdminNews = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      ["clean"],
-    ],
   };
 
   if (loading) {
@@ -251,29 +236,15 @@ const AdminNews = () => {
 
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  Excerpt *
+                  Description
                 </label>
                 <textarea
-                  value={formData.excerpt}
+                  value={formData.description}
                   onChange={(e) =>
-                    setFormData({ ...formData, excerpt: e.target.value })
+                    setFormData({ ...formData, description: e.target.value })
                   }
                   className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
-                  rows="3"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-royal-blue font-semibold mb-2">
-                  Content *
-                </label>
-                <ReactQuill
-                  theme="snow"
-                  value={formData.content}
-                  onChange={(content) => setFormData({ ...formData, content })}
-                  modules={modules}
-                  className="quill-editor"
+                  rows="5"
                 />
               </div>
 
@@ -440,7 +411,7 @@ const AdminNews = () => {
                     {news.title}
                   </h3>
                   <p className="text-paragraph-text text-sm mb-2 line-clamp-2">
-                    {news.excerpt}
+                    {news.description || news.excerpt}
                   </p>
                   <div className="text-xs text-paragraph-text mb-2">
                     {news.published_date} • {news.author}
@@ -511,6 +482,6 @@ const AdminNews = () => {
       </div>
     </AdminLayout>
   );
-}
+};
 
 export default AdminNews

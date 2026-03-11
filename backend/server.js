@@ -22,6 +22,7 @@ import adminRsvpRoutes from './routes/adminRsvpRoutes.js'
 import rsvpRoutes from './routes/rsvpRoutes.js'
 import adminProjectsRoutes from './routes/adminProjectsRoutes.js'
 import adminMembershipRoutes from './routes/adminMembershipRoutes.js'
+import multer from 'multer'
 import { fixAllSequences } from './utils/fixSequences.js'
 
 dotenv.config()
@@ -189,6 +190,19 @@ app.use((err, req, res, next) => {
   console.error('Stack:', err.stack)
   console.error('='.repeat(60))
   
+  // Handle multer-specific errors
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ success: false, error: 'File too large. Maximum size is 15MB.' })
+    }
+    return res.status(400).json({ success: false, error: `Upload error: ${err.message}` })
+  }
+
+  // Handle file filter errors
+  if (err.message === 'Only image files are allowed!') {
+    return res.status(400).json({ success: false, error: err.message })
+  }
+
   res.status(500).json({ 
     success: false,
     error: 'Something went wrong!',
