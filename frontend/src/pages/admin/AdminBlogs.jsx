@@ -20,6 +20,7 @@ const AdminBlogs = () => {
     status: "published",
   });
   const [imageFile, setImageFile] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -37,8 +38,28 @@ const AdminBlogs = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "This field is required";
+    if (!formData.excerpt.trim()) errors.excerpt = "This field is required";
+    if (!formData.content.trim() || formData.content === "<p><br></p>")
+      errors.content = "This field is required";
+    if (!formData.category.trim()) errors.category = "This field is required";
+    if (!formData.author.trim()) errors.author = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     const data = new FormData();
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (imageFile) {
@@ -98,6 +119,7 @@ const AdminBlogs = () => {
     });
     setImageFile(null);
     setEditingBlog(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -158,7 +180,7 @@ const AdminBlogs = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               {/* WordPress-style 2-Column Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Main Editor Area (Left - 70%) */}
@@ -173,12 +195,18 @@ const AdminBlogs = () => {
                       type="text"
                       placeholder="Enter blog title here..."
                       value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      required
-                      className="w-full px-6 py-4 bg-transparent text-gray-900 text-2xl font-bold border-0 focus:outline-none placeholder:text-gray-500"
+                      data-field="title"
+                      onChange={(e) => {
+                        setFormData({ ...formData, title: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, title: "" }));
+                      }}
+                      className={`w-full px-6 py-4 bg-transparent text-gray-900 text-2xl font-bold border-0 focus:outline-none placeholder:text-gray-500 ${fieldErrors.title ? "ring-2 ring-newari-red" : ""}`}
                     />
+                    {fieldErrors.title && (
+                      <p className="text-newari-red text-sm px-6 pb-2">
+                        {fieldErrors.title}
+                      </p>
+                    )}
                   </motion.div>
 
                   {/* Rich Text Editor */}
@@ -188,14 +216,15 @@ const AdminBlogs = () => {
                     transition={{ delay: 0.1 }}
                     className="bg-white border-2 border-gray-300 rounded-lg hover:border-royal-blue transition-colors"
                   >
-                    <div className="wordpress-editor">
+                    <div className="wordpress-editor" data-field="content">
                       <ReactQuill
                         ref={quillRef}
                         theme="snow"
                         value={formData.content}
-                        onChange={(value) =>
-                          setFormData({ ...formData, content: value })
-                        }
+                        onChange={(value) => {
+                          setFormData({ ...formData, content: value });
+                          setFieldErrors((prev) => ({ ...prev, content: "" }));
+                        }}
                         placeholder="Write your blog content..."
                         modules={{
                           toolbar: [
@@ -209,9 +238,14 @@ const AdminBlogs = () => {
                         className="wordpress-quill"
                       />
                     </div>
+                    {fieldErrors.content && (
+                      <p className="text-newari-red text-sm px-5 pb-2">
+                        {fieldErrors.content}
+                      </p>
+                    )}
                   </motion.div>
 
-                  {/* Excerpt */}
+                  {/* Description */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -219,17 +253,27 @@ const AdminBlogs = () => {
                     className="bg-white border-2 border-gray-300 rounded-lg hover:border-royal-blue transition-colors p-5"
                   >
                     <label className="block text-royal-blue font-semibold mb-3">
-                      📝 Excerpt
+                      📝 Description
                     </label>
                     <textarea
-                      placeholder="Write a short excerpt (optional)"
+                      placeholder="Write a short description"
                       value={formData.excerpt}
-                      onChange={(e) =>
-                        setFormData({ ...formData, excerpt: e.target.value })
-                      }
+                      data-field="excerpt"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          excerpt: e.target.value,
+                        });
+                        setFieldErrors((prev) => ({ ...prev, excerpt: "" }));
+                      }}
                       rows="3"
-                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.excerpt ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
                     />
+                    {fieldErrors.excerpt && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.excerpt}
+                      </p>
+                    )}
                   </motion.div>
                 </div>
 
@@ -373,12 +417,18 @@ const AdminBlogs = () => {
                       type="text"
                       placeholder="e.g., Culture, Events"
                       value={formData.category}
-                      onChange={(e) =>
-                        setFormData({ ...formData, category: e.target.value })
-                      }
-                      required
-                      className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
+                      data-field="category"
+                      onChange={(e) => {
+                        setFormData({ ...formData, category: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, category: "" }));
+                      }}
+                      className={`w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.category ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors text-sm`}
                     />
+                    {fieldErrors.category && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.category}
+                      </p>
+                    )}
                   </motion.div>
 
                   {/* Author Box */}
@@ -397,12 +447,18 @@ const AdminBlogs = () => {
                       type="text"
                       placeholder="Author name"
                       value={formData.author}
-                      onChange={(e) =>
-                        setFormData({ ...formData, author: e.target.value })
-                      }
-                      required
-                      className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
+                      data-field="author"
+                      onChange={(e) => {
+                        setFormData({ ...formData, author: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, author: "" }));
+                      }}
+                      className={`w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.author ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors text-sm`}
                     />
+                    {fieldErrors.author && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.author}
+                      </p>
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -452,7 +508,7 @@ const AdminBlogs = () => {
                     {blog.title}
                   </h3>
                   <p className="text-paragraph-text text-sm mb-2 line-clamp-2">
-                    {blog.excerpt}
+                    {blog.description || blog.excerpt}
                   </p>
                   <div className="text-xs text-paragraph-text mb-4">
                     {new Date(blog.created_at).toLocaleDateString()} •{" "}

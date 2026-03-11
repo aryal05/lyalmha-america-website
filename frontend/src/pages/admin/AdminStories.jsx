@@ -19,6 +19,7 @@ const AdminStories = () => {
     author: "",
     link: "",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchStories();
@@ -33,8 +34,25 @@ const AdminStories = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "This field is required";
+    if (!formData.excerpt.trim()) errors.excerpt = "This field is required";
+    if (!formData.content.trim()) errors.content = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     try {
       const data = new FormData();
       data.append("title", formData.title);
@@ -105,6 +123,7 @@ const AdminStories = () => {
       link: "",
     });
     setEditingStory(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -144,22 +163,28 @@ const AdminStories = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white border-2 border-gray-300 rounded-2xl p-8 mb-10 shadow-lg max-w-2xl mx-auto"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Title *
+                    Title <span className="text-newari-red">*</span>
                   </label>
                   <input
                     type="text"
-                    required
                     value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
+                    data-field="title"
+                    onChange={(e) => {
+                      setFormData({ ...formData, title: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, title: "" }));
+                    }}
+                    className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.title ? "border-newari-red" : "border-gray-300"} focus:border-gold-accent focus:outline-none transition-colors`}
                     placeholder="Story title"
                   />
+                  {fieldErrors.title && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
@@ -208,7 +233,7 @@ const AdminStories = () => {
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  Link (optional)
+                  Link
                 </label>
                 <input
                   type="url"
@@ -225,33 +250,45 @@ const AdminStories = () => {
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  Excerpt *
+                  Description <span className="text-newari-red">*</span>
                 </label>
                 <textarea
-                  required
                   rows="2"
                   value={formData.excerpt}
-                  onChange={(e) =>
-                    setFormData({ ...formData, excerpt: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
-                  placeholder="Short excerpt"
+                  data-field="excerpt"
+                  onChange={(e) => {
+                    setFormData({ ...formData, excerpt: e.target.value });
+                    setFieldErrors((prev) => ({ ...prev, excerpt: "" }));
+                  }}
+                  className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.excerpt ? "border-newari-red" : "border-gray-300"} focus:border-gold-accent focus:outline-none transition-colors`}
+                  placeholder="Short description"
                 />
+                {fieldErrors.excerpt && (
+                  <p className="text-newari-red text-sm mt-1">
+                    {fieldErrors.excerpt}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  Content *
+                  Content <span className="text-newari-red">*</span>
                 </label>
                 <textarea
-                  required
                   rows="5"
                   value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-gold-accent focus:outline-none transition-colors"
+                  data-field="content"
+                  onChange={(e) => {
+                    setFormData({ ...formData, content: e.target.value });
+                    setFieldErrors((prev) => ({ ...prev, content: "" }));
+                  }}
+                  className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.content ? "border-newari-red" : "border-gray-300"} focus:border-gold-accent focus:outline-none transition-colors`}
                   placeholder="Full content"
                 />
+                {fieldErrors.content && (
+                  <p className="text-newari-red text-sm mt-1">
+                    {fieldErrors.content}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">

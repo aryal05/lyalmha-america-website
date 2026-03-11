@@ -15,6 +15,7 @@ const AdminSupporters = () => {
   })
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchSupporters();
@@ -29,8 +30,23 @@ const AdminSupporters = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     const data = new FormData();
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (logoFile) {
@@ -41,7 +57,7 @@ const AdminSupporters = () => {
       if (editingSupporter) {
         await apiClient.put(
           API_ENDPOINTS.SUPPORTERS.UPDATE(editingSupporter.id),
-          data
+          data,
         );
       } else {
         await apiClient.post(API_ENDPOINTS.SUPPORTERS.CREATE, data);
@@ -52,7 +68,7 @@ const AdminSupporters = () => {
       console.error("Error saving supporter:", error);
       alert(
         "Error saving supporter: " +
-          (error.response?.data?.error || error.message)
+          (error.response?.data?.error || error.message),
       );
     }
   };
@@ -101,6 +117,7 @@ const AdminSupporters = () => {
       description: "",
     });
     setEditingSupporter(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -162,7 +179,7 @@ const AdminSupporters = () => {
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
@@ -171,14 +188,20 @@ const AdminSupporters = () => {
                     </label>
                     <input
                       type="text"
-                      required
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      data-field="name"
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, name: "" }));
+                      }}
+                      className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.name ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
                       placeholder="Enter name or organization"
                     />
+                    {fieldErrors.name && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.name}
+                      </p>
+                    )}
                   </div>
 
                   <div>

@@ -17,6 +17,7 @@ const AdminBanners = () => {
     active: true,
   });
   const [filterPosition, setFilterPosition] = useState("all");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchBanners();
@@ -31,14 +32,24 @@ const AdminBanners = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!editingBanner && !imageFile)
+      errors.image = "Please select an image for the banner";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate that image is provided for new banners
-    if (!editingBanner && !imageFile) {
-      alert("Please select an image for the banner");
-      return;
-    }
+    if (!validateForm()) return;
+    setFieldErrors({});
 
     try {
       const data = new FormData();
@@ -136,6 +147,7 @@ const AdminBanners = () => {
     });
     setImageFile(null);
     setEditingBanner(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -197,10 +209,10 @@ const AdminBanners = () => {
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Title (optional)
+                    Title
                   </label>
                   <input
                     type="text"
@@ -297,14 +309,21 @@ const AdminBanners = () => {
                   <input
                     type="file"
                     accept="image/*"
+                    data-field="image"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file) {
                         setImageFile(file);
+                        setFieldErrors((prev) => ({ ...prev, image: "" }));
                       }
                     }}
-                    className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg"
+                    className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.image ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg`}
                   />
+                  {fieldErrors.image && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.image}
+                    </p>
+                  )}
 
                   {/* Show current banner image when editing */}
                   {editingBanner && editingBanner.image && !imageFile && (

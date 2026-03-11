@@ -30,6 +30,7 @@ const AdminTeam = () => {
   });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchTeam();
@@ -44,8 +45,24 @@ const AdminTeam = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "This field is required";
+    if (!formData.role.trim()) errors.role = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     try {
       const data = new FormData();
       data.append("name", formData.name);
@@ -194,6 +211,7 @@ const AdminTeam = () => {
     });
     setCompletedCrop(null);
     setEditingMember(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -255,7 +273,7 @@ const AdminTeam = () => {
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-royal-blue font-semibold mb-2">
@@ -263,14 +281,20 @@ const AdminTeam = () => {
                     </label>
                     <input
                       type="text"
-                      required
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      data-field="name"
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, name: "" }));
+                      }}
+                      className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.name ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
                       placeholder="Member name"
                     />
+                    {fieldErrors.name && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.name}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -279,14 +303,20 @@ const AdminTeam = () => {
                     </label>
                     <input
                       type="text"
-                      required
                       value={formData.role}
-                      onChange={(e) =>
-                        setFormData({ ...formData, role: e.target.value })
-                      }
-                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                      data-field="role"
+                      onChange={(e) => {
+                        setFormData({ ...formData, role: e.target.value });
+                        setFieldErrors((prev) => ({ ...prev, role: "" }));
+                      }}
+                      className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.role ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
                       placeholder="Position/role"
                     />
+                    {fieldErrors.role && (
+                      <p className="text-newari-red text-sm mt-1">
+                        {fieldErrors.role}
+                      </p>
+                    )}
                   </div>
                 </div>
 

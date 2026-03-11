@@ -16,6 +16,7 @@ const AdminFestivals = () => {
     order_index: 0,
     active: 1
   });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchFestivals();
@@ -33,8 +34,27 @@ const AdminFestivals = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "This field is required";
+    if (!formData.description.trim())
+      errors.description = "This field is required";
+    if (!formData.image && !editingFestival)
+      errors.image = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     try {
       const data = new FormData();
       data.append('title', formData.title);
@@ -94,6 +114,7 @@ const AdminFestivals = () => {
   const resetForm = () => {
     setFormData({ title: '', description: '', image: null, highlights: [''], order_index: 0, active: 1 });
     setEditingFestival(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -114,169 +135,308 @@ const AdminFestivals = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Major Festivals</h1>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            {showForm ? 'Cancel' : '+ Add Festival'}
-          </button>
+      <div className="relative">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="mandala-pattern absolute top-10 right-10 w-64 h-64 animate-spin-slow"></div>
         </div>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-8 relative z-10"
+        >
+          <div>
+            <h1 className="text-3xl font-bold text-royal-blue mb-2">
+              Major Festivals
+            </h1>
+            <p className="text-paragraph-text">
+              Add, edit, or remove major festivals
+            </p>
+            <div className="pagoda-divider opacity-30 mt-3 w-32"></div>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              if (showForm) {
+                resetForm();
+              } else {
+                setEditingFestival(null);
+                setShowForm(true);
+              }
+            }}
+            className="px-6 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold flex items-center gap-2"
+          >
+            <span className="text-xl">{showForm ? "✕" : "+"}</span>
+            {showForm ? "Cancel" : "Add Festival"}
+          </motion.button>
+        </motion.div>
 
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-6 rounded-lg shadow-lg mb-6"
+            className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors mb-8 relative overflow-hidden"
           >
-            <h2 className="text-xl font-bold mb-4">
-              {editingFestival ? 'Edit Festival' : 'Add New Festival'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Title *</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  required
-                />
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 mandala-pattern"></div>
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-newari-red to-gold-accent rounded-full"></div>
+                <h2 className="text-xl font-bold text-royal-blue">
+                  {editingFestival ? "Edit Festival" : "Add New Festival"}
+                </h2>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Description *</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 border rounded-lg"
-                  rows="6"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Festival Image *</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
-                  className="w-full px-4 py-2 border rounded-lg"
-                />
-                {editingFestival?.image && (
-                  <div className="mt-2">
-                    <img src={editingFestival.image} alt="Current" className="h-32 w-48 object-cover rounded" />
-                    <p className="text-xs text-gray-500 mt-1">Current image (upload new to replace)</p>
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Highlights</label>
-                {formData.highlights.map((highlight, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={highlight}
-                      onChange={(e) => updateHighlight(index, e.target.value)}
-                      className="flex-1 px-4 py-2 border rounded-lg"
-                      placeholder="Enter highlight"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeHighlight(index)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addHighlight}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                >
-                  + Add Highlight
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Order</label>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Title <span className="text-newari-red">*</span>
+                  </label>
                   <input
-                    type="number"
-                    value={formData.order_index}
-                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg"
+                    type="text"
+                    value={formData.title}
+                    data-field="title"
+                    onChange={(e) => {
+                      setFormData({ ...formData, title: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, title: "" }));
+                    }}
+                    className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.title ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
+                    placeholder="Festival title"
                   />
+                  {fieldErrors.title && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Status</label>
-                  <select
-                    value={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  >
-                    <option value={1}>Active</option>
-                    <option value={0}>Inactive</option>
-                  </select>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Description <span className="text-newari-red">*</span>
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    data-field="description"
+                    onChange={(e) => {
+                      setFormData({ ...formData, description: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, description: "" }));
+                    }}
+                    className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.description ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors`}
+                    rows="6"
+                    placeholder="Festival description"
+                  />
+                  {fieldErrors.description && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.description}
+                    </p>
+                  )}
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                  {editingFestival ? 'Update' : 'Create'}
-                </button>
-                <button type="button" onClick={resetForm} className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Festival Image <span className="text-newari-red">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    data-field="image"
+                    onChange={(e) => {
+                      setFormData({ ...formData, image: e.target.files[0] });
+                      setFieldErrors((prev) => ({ ...prev, image: "" }));
+                    }}
+                    className={`w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 ${fieldErrors.image ? "border-newari-red" : "border-gray-300"} focus:border-royal-blue focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gradient-to-r file:from-newari-red file:to-gold-accent file:text-white file:cursor-pointer hover:file:shadow-lg`}
+                  />
+                  {fieldErrors.image && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.image}
+                    </p>
+                  )}
+                  {editingFestival?.image && (
+                    <div className="mt-4">
+                      <p className="text-paragraph-text text-sm mb-2">
+                        Current image:
+                      </p>
+                      <img
+                        src={editingFestival.image}
+                        alt="Current"
+                        className="h-32 w-48 object-cover rounded-lg border-2 border-gray-300"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-royal-blue font-semibold mb-2">
+                    Highlights
+                  </label>
+                  {formData.highlights.map((highlight, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={highlight}
+                        onChange={(e) => updateHighlight(index, e.target.value)}
+                        className="flex-1 px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                        placeholder="Enter highlight"
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        onClick={() => removeHighlight(index)}
+                        className="px-4 py-3 bg-newari-red/10 text-newari-red rounded-lg border border-newari-red/30 hover:bg-newari-red hover:text-white transition-all font-semibold"
+                      >
+                        Remove
+                      </motion.button>
+                    </div>
+                  ))}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={addHighlight}
+                    className="px-4 py-3 bg-royal-blue/10 text-royal-blue rounded-lg border border-royal-blue/30 hover:bg-royal-blue hover:text-white transition-all font-semibold"
+                  >
+                    + Add Highlight
+                  </motion.button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Order
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.order_index}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          order_index: parseInt(e.target.value),
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-royal-blue font-semibold mb-2">
+                      Status
+                    </label>
+                    <select
+                      value={formData.active}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          active: parseInt(e.target.value),
+                        })
+                      }
+                      className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors"
+                    >
+                      <option value={1}>Active</option>
+                      <option value={0}>Inactive</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pagoda-divider opacity-20 my-4"></div>
+
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="px-8 py-3 bg-gradient-to-r from-newari-red to-gold-accent text-white rounded-lg hover:shadow-lg hover:shadow-newari-red/30 transition-all duration-300 font-semibold"
+                  >
+                    {editingFestival ? "Update Festival" : "Create Festival"}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="button"
+                    onClick={resetForm}
+                    className="px-8 py-3 bg-white text-royal-blue rounded-lg border-2 border-gray-300 hover:border-royal-blue transition-all duration-300 font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </form>
+            </div>
           </motion.div>
         )}
 
         {loading ? (
-          <div className="text-center py-12">Loading...</div>
+          <div className="flex items-center justify-center h-64">
+            <div className="text-royal-blue font-semibold text-xl animate-pulse">
+              Loading...
+            </div>
+          </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {festivals.map((festival) => (
-                  <tr key={festival.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      {festival.image ? (
-                        <img src={festival.image} alt={festival.title} className="h-16 w-24 object-cover rounded" />
-                      ) : (
-                        <div className="h-16 w-24 bg-gray-200 rounded flex items-center justify-center text-gray-400">No img</div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 font-medium">{festival.title}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 max-w-md truncate">{festival.description}</td>
-                    <td className="px-6 py-4">{festival.order_index}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full ${festival.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {festival.active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <button onClick={() => handleEdit(festival)} className="text-blue-600 hover:text-blue-800 mr-3">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(festival.id)} className="text-red-600 hover:text-red-800">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {festivals.map((festival) => (
+              <motion.div
+                key={festival.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden group hover:border-royal-blue transition-all"
+              >
+                {festival.image ? (
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={festival.image}
+                      alt={festival.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-48 bg-gray-100 flex items-center justify-center text-gray-400">
+                    No image
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${festival.active ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}
+                    >
+                      {festival.active ? "Active" : "Inactive"}
+                    </span>
+                    <span className="text-xs px-2 py-1 bg-gold-accent/20 text-gold-accent rounded">
+                      Order: {festival.order_index}
+                    </span>
+                  </div>
+                  <h3 className="text-gray-900 font-bold text-lg mb-2 line-clamp-2">
+                    {festival.title}
+                  </h3>
+                  <p className="text-paragraph-text text-sm mb-4 line-clamp-2">
+                    {festival.description}
+                  </p>
+                  <div className="flex gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleEdit(festival)}
+                      className="flex-1 px-4 py-2 bg-gold-accent/20 text-gold-accent rounded-lg text-sm font-semibold hover:bg-gold-accent/30 transition-all"
+                    >
+                      ✏️ Edit
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleDelete(festival.id)}
+                      className="flex-1 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-all"
+                    >
+                      🗑️ Delete
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {!showForm && festivals.length === 0 && !loading && (
+          <div className="text-center py-12 text-royal-blue font-semibold">
+            <p className="text-xl">
+              No festivals found. Create your first one!
+            </p>
           </div>
         )}
       </div>

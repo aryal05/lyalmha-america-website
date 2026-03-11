@@ -38,6 +38,7 @@ const AdminGallery = () => {
   const [existingOtherImages, setExistingOtherImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchEvents();
@@ -54,13 +55,27 @@ const AdminGallery = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "This field is required";
+    if (!formData.event_date.trim())
+      errors.event_date = "This field is required";
+    if (!editingEvent && !thumbnailFile)
+      errors.thumbnail = "Please select a thumbnail image";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!editingEvent && !thumbnailFile) {
-      alert("Please select a thumbnail image");
-      return;
-    }
+    if (!validateForm()) return;
+    setFieldErrors({});
 
     setUploading(true);
     setUploadProgress("Preparing upload...");
@@ -230,6 +245,7 @@ const AdminGallery = () => {
     setOtherImagePreviews([]);
     setExistingOtherImages([]);
     setEditingEvent(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -311,35 +327,48 @@ const AdminGallery = () => {
             <h2 className="text-2xl font-bold text-royal-blue mb-6">
               {editingEvent ? "✏️ Edit Event" : "➕ Create New Event"}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Event Title *
+                    Event Title <span className="text-newari-red">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
-                    required
+                    data-field="title"
+                    onChange={(e) => {
+                      setFormData({ ...formData, title: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, title: "" }));
+                    }}
+                    className={`w-full px-4 py-2 border-2 ${fieldErrors.title ? "border-newari-red" : "border-gray-300"} rounded-lg focus:border-royal-blue`}
                   />
+                  {fieldErrors.title && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    📅 Event Date (Eastern US) *
+                    📅 Event Date (Eastern US){" "}
+                    <span className="text-newari-red">*</span>
                   </label>
                   <input
                     type="date"
                     value={formData.event_date}
-                    onChange={(e) =>
-                      setFormData({ ...formData, event_date: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-royal-blue"
-                    required
+                    data-field="event_date"
+                    onChange={(e) => {
+                      setFormData({ ...formData, event_date: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, event_date: "" }));
+                    }}
+                    className={`w-full px-4 py-2 border-2 ${fieldErrors.event_date ? "border-newari-red" : "border-gray-300"} rounded-lg focus:border-royal-blue`}
                   />
+                  {fieldErrors.event_date && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.event_date}
+                    </p>
+                  )}
                   {formData.event_date && (
                     <p className="text-sm text-green-600 mt-1 font-medium">
                       ✅{" "}
@@ -527,7 +556,7 @@ const AdminGallery = () => {
               {/* MORE IMAGES LINK */}
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  🔗 More Images Link (optional)
+                  🔗 More Images Link
                 </label>
                 <input
                   type="url"
@@ -551,7 +580,7 @@ const AdminGallery = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    🔗 Event Link Title (optional)
+                    🔗 Event Link Title
                   </label>
                   <input
                     type="text"
@@ -571,7 +600,7 @@ const AdminGallery = () => {
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    🔗 Event Link URL (optional)
+                    🔗 Event Link URL
                   </label>
                   <input
                     type="url"
@@ -594,15 +623,24 @@ const AdminGallery = () => {
               {/* THUMBNAIL IMAGE SECTION */}
               <div className="border-2 border-gold-accent/30 rounded-lg p-4 bg-gold-accent/5">
                 <label className="block text-royal-blue font-bold mb-3 text-lg">
-                  📸 Thumbnail Image * (Main Display Image)
+                  📸 Thumbnail Image <span className="text-newari-red">*</span>{" "}
+                  (Main Display Image)
                 </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleThumbnailChange}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg"
-                  required={!editingEvent}
+                  data-field="thumbnail"
+                  onChange={(e) => {
+                    handleThumbnailChange(e);
+                    setFieldErrors((prev) => ({ ...prev, thumbnail: "" }));
+                  }}
+                  className={`w-full px-4 py-2 border-2 ${fieldErrors.thumbnail ? "border-newari-red" : "border-gray-300"} rounded-lg`}
                 />
+                {fieldErrors.thumbnail && (
+                  <p className="text-newari-red text-sm mt-1">
+                    {fieldErrors.thumbnail}
+                  </p>
+                )}
                 {thumbnailPreview && (
                   <div className="mt-4">
                     <img

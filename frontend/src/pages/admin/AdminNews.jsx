@@ -22,6 +22,7 @@ const AdminNews = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     fetchNews();
@@ -38,8 +39,25 @@ const AdminNews = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title.trim()) errors.title = "This field is required";
+    if (!formData.description.trim())
+      errors.description = "This field is required";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      const firstErrorKey = Object.keys(errors)[0];
+      const el = document.querySelector(`[data-field="${firstErrorKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setFieldErrors({});
     const data = new FormData();
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (imageFile) {
@@ -107,6 +125,7 @@ const AdminNews = () => {
     setImageFile(null);
     setImagePreview(null);
     setEditingNews(null);
+    setFieldErrors({});
     setShowForm(false);
   };
 
@@ -167,21 +186,27 @@ const AdminNews = () => {
             <h2 className="text-2xl font-bold text-royal-blue mb-6">
               {editingNews ? "✏️ Edit News" : "➕ Add New News"}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Title *
+                    Title <span className="text-newari-red">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
-                    required
+                    data-field="title"
+                    onChange={(e) => {
+                      setFormData({ ...formData, title: e.target.value });
+                      setFieldErrors((prev) => ({ ...prev, title: "" }));
+                    }}
+                    className={`w-full px-4 py-2 bg-white text-gray-900 border-2 ${fieldErrors.title ? "border-newari-red" : "border-gray-300"} rounded-lg focus:outline-none focus:border-royal-blue`}
                   />
+                  {fieldErrors.title && (
+                    <p className="text-newari-red text-sm mt-1">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
@@ -240,18 +265,25 @@ const AdminNews = () => {
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  className="w-full px-4 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-royal-blue"
+                  data-field="description"
+                  onChange={(e) => {
+                    setFormData({ ...formData, description: e.target.value });
+                    setFieldErrors((prev) => ({ ...prev, description: "" }));
+                  }}
+                  className={`w-full px-4 py-2 bg-white text-gray-900 border-2 ${fieldErrors.description ? "border-newari-red" : "border-gray-300"} rounded-lg focus:outline-none focus:border-royal-blue`}
                   rows="5"
                 />
+                {fieldErrors.description && (
+                  <p className="text-newari-red text-sm mt-1">
+                    {fieldErrors.description}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Link Title (optional)
+                    Link Title
                   </label>
                   <input
                     type="text"
@@ -268,7 +300,7 @@ const AdminNews = () => {
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Link URL (optional)
+                    Link URL
                   </label>
                   <input
                     type="url"
