@@ -120,10 +120,10 @@ const BlogCard = ({ blog, index }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-blue-600 underline hover:text-blue-800 transition-colors font-medium text-sm mb-4"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-800 transition-colors font-medium text-sm mb-4 rounded-lg max-w-full"
             >
               <svg
-                className="w-3.5 h-3.5"
+                className="w-3.5 h-3.5 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -135,7 +135,7 @@ const BlogCard = ({ blog, index }) => {
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                 />
               </svg>
-              {blog.link}
+              <span className="truncate">Register Here</span>
             </a>
           )}
 

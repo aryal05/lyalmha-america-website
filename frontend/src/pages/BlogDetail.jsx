@@ -119,16 +119,16 @@ const BlogDetail = () => {
             </h1>
 
             {/* Meta Info */}
-            <div className="flex flex-wrap items-center gap-6 text-gray-300">
+            <div className="flex flex-wrap items-center gap-6 text-white">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-gold-accent to-newari-red rounded-full flex items-center justify-center text-charcoal-black font-bold">
                   {blog.author?.charAt(0) || "L"}
                 </div>
-                <span className="font-medium">
+                <span className="font-medium text-white">
                   {blog.author || "Lyaymha America Guthi"}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-white">
                 <svg
                   className="w-5 h-5 text-gold-accent"
                   fill="none"
@@ -149,7 +149,7 @@ const BlogDetail = () => {
                 })}
               </div>
               {blog.read_time && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-white">
                   <svg
                     className="w-5 h-5 text-gold-accent"
                     fill="none"
@@ -186,6 +186,33 @@ const BlogDetail = () => {
                 <p className="text-lg text-paragraph-text italic leading-relaxed">
                   {blog.excerpt}
                 </p>
+              </div>
+            )}
+
+            {/* Register Link */}
+            {blog.link && (
+              <div className="mb-8 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                <a
+                  href={blog.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors font-semibold"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                  Register Here
+                </a>
               </div>
             )}
 

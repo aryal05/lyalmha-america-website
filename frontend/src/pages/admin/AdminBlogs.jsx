@@ -18,6 +18,7 @@ const AdminBlogs = () => {
     category: "",
     author: "",
     status: "published",
+    link: "",
   });
   const [imageFile, setImageFile] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -92,6 +93,7 @@ const AdminBlogs = () => {
       category: blog.category,
       author: blog.author,
       status: blog.status,
+      link: blog.link || "",
     });
     setImageFile(null); // Clear file input but keep blog.banner for preview
     setShowForm(true);
@@ -116,6 +118,7 @@ const AdminBlogs = () => {
       category: "",
       author: "",
       status: "published",
+      link: "",
     });
     setImageFile(null);
     setEditingBlog(null);
@@ -459,6 +462,34 @@ const AdminBlogs = () => {
                         {fieldErrors.author}
                       </p>
                     )}
+                  </motion.div>
+
+                  {/* Register Link Box */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white border-2 border-gray-300 rounded-lg p-5 hover:border-royal-blue transition-colors"
+                  >
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-300">
+                      <span className="text-2xl">🔗</span>
+                      <h3 className="font-bold text-royal-blue">
+                        Register Link
+                      </h3>
+                    </div>
+
+                    <input
+                      type="url"
+                      placeholder="https://docs.google.com/forms/..."
+                      value={formData.link}
+                      onChange={(e) =>
+                        setFormData({ ...formData, link: e.target.value })
+                      }
+                      className="w-full px-3 py-2 bg-white text-gray-900 rounded-lg border-2 border-gray-300 focus:border-royal-blue focus:outline-none transition-colors text-sm"
+                    />
+                    <p className="text-xs text-paragraph-text mt-1">
+                      Google Form or registration link
+                    </p>
                   </motion.div>
                 </div>
               </div>
