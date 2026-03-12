@@ -48,10 +48,10 @@ router.post('/festivals', authenticateToken, upload.single('image'), async (req,
     const { title, description, highlights, order_index } = req.body
     let imageUrl = null
     
-    if (!title || !description) {
+    if (!title) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Title and description are required' 
+        error: 'Title is required' 
       })
     }
 

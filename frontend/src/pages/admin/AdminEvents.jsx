@@ -60,8 +60,6 @@ const AdminEvents = () => {
   const validateForm = () => {
     const errors = {};
     if (!formData.title.trim()) errors.title = "This field is required";
-    if (!formData.description.trim())
-      errors.description = "This field is required";
     if (!formData.event_date.trim())
       errors.event_date = "This field is required";
     if (!formData.location.trim()) errors.location = "This field is required";
@@ -238,7 +236,7 @@ const AdminEvents = () => {
 
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Description <span className="text-newari-red">*</span>
+                    Description
                   </label>
                   <textarea
                     rows="4"

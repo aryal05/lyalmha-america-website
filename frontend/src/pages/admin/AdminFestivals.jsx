@@ -37,10 +37,6 @@ const AdminFestivals = () => {
   const validateForm = () => {
     const errors = {};
     if (!formData.title.trim()) errors.title = "This field is required";
-    if (!formData.description.trim())
-      errors.description = "This field is required";
-    if (!formData.image && !editingFestival)
-      errors.image = "This field is required";
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
       const firstErrorKey = Object.keys(errors)[0];
@@ -215,7 +211,7 @@ const AdminFestivals = () => {
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Description <span className="text-newari-red">*</span>
+                    Description
                   </label>
                   <textarea
                     value={formData.description}
@@ -236,7 +232,7 @@ const AdminFestivals = () => {
                 </div>
                 <div>
                   <label className="block text-royal-blue font-semibold mb-2">
-                    Festival Image <span className="text-newari-red">*</span>
+                    Festival Image
                   </label>
                   <input
                     type="file"

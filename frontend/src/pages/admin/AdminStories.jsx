@@ -37,7 +37,6 @@ const AdminStories = () => {
   const validateForm = () => {
     const errors = {};
     if (!formData.title.trim()) errors.title = "This field is required";
-    if (!formData.excerpt.trim()) errors.excerpt = "This field is required";
     if (!formData.content.trim()) errors.content = "This field is required";
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
@@ -250,7 +249,7 @@ const AdminStories = () => {
               </div>
               <div>
                 <label className="block text-royal-blue font-semibold mb-2">
-                  Description <span className="text-newari-red">*</span>
+                  Description
                 </label>
                 <textarea
                   rows="2"

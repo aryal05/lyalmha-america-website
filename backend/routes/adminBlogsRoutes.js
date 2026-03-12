@@ -60,11 +60,11 @@ router.post('/', upload.single('banner'), async (req, res) => {
     
     const { title, excerpt, content, category, author, status, link } = req.body
     
-    if (!title || !excerpt || !content) {
+    if (!title || !content) {
       console.log('Validation failed - missing required fields')
       return res.status(400).json({ 
         success: false, 
-        error: 'Title, excerpt, and content are required' 
+        error: 'Title and content are required' 
       })
     }
     
